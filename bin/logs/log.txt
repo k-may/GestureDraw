@@ -1,0 +1,44 @@
+[12/12 12:28:13] Region created : Processing
+[12/12 12:34:00] Region created : SimpleOpenNI
+[12/12 12:34:18] Region created : SimpleOpenNI
+[12/12 12:35:09] Region created : SimpleOpenNI
+[12/12 12:35:22] New hand detected; id: 1
+[12/12 12:35:31] no users
+[12/12 12:35:32] New hand detected; id: 1
+[12/12 12:35:32] no users
+[12/12 12:42:05] Region created : SimpleOpenNI
+[12/12 12:42:15] New hand detected; id: 1
+[12/12 12:49:41] Region created : SimpleOpenNI
+[12/12 12:49:47] New hand detected; id: 1
+[12/12 12:49:51] no users
+[12/12 12:50:15] Region created : SimpleOpenNI
+[12/12 12:50:22] New hand detected; id: 1
+[12/12 12:56:23] Region created : SimpleOpenNI
+[12/12 12:56:29] New hand detected; id: 1
+[12/12 12:56:53] no users
+[12/12 12:58:38] Region created : SimpleOpenNI
+[1/13 17:34:18] Region created : GestTrackOSC
+[1/13 17:34:40] Region created : GestTrackOSC
+[1/13 17:35:45] Region created : GestTrackOSC
+[1/13 17:36:52] Region created : GestTrackOSC
+[1/13 18:02:36] Region created : GestTrackOSC
+[1/13 18:07:04] Region created : GestTrackOSC
+[1/13 18:07:57] Region created : GestTrackOSC
+[1/13 18:08:15] Region created : GestTrackOSC
+[1/13 18:10:10] Region created : GestTrackOSC
+[1/13 18:11:02] Region created : GestTrackOSC
+[1/13 18:11:21] Region created : GestTrackOSC
+[1/13 18:12:16] Region created : GestTrackOSC
+[1/13 18:12:51] Region created : GestTrackOSC
+[1/13 18:13:51] Region created : GestTrackOSC
+[1/13 18:14:09] Region created : GestTrackOSC
+[1/13 18:14:36] Region created : GestTrackOSC
+[1/13 18:15:12] Region created : GestTrackOSC
+[1/13 18:16:34] Region created : GestTrackOSC
+[1/13 18:16:51] Region created : GestTrackOSC
+[1/13 21:13:20] Region created : GestTrackOSC
+[1/13 21:15:29] Region created : GestTrackOSC
+[1/13 21:16:26] Region created : GestTrackOSC
+[1/13 21:21:42] Region created : GestTrackOSC
+[1/13 21:24:34] Region created : GestTrackOSC
+[1/13 21:25:37] Region created : GestTrackOSC

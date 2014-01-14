@@ -1,0 +1,2 @@
+[12/12 12:28:13] [SimpleOpenNI] Unable to load framework : Can't load library: C:\Program Files (x86)\Java\jre7\bin\lib\win32\OpenNI2.dll
+[12/12 12:34:19] [Asset Error] null
