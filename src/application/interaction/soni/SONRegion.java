@@ -48,13 +48,13 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 	public void onNewHand(int id, PVector pos) {
 		PVector lastPos = new PVector();
 		_source.convertRealWorldToProjective(pos, lastPos);
-		getHand(id, lastPos);
+		updateHand(id, lastPos);
 	}
 
 	public void onTrackedHand(int id, PVector pos) {
 		PVector lastPos = new PVector();
 		_source.convertRealWorldToProjective(pos, lastPos);
-		getHand(id, lastPos);
+		updateHand(id, lastPos);
 	}
 
 	public void onLostHand(int id) {

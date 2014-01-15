@@ -12,6 +12,8 @@ public class UserData {
 	private int _previousColor;
 	private HandType _primaryHand;
 	private Boolean _updated = false;
+	private int _unavailableCount;
+	
 	private float _localX;
 	private float _localY;
 	private int _region;
@@ -36,16 +38,22 @@ public class UserData {
 		return _color;
 	}
 
-	public void setPrimaryHand(HandType type) {
-		_primaryHand = type;
-	}
 
 	public Boolean isUpdated() {
 		return _updated;
 	}
 
-	public void set_updated(Boolean _updated) {
-		this._updated = _updated;
+	public void set_updated(Boolean updated) {
+		this._updated = updated;		
+		if(_updated){
+			_unavailableCount = 0;
+		}else{
+			_unavailableCount ++;
+		}
+	}
+	
+	public int getUnavailableCount(){
+		return _unavailableCount;
 	}
 
 	public float get_localX() {
@@ -116,5 +124,13 @@ public class UserData {
 
 	public void set_region(int _region) {
 		this._region = _region;
+	}
+
+	public HandType getHandType() {
+		return _primaryHand;
+	}
+
+	public void setHandType(HandType type) {
+		_primaryHand = type;
 	}
 }

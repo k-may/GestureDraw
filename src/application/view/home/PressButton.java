@@ -1,5 +1,7 @@
 package application.view.home;
 
+import processing.core.PApplet;
+import processing.core.PVector;
 import application.view.Image;
 import application.view.MainView;
 import application.view.menu.Menu;
@@ -7,13 +9,13 @@ import framework.events.LabelButtonPressed;
 import framework.events.TouchEvent;
 import framework.view.View;
 
-public class PressButton extends View{
+public class PressButton extends View {
 
 	private Image _icon;
 	private Image _text;
 	private Image _bg;
 	private Boolean _isOpen;
-	
+
 	public PressButton() {
 		_isHoverEnabled = true;
 		_width = Menu.BUTTON_WIDTH;
@@ -22,14 +24,29 @@ public class PressButton extends View{
 		_icon = new Image("pressIcon");
 		_icon.set_x((_width - _icon.get_width()) / 2);
 		_icon.set_y((_height - _icon.get_height()) / 2);
+		addChild(_icon);
 
 		_bg = new Image("shadow");
 		_bg.set_width(_width);
 		_bg.set_height(_height);
+		addChild(_bg);
 
 		_text = new Image("pressText");
 		_text.set_color(0xff000000);
 		_text.set_y(MainView.BUTTON_TEXT_TOP);
+		addChild(_text);
+	}
+
+	@Override
+	public void draw(PApplet p) {
+		super.draw(p);
+
+		PVector absPos = get_absPos();
+
+		p.noFill();
+		p.stroke(150);
+		p.rect(absPos.x, absPos.y, _width, _height);
+
 	}
 
 	@Override
@@ -39,7 +56,7 @@ public class PressButton extends View{
 		if (_isOpen)
 			event.cancelPropogation();
 	}
-	
+
 	@Override
 	protected void onHover(TouchEvent event) {
 		_icon.set_color(event.getColor());
@@ -63,7 +80,6 @@ public class PressButton extends View{
 		addChild(_text);
 		_isOpen = true;
 	}
-
 
 	@Override
 	protected void onPress(TouchEvent event) {

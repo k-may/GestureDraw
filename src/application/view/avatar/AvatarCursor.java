@@ -1,5 +1,6 @@
 package application.view.avatar;
 
+import framework.interaction.Types.HandType;
 import framework.view.View;
 import application.content.ContentManager;
 import processing.core.PApplet;
@@ -26,6 +27,7 @@ public class AvatarCursor extends View {
 	public static final int MAX_RADIUS = 25;
 	public static final int MIN_RADIUS = 4;
 	private Boolean _isPressing = false;
+	private HandType _handType;
 
 	private Boolean _isOverPressTarget = false;
 
@@ -33,7 +35,7 @@ public class AvatarCursor extends View {
 
 	public AvatarCursor() {
 
-		_hand = ContentManager.GetIcon("hand");
+		_hand = ContentManager.GetIcon("handRight");
 		_highlight = ContentManager.GetIcon("cursorHighlight");
 	}
 
@@ -41,6 +43,8 @@ public class AvatarCursor extends View {
 	public void draw(PApplet p) {
 
 		int baseColor = _pressPressure > 0.0f ? _lightGreyColor : _greyColor;
+
+		p.ellipseMode(PApplet.CENTER);
 
 		if (_pressPressure > 0.0f) {
 			p.image(_highlight, _x - _highlight.width / 2, _y
@@ -148,8 +152,16 @@ public class AvatarCursor extends View {
 		_navPressure = navigationPressure;
 	}
 
+	public void setHandType(HandType handType) {
+		if (_handType != handType) {
+			_handType = handType;
+			_hand = _handType == HandType.Right ? ContentManager.GetIcon("handRight")
+					: ContentManager.GetIcon("handLeft");
+		}
+	}
+
 	public void onHoverEnd() {
-		//println("hoverend");
+		// println("hoverend");
 	}
 
 }

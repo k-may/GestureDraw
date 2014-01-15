@@ -2,10 +2,6 @@ package application.view.home;
 
 import java.util.ArrayList;
 import java.util.Observable;
-
-import de.looksgood.ani.Ani;
-import de.looksgood.ani.easing.Easing;
-
 import framework.data.GalleryEntry;
 
 import processing.core.PImage;

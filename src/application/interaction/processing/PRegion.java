@@ -7,6 +7,7 @@ import framework.interaction.InteractionStreamData;
 import framework.interaction.InteractionTargetInfo;
 import framework.interaction.InteractionType;
 import framework.interaction.Region;
+import framework.interaction.Types.HandType;
 
 import application.interaction.Adapter;
 import application.interaction.RegionType;
@@ -40,7 +41,7 @@ public class PRegion extends Region<PApplet> {
 		
 		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(pos.x, pos.y, 1, _type);
 
-		InteractionStreamData data = new InteractionStreamData(pos.x, pos.y, mZ, 1, _type, info.get_isHoverTarget(), info.get_isPressTarget(),mZ == 1.0f, mZ);
+		InteractionStreamData data = new InteractionStreamData(pos.x, pos.y, mZ, 1, _type, info.get_isHoverTarget(), info.get_isPressTarget(),mZ == 1.0f, mZ, HandType.None);
 		//data.set_isOverPressTarget(info.get_isPressTarget());
 
 		_stream = new ArrayList<InteractionStreamData>();

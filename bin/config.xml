@@ -5,17 +5,17 @@
   <!--valid gestures include wave, click, raise -->
   <!-- only works with soni input -->
   <soni_start_gesture>wave</soni_start_gesture>
-  <!-- define max number of hands to capture (application does not yet support users)-->
+  <!-- define max number of hands to capture, only app. for soni input(application does not yet support users)-->
   <input_max_handnum>3</input_max_handnum>
   <!-- area of hand interaction in mm -->
   <input_hor_range>100</input_hor_range>
   <input_ver_range>100</input_ver_range>
-  <input_for_range>300</input_for_range>
+  <input_for_range>100</input_for_range>
   <!-- whether to show a clear button on the canvas -->
   <ui_clearable>true</ui_clearable>
   <!--user regions defined as ratio of total camera width --> 
   <user_region_ratio_1>0.3</user_region_ratio_1>
-  <user_region_ratio_2>0.7</user_region_ratio_1>
+  <user_region_ratio_2>0.7</user_region_ratio_2>
   <!-- absolute paths only! -->
   
   <!-- example tracks config

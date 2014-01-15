@@ -42,3 +42,18 @@
 [1/13 21:21:42] Region created : GestTrackOSC
 [1/13 21:24:34] Region created : GestTrackOSC
 [1/13 21:25:37] Region created : GestTrackOSC
+[1/14 13:18:14] Region created : GestTrackOSC
+[1/14 13:24:59] Region created : GestTrackOSC
+[1/14 13:25:08] New hand detected; id: 0
+[1/14 13:26:56] New hand detected; id: 1
+[1/14 13:27:45] Region created : GestTrackOSC
+[1/14 13:27:47] New hand detected; id: 0
+[1/14 13:27:50] New hand detected; id: 1
+[1/14 14:08:04] Region created : GestTrackOSC
+[1/14 15:39:03] Region created : GestTrackOSC
+[1/14 15:39:24] Region created : GestTrackOSC
+[1/14 15:41:30] Region created : GestTrackOSC
+[1/14 15:52:50] Region created : GestTrackOSC
+[1/14 15:57:18] Region created : GestTrackOSC
+[1/14 16:08:45] Region created : GestTrackOSC
+[1/14 16:10:00] Region created : GestTrackOSC

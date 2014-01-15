@@ -136,9 +136,10 @@ public class Controller implements IController {
 	}
 
 	private void handleUpdateColor(UpdateColorEvent event) {
-		int userRegion = event.get_user().get_region();
+		int id = event.get_user().get_id();
+		float position = event.get_user().get_localX();
 		int color = event.get_color();
-		_mainView.get_userMenuView().updateRegion(userRegion, color);
+		_mainView.get_userMenuView().updateDomain(id, position, color);//updateRegion(userRegion, color);
 	}
 
 	private void handleInAction() {
@@ -150,17 +151,16 @@ public class Controller implements IController {
 	}
 
 	private void handleUserAdded(UserAddedEvent event) {
-		float ratio = event.get_horRatio();
-		int userRegion = RegionHelper.GetUserRegion(ratio);
-		event.get_user().set_region(userRegion);
-		_mainView.get_userMenuView().updateRegion(userRegion, UserData.START_COLOR);
+		int id = event.get_user().get_id();
+		float position = event.get_user().get_localX();
+		_mainView.get_userMenuView().updateDomain(id, position, UserData.START_COLOR);//updateRegion(userRegion, UserData.START_COLOR);
 	}
 
 	private void handleUserRemoved(UserRemovedEvent event) {
 		IInteractionRegion region = _mainView.get_region();
-		region.removeHand(event.get_user().get_id());
-		int userRegion = event.get_user().get_region();
-		_mainView.get_userMenuView().updateRegion(userRegion, UserData.START_COLOR);
+		int id = event.get_user().get_id();
+		region.removeHand(id);
+		_mainView.get_userMenuView().removeDomain(id);
 
 	}
 

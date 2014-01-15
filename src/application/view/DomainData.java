@@ -1,11 +1,11 @@
 package application.view;
 
-public class RegionData {
+public class DomainData {
 	
 	public int color;
 	public float position;
 
-	public RegionData(int c, float p) {
+	public DomainData(int c, float p) {
 		color = c;
 		position = p;
 	}

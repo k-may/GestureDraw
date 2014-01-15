@@ -21,6 +21,7 @@ import static processing.core.PApplet.println;
 
 public class Adapter implements IAdapter {
 
+	private final int MAX_UNAVAILABLE = 5;
 	protected IMainView _canvas;
 	protected AvatarsView _avatarsView;
 	private PressStateFactory _pressStateFactory;
@@ -98,7 +99,7 @@ public class Adapter implements IAdapter {
 	public void endInteractionFrame() {
 		ArrayList<UserData> staleUsers = new ArrayList<UserData>();
 		for (UserData user : _avatarsView.get_users()) {
-			if (!user.isUpdated())
+			if (user.getUnavailableCount() > MAX_UNAVAILABLE)
 				staleUsers.add(user);
 		}
 
@@ -128,6 +129,7 @@ public class Adapter implements IAdapter {
 			user.set_updated(true);
 			user.set_localX(localX);
 			user.set_localY(localY);
+			user.setHandType(streamData.getHandType());
 		}
 
 	}

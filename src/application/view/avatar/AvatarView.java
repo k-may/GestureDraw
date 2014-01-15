@@ -21,13 +21,10 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 	private Boolean _isColorWheelVisible = false;
 	private float _colorWheelX;
 	private float _colorWheelY;
-	// private PImage _colorWheel;
 	private ColorWheel _colorWheel;
 	private Ani _hoverAnimation;
 	private Ani _colorWheelAnimation;
 	private Boolean _animationComplete = false;
-
-	public static int LightGreyColor = 0xBADBD7D7;
 
 	private AvatarCursor _cursor;
 
@@ -65,6 +62,7 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		_cursor.set_x(_user.get_localX());
 		_cursor.set_y(_user.get_localY());
 		_cursor.setColor(_user.getColor());
+		_cursor.setHandType(_user.getHandType());
 
 	}
 

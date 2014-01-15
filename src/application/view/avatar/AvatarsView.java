@@ -8,6 +8,7 @@ import java.util.Map;
 
 import framework.data.UserData;
 import framework.events.InActionEvent;
+import framework.events.UserAddedEvent;
 import framework.events.UserRemovedEvent;
 import framework.interaction.IInteractionView;
 import framework.scenes.SceneManager;
@@ -81,6 +82,8 @@ public class AvatarsView extends View implements IInteractionView {
 		addChild(view);
 
 		_updated = true;
+		
+		new UserAddedEvent(user).dispatch();
 
 		return user;
 	}

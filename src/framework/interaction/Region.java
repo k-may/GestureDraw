@@ -17,6 +17,8 @@ public abstract class Region<T> implements IInteractionRegion {
 	protected T _source;
 	protected ArrayList<InteractionStreamData> _stream;
 	protected InteractionType _type;
+	protected float firstDomain;
+	protected float secondDomain;
 
 	public Region(T source) {
 		_source = source;
@@ -53,7 +55,11 @@ public abstract class Region<T> implements IInteractionRegion {
 		return _source;
 	}
 
-
+	@Override
+	public void setDomains(float first, float second) {
+		firstDomain = first;
+		secondDomain = second;
+	}
 
 	public static PVector MapValuesToCurvedPlane(PVector position) {
 		float midX = 0.5f; // rangeX /2;

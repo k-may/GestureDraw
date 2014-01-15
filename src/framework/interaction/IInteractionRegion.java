@@ -17,4 +17,5 @@ public interface IInteractionRegion {
 	Object get_source();
 	RegionType getType();
 	void removeHand(int id);
+	void setDomains(float first, float second);
 }

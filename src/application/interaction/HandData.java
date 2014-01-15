@@ -2,17 +2,22 @@ package application.interaction;
 
 import java.util.ArrayList;
 
+import framework.interaction.Types.HandType;
+
 import processing.core.PVector;
 import static processing.core.PApplet.println;
 
 public class HandData {
 
+	public HandType handType = HandType.Right;
+	
 	private int _sampleCount = 0;
 	private ArrayList<PVector> _positions;
 	private ArrayList<PVector> _rawPositions;
 
+	public int regionID;
+	
 	private int _id;
-
 	public int get_id() {
 		return _id;
 	}
@@ -34,9 +39,12 @@ public class HandData {
 	private final int SAMPLES = 7;
 
 	public Boolean updated = false;
+	private int _domain;
 
-	public HandData(int id) {
-		_id = id;
+	public boolean handChanged = false;
+
+	public HandData(int domain) {
+		_id = domain;
 	}
 
 	/*
@@ -59,15 +67,15 @@ public class HandData {
 	}
 
 	private Boolean isPositionBad(PVector pos) {
-		//return false;
-		
+		// return false;
+
 		double distance = 0;
 		if (lastPosition != null)
 			distance = Math.hypot(pos.x - lastPosition.x, pos.y
 					- lastPosition.y);
-		
+
 		lastPosition = pos;
-		//println("distance : " + distance);
+		// println("distance : " + distance);
 		return distance > 10;
 	}
 
@@ -170,5 +178,9 @@ public class HandData {
 		zDiff /= count;
 
 		return new PVector(xDiff, yDiff, zDiff);
+	}
+
+	public int getDomain() {
+		return _domain;
 	}
 }

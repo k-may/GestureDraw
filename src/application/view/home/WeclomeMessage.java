@@ -31,7 +31,7 @@ public class WeclomeMessage extends View {
 		_title = new GlowingImage("welcomeTitle");
 		addChild(_title);
 
-		String welcomeMsg = AppBuilder.REGION_TYPE == RegionType.SimpleOpenNI ? "welcomeMessageWave"
+		String welcomeMsg = MainView.REGION_TYPE == RegionType.SimpleOpenNI ? "welcomeMessageWave"
 				: "welcomeMessagePress";
 		_message = new GlowingImage(welcomeMsg);
 		addChild(_message);

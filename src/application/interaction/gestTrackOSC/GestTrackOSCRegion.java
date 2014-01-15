@@ -28,14 +28,14 @@ public class GestTrackOSCRegion extends KinectRegion<OscP5> implements
 
 	private GestTrackingType _trackingType;
 
-	public GestTrackOSCRegion(OscP5 source, int maxHands, int xRange,
+	public GestTrackOSCRegion(OscP5 source, int xRange,
 			int yRange, int zRange) {
-		super(source, maxHands, xRange, yRange, zRange, RegionType.GestTrackOSC);
+		super(source, 3, xRange, yRange, zRange, RegionType.GestTrackOSC);
 		_trackingType = GestTrackingType.Normalized;
 
 		source.addListener(this);
 
-		for (int i = 0; i < maxHands; i++) {
+		for (int i = 0; i < 11; i++) {
 			source.plug(this, "onHand" + i, _trackingType.toString() + "/hand"
 					+ i);
 		}
@@ -100,7 +100,7 @@ public class GestTrackOSCRegion extends KinectRegion<OscP5> implements
 			if (_trackingType == GestTrackingType.Normalized)
 				getHand(id, x, y, z);
 			else
-				getHand(id, new PVector(x, y, z));
+				updateHand(id, new PVector(x, y, z));
 		} catch (Exception e) {
 			new ErrorEvent(ErrorType.KinectError, "GestTracker error").dispatch();
 			System.out.println("error : " + e.getLocalizedMessage());
@@ -126,7 +126,7 @@ public class GestTrackOSCRegion extends KinectRegion<OscP5> implements
 		 * 
 		 * } } }
 		 */
-		getHand(id, new PVector(x * CAM_WIDTH, y * CAM_HEIGHT, z * 1000));
+		updateHand(id, new PVector(x * CAM_WIDTH, y * CAM_HEIGHT, z * 1000));
 	}
 
 	@Override

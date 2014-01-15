@@ -1,5 +1,6 @@
 package framework.interaction;
 
+import framework.interaction.Types.HandType;
 import framework.pressing.PressStateData;
 
 public class InteractionStreamData {
@@ -25,12 +26,15 @@ public class InteractionStreamData {
 	}
 
 	public InteractionStreamData(float x, float y, float z, int userId,
-			InteractionType type, Boolean isOverHoverTarget, Boolean isOverPressTarget,Boolean isPressing,float pressPressure) {
+			InteractionType type, Boolean isOverHoverTarget,
+			Boolean isOverPressTarget,Boolean isPressing,
+			float pressPressure, HandType handType) {
 		this(x, y, z, userId, type);
 		_isOverHoverTarget = isOverHoverTarget;
 		_isOverPressTarget = isOverPressTarget;
 		_isPressing = isPressing;
 		_pressPressure = pressPressure;
+		_handType = handType;
 	}
 
 	public float get_pressPressure() {
@@ -70,8 +74,11 @@ public class InteractionStreamData {
 	}
 
 	public Boolean isOverTarget() {
-		// TODO Auto-generated method stub
 		return _isOverHoverTarget || _isOverPressTarget;
+	}
+
+	public HandType getHandType() {
+		return _handType;
 	}
 
 }

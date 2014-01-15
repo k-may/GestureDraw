@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import processing.core.PApplet;
+import application.interaction.RegionType;
 import application.view.avatar.AvatarView;
 import application.view.avatar.AvatarsView;
 import framework.BaseMainView;
@@ -17,6 +18,8 @@ import framework.view.IView;
 public class MainView extends BaseMainView implements Observer {
 	private SceneType DefaultScene = SceneType.Home;
 	private Controller _controller;
+	
+	public static RegionType REGION_TYPE;
 
 	public static int LightGreyColor = 0xBADBD7D7;
 	public static int ICON_COLOR = 0Xff333333;
@@ -43,10 +46,10 @@ public class MainView extends BaseMainView implements Observer {
 	}
 
 	private void createChilds() {
-		_userMenuView = new UserMenuView();
-		int width = (int) ((UserMenuView) _userMenuView).get_width();
-		((UserMenuView) _userMenuView).set_x((SCREEN_WIDTH - width) / 2);
-		addChild((UserMenuView) _userMenuView);
+		_userMenuView = new DomainView();
+		int width = (int) ((DomainView) _userMenuView).get_width();
+		((DomainView) _userMenuView).set_x((SCREEN_WIDTH - width) / 2);
+		addChild((DomainView) _userMenuView);
 	}
 
 	public void start() {

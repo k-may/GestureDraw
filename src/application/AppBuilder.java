@@ -29,7 +29,6 @@ import framework.Controller;
 import framework.ErrorType;
 import framework.IMainView;
 import framework.PathUtil;
-import framework.RegionHelper;
 import framework.audio.IAudioPlayer;
 import framework.data.AssetEntry;
 import framework.data.FontEntry;
@@ -44,8 +43,6 @@ import gesturedraw.GestureDraw;
 public class AppBuilder {
 
 	public static String logPath;
-
-	public static RegionType REGION_TYPE;
 	private IInteractionRegion _region;
 	GestureDraw _parent;
 	IMainView _root;
@@ -176,60 +173,24 @@ public class AppBuilder {
 		for (Observer ob : audioObservers) {
 			((Observable) _player).addObserver(ob);
 		}
-
-	}
-
-	private void initUserRegions() {
-
 	}
 
 	private void initInteraction() {
-
-		DataXMLClient dataClient;
-		dataClient = DataXMLClient.getInstance();
-
+		
+		DataXMLClient dataClient = DataXMLClient.getInstance();
 		_controller.registerDataClient(dataClient);
 
-		REGION_TYPE = RegionTypeHelper.GetTypeForString(dataClient.getInputType());
+		MainView.REGION_TYPE = RegionTypeHelper.GetTypeForString(dataClient.getInputType());
 
-		int maxNumHands = dataClient.getMaxNumHands();
-		
-		if (maxNumHands == 3) {
-			_root.get_userMenuView().initRegions(maxNumHands);
-			RegionHelper.HorUserRegion1 = dataClient.getHorUserRegion1();
-			RegionHelper.HorUserRegion2 = dataClient.getHorUserRegion2();
-		}
-
-		int xRange = dataClient.getXInputRange();
-		int yRange = dataClient.getYInputRange();
-		int zRange = dataClient.getZInputRange();
-
-		switch (REGION_TYPE) {
+		switch (MainView.REGION_TYPE) {
 			case GestTrackOSC:
-				OscP5 osc = new OscP5(GestureDraw.instance, 12345);
-				_region = new GestTrackOSCRegion(osc, maxNumHands, xRange, yRange, zRange);
+				initGestTrackOSCRegion();
 				break;
 			case SimpleOpenNI:
-				String gestureType = dataClient.getStartGestureType();
-				try {
-					SimpleOpenNI context = new SimpleOpenNI(GestureDraw.instance);
-					if (context.init()) {
-						_region = new SONRegion(context, maxNumHands, xRange, yRange, zRange, gestureType);
-					} else {
-						new ErrorEvent(ErrorType.KinectError, "Unable to initate SimpleOpenNI, make sure all KinectAPI drivers are properly installed").dispatch();
-						_region = new PRegion(_parent);
-					}
-				} catch (UnsatisfiedLinkError e) {
-					new ErrorEvent(ErrorType.SimpleOpenNI, "Unable to load framework : "
-							+ e.getMessage()).dispatch();
-					_region = new PRegion(_parent);
-
-				}
-
+				initSimpleOpenNIRegion();
 				break;
 			default:
 				_region = new PRegion(_parent);
-
 		}
 
 		new LogEvent("Region created : " + _region.getType().toString()).dispatch();
@@ -237,6 +198,42 @@ public class AppBuilder {
 		_region.get_adapter().set_canvas(_root);
 		_root.set_region(_region);
 
+	}
+	
+	private void initSimpleOpenNIRegion() {
+		DataXMLClient dataClient = DataXMLClient.getInstance();
+		int xRange = dataClient.getXInputRange();
+		int yRange = dataClient.getYInputRange();
+		int zRange = dataClient.getZInputRange();
+		String gestureType = dataClient.getStartGestureType();
+		int maxNumHands = dataClient.getMaxNumHands();
+		try {
+			SimpleOpenNI context = new SimpleOpenNI(GestureDraw.instance);
+			if (context.init()) {
+				_region = new SONRegion(context, maxNumHands, xRange, yRange, zRange, gestureType);
+			} else {
+				new ErrorEvent(ErrorType.KinectError, "Unable to initate SimpleOpenNI, make sure all KinectAPI drivers are properly installed").dispatch();
+				_region = new PRegion(_parent);
+			}
+		} catch (UnsatisfiedLinkError e) {
+			new ErrorEvent(ErrorType.SimpleOpenNI, "Unable to load framework : "
+					+ e.getMessage()).dispatch();
+			_region = new PRegion(_parent);
+
+		}
+	}
+
+	private void initGestTrackOSCRegion(){
+		DataXMLClient dataClient = DataXMLClient.getInstance();
+		int xRange = dataClient.getXInputRange();
+		int yRange = dataClient.getYInputRange();
+		int zRange = dataClient.getZInputRange();
+		float firstRegion = dataClient.getHorUserRegion1();
+		float secondRegion = dataClient.getHorUserRegion2();
+		
+		OscP5 osc = new OscP5(GestureDraw.instance, 12345);
+		_region = new GestTrackOSCRegion(osc, xRange, yRange, zRange);
+		_region.setDomains(firstRegion, secondRegion);
 	}
 
 }

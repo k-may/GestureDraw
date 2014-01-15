@@ -4,7 +4,8 @@
 	<asset type="shader" name="blurShader">shaders\blur.glsl</asset>
 
 	<asset type="image" name="poweredByText">poweredBy.png</asset>
-	<asset type="image" name="hand">handCircle.png</asset>
+	<asset type="image" name="handLeft">handLeft.png</asset>
+	<asset type="image" name="handRight">handRight.png</asset>
 	<asset type="image" name="cursorHighlight">cursorHighlight.png</asset>
 	<asset name="galleryText" type="image">galleryText.png</asset>
 	<asset name="saveText" type="image">saveText.png</asset>

@@ -2,10 +2,12 @@ package application.interaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import processing.core.PVector;
 import framework.events.HandDetectedEvent;
 import framework.events.LogEvent;
+import framework.interaction.Types.HandType;
 import framework.interaction.InteractionStreamData;
 import framework.interaction.InteractionTargetInfo;
 import framework.interaction.PressData;
@@ -24,6 +26,7 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 	protected RegionType _regionType;
 
+	protected HashMap<Integer, Integer> _handIdDomainIdMap;
 	protected HashMap<Integer, PressStateData> _pressStateMap;
 
 	public KinectRegion(T source, int maxHands, int xRange, int yRange,
@@ -32,7 +35,7 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 		_regionType = type;
 		_maxHands = maxHands;
-
+		_handIdDomainIdMap = new HashMap<Integer, Integer>();
 		_pressStateMap = new HashMap<Integer, PressStateData>();
 		if (xRange != -1)
 			HandData.XRANGE = xRange;
@@ -62,31 +65,75 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 		PressData pressData = _pressHandler.getPressData(handData, info);
 
-		InteractionStreamData data = new InteractionStreamData(pressData.get_x(), pressData.get_y(), position.z, handData.get_id(), _type, isHoverTarget, pressData.get_isPressTarget(), pressData.get_isPressing(), pressData.getPressPressure());
+		InteractionStreamData data = new InteractionStreamData(pressData.get_x(), pressData.get_y(), position.z, handData.get_id(), _type, isHoverTarget, pressData.get_isPressTarget(), pressData.get_isPressing(), pressData.getPressPressure(), handData.handType);
 
 		_stream.add(data);
 	}
 
-	protected HandData getHand(int id, PVector pos) {
-		if (_handData == null) {
-			_handData = new HashMap<Integer, HandData>();
-			new HandDetectedEvent().dispatch();
-		}
+	protected HandData updateHand(int handId, PVector pos) {
+
+		if (_handData == null)
+			initialize();
 
 		HandData data = null;
+		int id;
 
-		if (_handData.containsKey(id))
+		if (_handIdDomainIdMap.containsKey(handId)) {
+			id = _handIdDomainIdMap.get(handId);
 			data = _handData.get(id);
-		else {
-			new LogEvent("New hand detected; id: " + id).dispatch();
-			data = new HandData(id);
-			_handData.put(id, data);
+		} else {
+			// no domain found for hand id
+			id = getDomainForHand(pos.x);
+
+			if (id != -1) {
+				// no domain est. for hand id
+				_handIdDomainIdMap.put(handId, id);
+				if (_handData.containsKey(id)) {
+					data = _handData.get(id);
+					// if new hand in est. domain, user probably switched hands
+					updateHandType(data, pos.x);
+				} else {
+					data = new HandData(id);
+					_handData.put(id, data);
+				}
+			} else {
+				System.out.println("can't create domain for pos : " + pos.x);
+				return null;
+			}
 		}
 
 		data.addPosition(pos, getDampeningForHand(id));
 
 		return data;
 
+	}
+
+	private void initialize() {
+		// initialize map
+		_handData = new HashMap<Integer, HandData>();
+		new HandDetectedEvent().dispatch();
+	}
+
+	private void updateHandType(HandData hand, float x) {
+		HandType newHandType = x < hand.getPosition().x ? HandType.Right
+				: HandType.Left;
+		hand.handChanged = newHandType != hand.handType;
+		hand.handType = newHandType;
+	}
+
+	private int getDomainForHand(float x) {
+		return getDomainForNormalizedPos(x/CAM_WIDTH);
+	}
+
+	private int getDomainForNormalizedPos(float x) {
+		if (x <= firstDomain)
+			return 0;
+		else if (x > firstDomain & x <= secondDomain)
+			return 1;
+		else if (x > secondDomain && x <= 1)
+			return 2;
+		else
+			return -1;
 	}
 
 	private float getDampeningForHand(int id) {
@@ -126,4 +173,23 @@ public abstract class KinectRegion<T> extends Region<T> {
 		return _stream;
 	}
 
+	@Override
+	public void removeHand(int id) {
+		if(_handData.containsKey(id)){
+			HandData data = _handData.get(id);
+			//remove domains / hand ids from map 
+			ArrayList<Integer> entries = new ArrayList<Integer>();
+			for(Entry<Integer, Integer> set: _handIdDomainIdMap.entrySet()){
+				if(set.getValue() == id)
+					entries.add(set.getKey());
+			}
+			for(int handId : entries){
+				_handIdDomainIdMap.remove(handId);
+			}
+			
+			_handData.remove(id);
+		}else{
+			System.out.println("wierd : remove hand that doesn't exist!");
+		}
+	}
 }
