@@ -5,6 +5,7 @@ import processing.core.PVector;
 import application.view.Image;
 import application.view.MainView;
 import application.view.menu.Menu;
+import framework.Rectangle;
 import framework.events.LabelButtonPressed;
 import framework.events.TouchEvent;
 import framework.view.View;
@@ -14,7 +15,7 @@ public class PressButton extends View {
 	private Image _icon;
 	private Image _text;
 	private Image _bg;
-	private Boolean _isOpen;
+	private Boolean _isOpen = false;
 
 	public PressButton() {
 		_isHoverEnabled = true;
@@ -29,14 +30,20 @@ public class PressButton extends View {
 		_bg = new Image("shadow");
 		_bg.set_width(_width);
 		_bg.set_height(_height);
-		addChild(_bg);
+		//addChild(_bg);
 
 		_text = new Image("pressText");
 		_text.set_color(0xff000000);
 		_text.set_y(MainView.BUTTON_TEXT_TOP);
-		addChild(_text);
+		//addChild(_text);
 	}
 
+	@Override
+	public Boolean isTouchEnabled() {
+		// TODO Auto-generated method stub
+		return super.isTouchEnabled();
+	}
+	
 	@Override
 	public void draw(PApplet p) {
 		super.draw(p);

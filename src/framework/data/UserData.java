@@ -1,5 +1,6 @@
 package framework.data;
 
+import framework.events.HandChangedEvent;
 import framework.interaction.InteractionStreamData;
 import framework.interaction.Types.HandType;
 import framework.pressing.PressState;
@@ -131,6 +132,9 @@ public class UserData {
 	}
 
 	public void setHandType(HandType type) {
+		if(_primaryHand != null && _primaryHand != type)
+			new HandChangedEvent(this).dispatch();
+		
 		_primaryHand = type;
 	}
 }

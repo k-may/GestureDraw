@@ -30,11 +30,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="GestureDraw/lib/base/minim"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/base/core/core.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="GestureDraw/lib/base/core"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/base/core/gluegen-rt-natives-linux-amd64.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="GestureDraw/lib/base/core"/>
@@ -122,5 +117,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Program Files/processing-2.1/core/library/core.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -10,14 +10,14 @@ import framework.view.IView;
 
 public class InteractionDispatcher {
 
-	public IMainView _canvas;
+	public IMainView _mainView;
 	public ArrayList<InteractionHandle> _handles;
 	private ArrayList<InteractionHandle> _completeHandles;
 
 	public static int HOVER_ELAPSE = 1000;
 
-	public InteractionDispatcher(IMainView canvas) {
-		_canvas = canvas;
+	public InteractionDispatcher(IMainView mainView) {
+		_mainView = mainView;
 		_handles = new ArrayList<InteractionHandle>();
 	}
 
@@ -32,7 +32,7 @@ public class InteractionDispatcher {
 	private void seeData(InteractionStreamData data) {
 		float x = data.get_x();
 		float y = data.get_y();
-		ArrayList<IView> targets = _canvas.getTargetsAtLocation(x, y);
+		ArrayList<IView> targets = _mainView.getTargetsAtLocation(x, y);
 
 		for (InteractionHandle handle : _handles) {
 			if (handle.get_id() == data.get_userId()) {
@@ -61,8 +61,7 @@ public class InteractionDispatcher {
 	public void process(int millis) {
 
 		_completeHandles = new ArrayList<InteractionHandle>();
-		// ArrayList<InteractionEvent> events = new
-		// ArrayList<InteractionEvent>();
+
 		for (InteractionHandle handle : _handles) {
 			if (!handle.isUpdated()) {
 				disposeHandle(handle);
@@ -86,13 +85,10 @@ public class InteractionDispatcher {
 		float y = handle.get_currentY();
 		float pressure = handle.getCurrentPressure();
 		int id = handle.get_id();
-		/*
-		 * if (currentInteraction.isPressing()) { if (!handle.isPressing())
-		 * dispatchEvent(target, InteractionEventType.PressDown, x, y, pressure,
-		 * id); } else { if (handle.isPressing()) dispatchEvent(target,
-		 * InteractionEventType.PressUp, x, y, pressure, id); }
-		 */
 
+		if (handle.get_dX() != 0.0f || handle.get_dY() != 0.0f)
+			dispatchEvent(target, InteractionEventType.Move, x, y, pressure, id);
+		
 		if (currentInteraction.isPressing() && !handle.isPressing())
 			dispatchEvent(target, InteractionEventType.PressDown, x, y, pressure, id);
 
@@ -100,15 +96,15 @@ public class InteractionDispatcher {
 			dispatchEvent(target, InteractionEventType.PressUp, x, y, pressure, id);
 
 		if (handle.isHovering()) {
-			int elapsed = millis - handle.get_startMillis();
-			if (elapsed > HOVER_ELAPSE) {
-				dispatchEvent(target, InteractionEventType.HoverEnd, x, y, pressure, id);
-				handle.endHovering();
+			if (handle.isPreHovering()) {
+				int elapsed = millis - handle.get_startMillis();
+				if (elapsed > HOVER_ELAPSE) {
+					dispatchEvent(target, InteractionEventType.HoverEnd, x, y, pressure, id);
+					handle.endPreHovering();
+				}
 			}
 		}
 
-		if (handle.get_dX() != 0.0f || handle.get_dY() != 0.0f)
-			dispatchEvent(target, InteractionEventType.Move, x, y, pressure, id);
 	}
 
 	private void initHandle(InteractionHandle handle, int millis) {
@@ -152,25 +148,25 @@ public class InteractionDispatcher {
 			case None:
 				break;
 			case PressDown:
-				_canvas.addPressDownEvent(target, x, y, pressure, id);
+				_mainView.addPressDownEvent(target, x, y, pressure, id);
 				break;
 			case PressUp:
-				_canvas.addPressReleaseEvent(target, x, y, pressure, id);
+				_mainView.addPressReleaseEvent(target, x, y, pressure, id);
 				break;
 			case Cancel:
-				_canvas.addCancelEvent(target, x, y, pressure, id);
+				_mainView.addCancelEvent(target, x, y, pressure, id);
 				break;
 			case RollOver:
-				_canvas.addRollOverEvent(target, x, y, pressure, id);
+				_mainView.addRollOverEvent(target, x, y, pressure, id);
 				break;
 			case Move:
-				_canvas.addMoveEvent(target, x, y, pressure, id);
+				_mainView.addMoveEvent(target, x, y, pressure, id);
 				break;
 			case HoverStart:
-				_canvas.addHoverStartEvent(target, x, y, pressure, id);
+				_mainView.addHoverStartEvent(target, x, y, pressure, id);
 				break;
 			case HoverEnd:
-				_canvas.addHoverEndEvent(target, x, y, pressure, id);
+				_mainView.addHoverEndEvent(target, x, y, pressure, id);
 				break;
 		}
 	}

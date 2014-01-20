@@ -47,14 +47,16 @@ public class StrokeHandle {
 	public StrokeFragment getStrokeFragment() {
 		int index = _pos.size() - 1;
 		PVector pt1, ctrl, pt2;
-		switch (getCurrentStrokeType()) {
+		StrokeType type = getCurrentStrokeType();
+		//System.out.println("type:" + type);
+		switch (type) {
 			case Move:
 				if (index > 1) {
 					pt1 = index == 2 ? _pos.get(0)
 							: PVector.lerp(_pos.get(index - 2), _pos.get(index - 1), 0.5f);
 					ctrl = _pos.get(index - 1);
 					pt2 = PVector.lerp(_pos.get(index - 1), _pos.get(index), 0.5f);
-					return new StrokeFragment(pt1, ctrl, pt2, getCurrentPressure(), _color);
+					return new StrokeFragment(pt1, ctrl, pt2, getCurrentPressure(), _color, _id, type);
 				}
 				break;
 			case End:
@@ -62,7 +64,7 @@ public class StrokeHandle {
 					pt1 = PVector.lerp(_pos.get(index - 2), _pos.get(index - 1), 0.5f);
 					ctrl = _pos.get(index);
 					pt2 = _pos.get(index);
-					return new StrokeFragment(pt1, ctrl, pt2, getCurrentPressure(), _color);
+					return new StrokeFragment(pt1, ctrl, pt2, getCurrentPressure(), _color, _id, type);
 				}
 				break;
 		}

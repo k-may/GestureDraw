@@ -80,9 +80,9 @@ public class AppBuilder {
 			contentManager.loadGalleryEntries(_parent, dataClient.readImageEntries());
 
 			ArrayList<MusicEntry> trackEntries = dataClient.readMusicEntries();
-			if (trackEntries.size() > 0)
-				_player.setEntries(dataClient.readMusicEntries());
-			else
+			_player.setEntries(trackEntries);
+
+			if (trackEntries.size() == 0)
 				Menu.TRACKS = false;
 
 		} catch (NullPointerException e) {
@@ -176,7 +176,7 @@ public class AppBuilder {
 	}
 
 	private void initInteraction() {
-		
+
 		DataXMLClient dataClient = DataXMLClient.getInstance();
 		_controller.registerDataClient(dataClient);
 
@@ -199,7 +199,7 @@ public class AppBuilder {
 		_root.set_region(_region);
 
 	}
-	
+
 	private void initSimpleOpenNIRegion() {
 		DataXMLClient dataClient = DataXMLClient.getInstance();
 		int xRange = dataClient.getXInputRange();
@@ -223,14 +223,14 @@ public class AppBuilder {
 		}
 	}
 
-	private void initGestTrackOSCRegion(){
+	private void initGestTrackOSCRegion() {
 		DataXMLClient dataClient = DataXMLClient.getInstance();
 		int xRange = dataClient.getXInputRange();
 		int yRange = dataClient.getYInputRange();
 		int zRange = dataClient.getZInputRange();
 		float firstRegion = dataClient.getHorUserRegion1();
 		float secondRegion = dataClient.getHorUserRegion2();
-		
+
 		OscP5 osc = new OscP5(GestureDraw.instance, 12345);
 		_region = new GestTrackOSCRegion(osc, xRange, yRange, zRange);
 		_region.setDomains(firstRegion, secondRegion);

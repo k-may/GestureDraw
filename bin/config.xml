@@ -1,31 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
   <!--valid input values include mouse, gesttracker, soni(SimpleOpenNI)  -->
-  <input>gesttracker</input>
+  <input>mouse</input>
   <!--valid gestures include wave, click, raise -->
   <!-- only works with soni input -->
   <soni_start_gesture>wave</soni_start_gesture>
-  <!-- define max number of hands to capture, only app. for soni input(application does not yet support users)-->
-  <input_max_handnum>3</input_max_handnum>
+  <!-- define max number of hands to capture (application does not yet support users)-->
+  <input_max_handnum>2</input_max_handnum>
   <!-- area of hand interaction in mm -->
   <input_hor_range>100</input_hor_range>
   <input_ver_range>100</input_ver_range>
-  <input_for_range>100</input_for_range>
+  <input_for_range>300</input_for_range>
   <!-- whether to show a clear button on the canvas -->
   <ui_clearable>true</ui_clearable>
-  <!--user regions defined as ratio of total camera width --> 
-  <user_region_ratio_1>0.3</user_region_ratio_1>
-  <user_region_ratio_2>0.7</user_region_ratio_2>
   <!-- absolute paths only! -->
   
-  <!-- example tracks config
-  
+  <user_region_ratio_1>0.2</user_region_ratio_1>
+  <user_region_ratio_2>0.8</user_region_ratio_2>
+
   <trackpath>c:\work\gesturetek\KinectApp\KinectApp\bin\tracks\</trackpath>
   <music artist="Caribou" name="Sun">Sun.mp3</music>
   <music artist="Peter King" name="African Dialects">African Dialects.mp3</music>
   <music artist="Saint-Germain" name="Sure Thing">Sure Thing.mp3</music>
-  <image artists="me" title="">/C:/work/GestureDraw/bin/images/0_21.jpg</image>
-  <image artists="me" title="">/C:/work/GestureDraw/bin/images/30_20.jpg</image>
-  
-  -->
+
 </data>

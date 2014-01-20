@@ -1,23 +1,31 @@
 package application.interaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import framework.data.HandData;
 import framework.interaction.Types.HandType;
 
 import processing.core.PVector;
 import static processing.core.PApplet.println;
 
-public class HandData {
+public class DomainData {
 
+	private static final int MAX_SAMPLES = 5;
+	private HashMap<Integer, HandData> _handMap;
 	public HandType handType = HandType.Right;
-	
+
+	private Boolean _isUpdated = false;
 	private int _sampleCount = 0;
+
+	private static final int MAX_INVALID = 5;
+	private int _invalidDataCount = 0;
 	private ArrayList<PVector> _positions;
-	private ArrayList<PVector> _rawPositions;
 
 	public int regionID;
-	
+
 	private int _id;
+
 	public int get_id() {
 		return _id;
 	}
@@ -32,38 +40,91 @@ public class HandData {
 	private float minY = Float.MAX_VALUE;
 	private float maxY = Float.MIN_VALUE;
 
-	// private final float DAMPENING = 0.1f;
 	public static int ZRANGE = 300;
 	public static int XRANGE = 200;
 	public static int YRANGE = 200;
 	private final int SAMPLES = 7;
 
-	public Boolean updated = false;
-	private int _domain;
+	private float _dampening;
 
-	public boolean handChanged = false;
-
-	public HandData(int domain) {
+	public DomainData(int domain) {
 		_id = domain;
+		_handMap = new HashMap<Integer, HandData>();
 	}
 
 	/*
 	 * Screen new positions for spikes, irregular values, etc
 	 */
-
-	public void addPosition(PVector pos, float dampening) {
+	public void addPosition(PVector pos, float dampening, int handId) {
 		_sampleCount++;
-		updated = true;
+		_dampening = dampening;
 
-		if (_positions == null) {
+		if (_handMap.containsKey(handId))
+			_handMap.get(handId).updateCount();
+		else
+			addHand(pos, handId);
+
+		if (_positions == null)
 			init(pos);
+		else
+			update(pos);
+		
+		_isUpdated = true;
+	}
+
+	private void update(PVector pos) {
+		
+		if (isPositionBad(pos)) {
+			_invalidDataCount++;
+			return;
 		} else {
-			if (isPositionBad(pos)) {
-				updated = false;
-				return;
-			} else
-				update(pos, dampening);
+			_invalidDataCount = 0;
+			addPosition(pos);
 		}
+	}
+
+	public Boolean isUpdated() {
+		_invalidDataCount = _isUpdated ? _invalidDataCount : _invalidDataCount + 1; 
+		Boolean updated = _invalidDataCount < MAX_INVALID;
+		_isUpdated = false;
+		return updated;
+	}
+
+	public Boolean isReady(){
+		return _sampleCount > MAX_SAMPLES;
+	}
+	
+	private void addHand(PVector pos, int handId) {
+
+		if (_handMap.values().size() > 1)
+			return;
+
+		HandData primary = getPrimaryHand();
+		if (primary == null) {
+			// init first hand (defaults to right)
+			_handMap.put(handId, new HandData(handId, HandType.Right));
+		} else {
+
+			HandType newHandType = pos.x < position.x ? HandType.Right
+					: HandType.Left;
+
+			// test if not the same
+			if (newHandType != getPrimaryHand().getType()) {
+				_handMap.put(handId, new HandData(handId, newHandType));
+			}
+		}
+	}
+
+	public HandData getPrimaryHand() {
+		int count = -1;
+		HandData data = null;
+		for (HandData handData : _handMap.values()) {
+			if (handData.getUseCount() > count) {
+				data = handData;
+				count = handData.getUseCount();
+			}
+		}
+		return data;
 	}
 
 	private Boolean isPositionBad(PVector pos) {
@@ -83,38 +144,38 @@ public class HandData {
 		return _sampleCount;
 	}
 
-	private void update(PVector pos, float dampening) {
+	private void addPosition(PVector pos) {
 
-		position = PVector.lerp(position, pos, dampening);
+		position = PVector.lerp(position, pos, _dampening);
 
 		_positions.add(position);
 
 		if (minX > pos.x) {
-			minX = ease(minX, pos.x, dampening);// minX + (pos.x - minX)*0.1f;
+			minX = ease(minX, pos.x, _dampening);// minX + (pos.x - minX)*0.1f;
 			maxX = minX + XRANGE;
 		}
 
 		if (maxX < pos.x) {
-			maxX = ease(maxX, pos.x, dampening);// maxX + (pos.x - maxX)*0.1f;
+			maxX = ease(maxX, pos.x, _dampening);// maxX + (pos.x - maxX)*0.1f;
 			minX = maxX - XRANGE;
 		}
 
 		if (minY > pos.y) {
-			minY = ease(minY, pos.y, dampening);// minY pos.y;
+			minY = ease(minY, pos.y, _dampening);// minY pos.y;
 			maxY = minY + YRANGE;
 		}
 
 		if (maxY < pos.y) {
-			maxY = ease(maxY, pos.y, dampening);
+			maxY = ease(maxY, pos.y, _dampening);
 			minY = maxY - YRANGE;
 		}
 		if (minZ > pos.z) {
-			minZ = ease(minZ, pos.z, dampening);
+			minZ = ease(minZ, pos.z, _dampening);
 			maxZ = minZ + ZRANGE;
 		}
 
 		if (maxZ < pos.z) {
-			maxZ = ease(maxZ, pos.z, dampening);
+			maxZ = ease(maxZ, pos.z, _dampening);
 			minZ = maxZ - ZRANGE;
 		}
 
@@ -180,7 +241,4 @@ public class HandData {
 		return new PVector(xDiff, yDiff, zDiff);
 	}
 
-	public int getDomain() {
-		return _domain;
-	}
 }

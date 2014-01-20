@@ -69,7 +69,7 @@ public class Controller implements IController {
 
 		for (TouchEvent evt : tempList) {
 			if (!handleTouchEvent(evt))
-				break;
+				continue;
 		}
 	}
 

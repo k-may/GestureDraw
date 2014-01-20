@@ -1,3 +1,16 @@
-[12/12 12:28:13] [SimpleOpenNI] Unable to load framework : Can't load library: C:\Program Files (x86)\Java\jre7\bin\lib\win32\OpenNI2.dll
-[12/12 12:34:19] [Asset Error] null
-[1/14 15:39:03] [Asset Error] path 'handLeft.png' could not be found
+[1/20 12:00:57] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 12:02:14] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 13:36:28] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 13:42:15] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 13:43:10] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 13:43:38] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 13:44:07] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:01:25] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:02:56] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:03:32] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:05:17] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:07:11] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:10:45] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:11:44] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:13:01] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found
+[1/20 14:14:41] [Asset Error] path '/C:/work/GestureDraw/bin/images/0_21.jpg' could not be found

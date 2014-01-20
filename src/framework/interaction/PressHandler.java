@@ -3,7 +3,7 @@ package framework.interaction;
 import java.util.HashMap;
 
 import processing.core.PVector;
-import application.interaction.HandData;
+import application.interaction.DomainData;
 
 public class PressHandler {
 
@@ -15,7 +15,7 @@ public class PressHandler {
 		_pressStates = new HashMap<Integer, Boolean>();
 	}
 
-	public PressData getPressData(HandData handData, InteractionTargetInfo info) {
+	public PressData getPressData(DomainData handData, InteractionTargetInfo info) {
 
 		Boolean isPressTarget = false;
 		Boolean isPressTendency = getPressState(handData);
@@ -39,7 +39,7 @@ public class PressHandler {
 		return new PressData(x, y, pressure, isPressTarget, isPressTendency);
 	}
 
-	private Boolean getPressState(HandData handData) {
+	private Boolean getPressState(DomainData handData) {
 		Boolean pressState = handData.getPosition().z > PressHandle.PRESS_EXTENTS;
 		Boolean currentState = false;
 
@@ -60,7 +60,7 @@ public class PressHandler {
 
 	}
 
-	private PressHandle getPressHandle(HandData handData,
+	private PressHandle getPressHandle(DomainData handData,
 			InteractionTargetInfo info, Boolean isPressTendency) {
 		PressHandle handle = null;
 		if (_pressHandles.containsKey(handData.get_id())) {

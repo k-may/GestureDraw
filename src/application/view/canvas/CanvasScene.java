@@ -32,11 +32,13 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 
 	private void createChilds() {
 
-		_canvas = new Canvas();
+		_canvas = new CanvasGL();
 		_canvas.set_width(_width);
 		_canvas.set_height(_height);
+		addChild(_canvas);
 
 		_menu = new Menu();
+		addChild(_menu);
 
 	}
 

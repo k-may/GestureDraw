@@ -38,8 +38,8 @@ public class DataXMLClient implements IDataClient {
 			new ErrorEvent(ErrorType.XMLPath, "path '" + _filePath
 					+ "' could not be found").dispatch();
 			println("cant load");
-		}
-		setTracksPath();
+		} else
+			setTracksPath();
 	}
 
 	private void setTracksPath() {
@@ -157,25 +157,27 @@ public class DataXMLClient implements IDataClient {
 		return getContent("soni_start_gesture");
 	}
 
-	private int getIntContent(String name){
+	private int getIntContent(String name) {
 		return Integer.parseInt(getContent(name));
 	}
-	
-	private float getFloatContent(String name){
+
+	private float getFloatContent(String name) {
 		return Float.parseFloat(getContent(name));
 	}
-	private Boolean getBooleanContent(String name){
+
+	private Boolean getBooleanContent(String name) {
 		Boolean value = true;
 		value = Boolean.parseBoolean(getContent(name));
 		return value;
 	}
-	
-	private String getContent(String name){
+
+	private String getContent(String name) {
 		String value = "";
 		try {
-			value = dataXML.getChild(name).getContent();//Integer.parseInt(dataXML.getChild("input_for_range").getContent());
+			value = dataXML.getChild(name).getContent();// Integer.parseInt(dataXML.getChild("input_for_range").getContent());
 		} catch (NullPointerException e) {
-			new ErrorEvent(ErrorType.XMLParsing, "couldn't find value for '"+ name + "' in config.xml").dispatch();
+			new ErrorEvent(ErrorType.XMLParsing, "couldn't find value for '"
+					+ name + "' in config.xml").dispatch();
 		}
 		return value;
 	}

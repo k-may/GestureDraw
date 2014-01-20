@@ -117,8 +117,8 @@ public class MainView extends BaseMainView implements Observer {
 					if (child.isPressTarget())
 						throw new Exception();
 
-					x -= parent.get_x();
-					y -= parent.get_y();
+					x -= child.get_x();
+					y -= child.get_y();
 
 					getChildsAtLocation(child, x, y, elements);
 				}

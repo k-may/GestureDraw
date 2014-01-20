@@ -90,11 +90,6 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		}
 		_isColorWheelVisible = state == PressState.ColorSelection;
 
-		// stop animation
-		/*
-		 * if(!_isColorWheelVisible && _colorWheelAnimation != null){
-		 * _colorWheelAnimation.end(); _colorWheelAnimation = null; }
-		 */
 	}
 
 	public CursorMode getCursorMode() {
@@ -140,7 +135,7 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		// draw wheel in static position
 		p.image(_colorWheel.getImage(), _colorWheelX, _colorWheelY);
 
-		println("animation ended : " + _colorWheelAnimation.isEnded() + " : " + _animationComplete);
+		//println("animation ended : " + _colorWheelAnimation.isEnded() + " : " + _animationComplete);
 
 		if (isOverWheel && _colorWheelAnimation.isEnded())
 			updateColor();
@@ -180,7 +175,7 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		_colorWheelY = y - ColorWheel.WHEEL_RADIUS;
 		_animationComplete = false;
 		colorWheelAlpha = 0;
-		_colorWheelAnimation = Ani.to(this, 1, "colorWheelAlpha", 255, Easing.EXPO_OUT, "onEnd:animationEnd");
+		_colorWheelAnimation = Ani.to(this, 0.5f, "colorWheelAlpha", 255, Easing.EXPO_IN, "onEnd:animationEnd");
 	}
 
 	public void animationEnd(){

@@ -8,14 +8,28 @@ public class StrokeFragment {
 	private PVector _ctrlPt;
 	private float _pressure;
 	private int _color;
-	
-	public StrokeFragment(PVector startPt, PVector ctrlPt, PVector endPt, float pressure, int color){
+	private int _id;
+	private StrokeType _type;
+
+	public StrokeFragment(PVector startPt, PVector ctrlPt, PVector endPt,
+			float pressure, int color, int id, StrokeType type) {
 		_startPt = startPt;
 		_endPt = endPt;
 		_ctrlPt = ctrlPt;
-		
+
 		_pressure = pressure;
 		_color = color;
+		_id = id;
+		
+		_type = type;
+	}
+
+	public StrokeType get_type(){
+		return _type;
+	}
+	
+	public int get_id() {
+		return _id;
 	}
 
 	public PVector get_startPt() {
@@ -26,9 +40,10 @@ public class StrokeFragment {
 		return _endPt;
 	}
 
-	public PVector get_ctrlPt(){
+	public PVector get_ctrlPt() {
 		return _ctrlPt;
 	}
+
 	public float get_pressure() {
 		return _pressure;
 	}

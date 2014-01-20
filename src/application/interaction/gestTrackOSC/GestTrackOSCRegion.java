@@ -8,7 +8,7 @@ import framework.interaction.InteractionStreamData;
 import gesturedraw.GestureDraw;
 
 import application.interaction.Adapter;
-import application.interaction.HandData;
+import application.interaction.DomainData;
 import application.interaction.KinectRegion;
 import application.interaction.RegionType;
 

@@ -32,7 +32,7 @@ public class DomainView extends View implements IDomainView {
 
 		p.stroke(150);
 		p.strokeWeight(1);
-		p.ellipseMode(PApplet.CORNER);
+		//p.ellipseMode(PApplet.CORNER);
 
 		DomainData[] regions = getOrderedRegions();
 		for (int i = 0; i < _numRegions; i++) {

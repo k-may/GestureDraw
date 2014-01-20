@@ -5,12 +5,12 @@ import java.util.Map;
 
 import processing.core.PVector;
 
-import application.interaction.HandData;
+import application.interaction.DomainData;
 import application.interaction.RegionType;
 
 public abstract class Region<T> implements IInteractionRegion {
 
-	protected Map<Integer, HandData> _handData;
+	protected Map<Integer, DomainData> _domainData;
 	protected PressHandler _pressHandler;
 	protected IAdapter _adapter;
 	protected int[] _users;

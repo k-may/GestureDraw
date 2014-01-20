@@ -160,8 +160,4 @@ public class AvatarCursor extends View {
 		}
 	}
 
-	public void onHoverEnd() {
-		// println("hoverend");
-	}
-
 }

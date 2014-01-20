@@ -5,6 +5,7 @@ import application.view.GlowingImage;
 import application.view.MainView;
 import application.view.menu.Menu;
 import application.view.menu.MenuButton;
+import framework.events.TouchEvent;
 import framework.view.View;
 
 public class StartMessage extends View {
@@ -15,7 +16,6 @@ public class StartMessage extends View {
 	private int _buttonPaddingTop = 254;
 
 	public StartMessage() {
-		
 		_width = MainView.MESSAGE_WIDTH;
 		_height = MainView.MESSAGE_HEIGHT;
 		_x = (MainView.SCREEN_WIDTH - _width) / 2;
@@ -51,5 +51,17 @@ public class StartMessage extends View {
 
 		_pressButton.set_x((_width - Menu.BUTTON_WIDTH) / 2);
 		_pressButton.set_y(_buttonPaddingTop);
+	}
+
+	@Override
+	public void handleInteraction(TouchEvent event) {
+		// TODO Auto-generated method stub
+		super.handleInteraction(event);
+	}
+
+	@Override
+	public Boolean isTouchEnabled() {
+		// TODO Auto-generated method stub
+		return super.isTouchEnabled();
 	}
 }

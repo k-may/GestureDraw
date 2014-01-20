@@ -2,7 +2,7 @@ package application.interaction.soni;
 
 import framework.events.StreamEndEvent;
 import application.interaction.Adapter;
-import application.interaction.HandData;
+import application.interaction.DomainData;
 import application.interaction.KinectRegion;
 import application.interaction.RegionType;
 import processing.core.PVector;
@@ -58,8 +58,8 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 	}
 
 	public void onLostHand(int id) {
-		if (_handData.containsKey(id))
-			_handData.remove(id);
+		if (_domainData.containsKey(id))
+			_domainData.remove(id);
 	}
 
 	@Override
@@ -70,17 +70,17 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 
 	public void removeHand(int id) {
 
-		if (_handData != null) {
-			if (_handData.containsKey(id)) {
-				HandData data = _handData.get(id);
+		if (_domainData != null) {
+			if (_domainData.containsKey(id)) {
+				DomainData data = _domainData.get(id);
 				System.out.println("remove hand : num samples = "
 						+ data.get_sampleCount());
-				_handData.remove(id);
+				_domainData.remove(id);
 
 			}
 
-			if (_handData.size() == 0) {
-				_handData = null;
+			if (_domainData.size() == 0) {
+				_domainData = null;
 
 				new StreamEndEvent().dispatch();
 			}
