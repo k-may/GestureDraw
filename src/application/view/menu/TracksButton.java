@@ -1,7 +1,7 @@
 package application.view.menu;
 
-import application.view.Image;
 import application.view.MainView;
+import application.view.image.Image;
 import application.view.tracks.TrackView;
 import framework.events.TracksShowEvent;
 import framework.events.TouchEvent;

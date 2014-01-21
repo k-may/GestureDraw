@@ -1,9 +1,9 @@
 package application.view.tracks;
 
 import application.content.ContentManager;
-import application.view.Image;
 import application.view.MainView;
 import application.view.ShadowButton;
+import application.view.image.Image;
 import application.view.labels.LabelView;
 import application.view.menu.Menu;
 import de.looksgood.ani.Ani;

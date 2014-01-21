@@ -1,5 +1,6 @@
 package application.view;
 
+import application.view.image.Image;
 import framework.events.TouchEvent;
 import framework.view.View;
 import processing.core.PApplet;

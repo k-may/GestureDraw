@@ -2,8 +2,8 @@ package application.view.menu;
 
 import processing.core.PApplet;
 import processing.core.PVector;
-import application.view.Image;
 import application.view.MainView;
+import application.view.image.Image;
 import framework.events.TouchEvent;
 import framework.view.View;
 

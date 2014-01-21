@@ -1,5 +1,6 @@
 package framework.data;
 
+import framework.cursor.CursorState;
 import framework.events.HandChangedEvent;
 import framework.interaction.InteractionStreamData;
 import framework.interaction.Types.HandType;
@@ -21,6 +22,7 @@ public class UserData {
 
 	private PressStateData _pressStateData;
 	private InteractionStreamData _streamData;
+	private CursorState _cursorState;
 
 	public UserData(int id) {
 		_id = id;
@@ -136,5 +138,13 @@ public class UserData {
 			new HandChangedEvent(this).dispatch();
 		
 		_primaryHand = type;
+	}
+
+	public void setCursorState(CursorState cursorState) {
+		_cursorState = cursorState;
+	}
+	
+	public CursorState getCursorState(){
+		return _cursorState;
 	}
 }

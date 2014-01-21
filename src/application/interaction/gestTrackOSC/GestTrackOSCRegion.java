@@ -177,9 +177,5 @@ public class GestTrackOSCRegion extends KinectRegion<OscP5> implements
 		return RegionType.GestTrackOSC;
 	}
 
-	@Override
-	public void removeHand(int id) {
-
-	}
 
 }

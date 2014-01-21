@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import framework.interaction.IInteractionRegion;
 import framework.interaction.IInteractionView;
-import framework.view.IDomainView;
+import framework.view.IUserMenuView;
 import framework.view.IView;
 
 public interface IMainView extends IView {
@@ -13,7 +13,7 @@ public interface IMainView extends IView {
 	void start();
 
 	IInteractionRegion get_region();
-	IDomainView get_userMenuView();
+	IUserMenuView get_userMenuView();
 
 	void addInteractionView(IInteractionView view);
 

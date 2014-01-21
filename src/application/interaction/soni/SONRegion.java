@@ -68,13 +68,11 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 		return RegionType.SimpleOpenNI;
 	}
 
-	public void removeHand(int id) {
+	public void removeDomain(int id) {
 
 		if (_domainData != null) {
 			if (_domainData.containsKey(id)) {
 				DomainData data = _domainData.get(id);
-				System.out.println("remove hand : num samples = "
-						+ data.get_sampleCount());
 				_domainData.remove(id);
 
 			}

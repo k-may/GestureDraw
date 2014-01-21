@@ -6,9 +6,9 @@ import framework.data.GalleryEntry;
 import framework.view.IGallery;
 import framework.view.View;
 
-import application.view.Image;
 import application.view.MainView;
 import application.view.canvas.PGalleryEntry;
+import application.view.image.Image;
 
 import processing.core.PApplet;
 import processing.core.PImage;

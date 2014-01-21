@@ -59,7 +59,9 @@ public abstract class KinectRegion<T> extends Region<T> {
 		_adapter.beginInteractionFrame();
 
 		for (DomainData domain : _domainData.values()) {
-			if (domain.isReady() && domain.isUpdated())
+			Boolean ready = domain.isReady();
+			Boolean updated = domain.isUpdated();
+			if (ready && updated)
 				_stream.add(processInput(domain));
 		}
 
@@ -74,7 +76,8 @@ public abstract class KinectRegion<T> extends Region<T> {
 	}
 
 	@Override
-	public void removeHand(int id) {
+	public void removeDomain(int id) {
+		println("remove hand : " + id);
 		if (_domainData.containsKey(id)) {
 			DomainData data = _domainData.get(id);
 			// remove domains / hand ids from map
@@ -93,13 +96,17 @@ public abstract class KinectRegion<T> extends Region<T> {
 		}
 	}
 
+	private void println(String msg) {
+		System.out.println(msg);
+	}
+
 	/*
 	 * Mapping values only seems to work for the SONRegion at the moment, (may
 	 * be skipping frames!?)
 	 */
 	protected InteractionStreamData processInput(DomainData handData) {
 
-		PVector position = handData.getPosition();
+		PVector position = handData.getMappedPosition();
 
 		if (_regionType == RegionType.SimpleOpenNI)
 			MapValuesToCurvedPlane(position);
@@ -128,7 +135,7 @@ public abstract class KinectRegion<T> extends Region<T> {
 			return null;
 
 		if (_handIdDomainIdMap.containsKey(handId)) {
-			//check if hand has left domain
+			// check if hand has left domain
 			if (_handIdDomainIdMap.get(handId) == domain)
 				data = _domainData.get(domain);
 		} else {
@@ -166,7 +173,6 @@ public abstract class KinectRegion<T> extends Region<T> {
 	}
 
 	private int getDomainForNormalizedPos(float x) {
-		// System.out.print(x + " : " + firstDomain + " : " + secondDomain);
 		if (x <= firstDomain)
 			return 0;
 		else if (x > firstDomain & x <= secondDomain)
@@ -178,10 +184,14 @@ public abstract class KinectRegion<T> extends Region<T> {
 	}
 
 	private float getDampeningForHand(int id) {
-		PressStateData data = _adapter.getPressStateData(id);
-		if (data != null) {
-			if (data.get_state() == PressState.ColorSelection)
-				return MAX_DAMPENING;
+		try {
+			PressState state = _adapter.getUserForDomain(id).getPressState();
+			if (state != null) {
+				if (state == PressState.ColorSelection)
+					return MAX_DAMPENING;
+			}
+		} catch (NullPointerException e) {
+
 		}
 
 		return MIN_DAMPENING;

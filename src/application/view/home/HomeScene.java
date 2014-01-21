@@ -7,10 +7,10 @@ import de.looksgood.ani.Ani;
 import processing.core.PApplet;
 import processing.core.PImage;
 import application.content.ContentManager;
-import application.view.GlowingImage;
-import application.view.Image;
 import application.view.MainView;
 import application.view.gallery.NavButton;
+import application.view.image.GlowingImage;
+import application.view.image.Image;
 import application.view.scene.Scene;
 import framework.data.GalleryEntry;
 import framework.events.LabelButtonPressed;
@@ -89,7 +89,7 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 
 		_gallery = new HomeGallery(_model);
 		addChild(_gallery);
-		float galleryScale = 0.5f;
+		float galleryScale = 0.9f;
 
 		float galleryWidth = _width * galleryScale;
 		float galleryHeight = _height * galleryScale;

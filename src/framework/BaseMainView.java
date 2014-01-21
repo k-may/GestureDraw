@@ -12,7 +12,7 @@ import framework.interaction.InteractionDispatcher;
 import framework.interaction.Types.InteractionEventType;
 import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
-import framework.view.IDomainView;
+import framework.view.IUserMenuView;
 import framework.view.IView;
 
 import processing.core.PApplet;
@@ -27,7 +27,7 @@ public abstract class BaseMainView implements IMainView {
 	protected SceneType _currentScene;
 	protected IInteractionRegion _region;
 	protected IInteractionView _interactionView;
-	protected IDomainView _userMenuView;
+	protected IUserMenuView _userMenuView;
 
 	public BaseMainView(PApplet parent) {
 		_parent = parent;
@@ -36,7 +36,7 @@ public abstract class BaseMainView implements IMainView {
 	}
 
 	@Override
-	public IDomainView get_userMenuView() {
+	public IUserMenuView get_userMenuView() {
 		return _userMenuView;
 	}
 

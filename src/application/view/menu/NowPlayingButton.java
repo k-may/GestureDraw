@@ -5,9 +5,9 @@ import framework.data.MusicEntry;
 import framework.events.TracksShowEvent;
 import framework.events.TouchEvent;
 import application.content.ContentManager;
-import application.view.Image;
 import application.view.MainView;
 import application.view.ShadowButton;
+import application.view.image.Image;
 import application.view.labels.LabelView;
 
 public class NowPlayingButton extends ShadowButton {

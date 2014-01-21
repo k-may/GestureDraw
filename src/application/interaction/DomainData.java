@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import framework.data.HandData;
 import framework.interaction.Types.HandType;
+import framework.pressing.PressState;
 
 import processing.core.PVector;
 import static processing.core.PApplet.println;
@@ -18,7 +19,7 @@ public class DomainData {
 	private Boolean _isUpdated = false;
 	private int _sampleCount = 0;
 
-	private static final int MAX_INVALID = 5;
+	private static final int MAX_INVALID = 15;
 	private int _invalidDataCount = 0;
 	private ArrayList<PVector> _positions;
 
@@ -30,6 +31,7 @@ public class DomainData {
 		return _id;
 	}
 
+	private PVector virtualPosition;
 	private PVector position;
 	private PVector lastPosition;
 
@@ -75,6 +77,7 @@ public class DomainData {
 	private void update(PVector pos) {
 		
 		if (isPositionBad(pos)) {
+			//println("position bad : " + pos);
 			_invalidDataCount++;
 			return;
 		} else {
@@ -128,27 +131,71 @@ public class DomainData {
 	}
 
 	private Boolean isPositionBad(PVector pos) {
-		// return false;
-
 		double distance = 0;
 		if (lastPosition != null)
 			distance = Math.hypot(pos.x - lastPosition.x, pos.y
 					- lastPosition.y);
 
 		lastPosition = pos;
-		// println("distance : " + distance);
 		return distance > 10;
 	}
 
-	public int get_sampleCount() {
-		return _sampleCount;
+	private void addPosition(PVector pos) {
+		position = PVector.lerp(position, pos, _dampening);
+		_positions.add(position);
+		updateRanges(pos);
 	}
 
-	private void addPosition(PVector pos) {
 
-		position = PVector.lerp(position, pos, _dampening);
+	private void init(PVector pos) {
+		position = pos;
+		_positions = new ArrayList<PVector>();
 
-		_positions.add(position);
+		minX = pos.x - XRANGE / 2;
+		maxX = minX + XRANGE;
+
+		minY = pos.y - YRANGE / 2;
+		maxY = minY + YRANGE;
+
+		minZ = pos.z - ZRANGE / 2;
+		maxZ = minZ + XRANGE;
+	}
+
+	public PVector getMappedPosition() {
+		float x = getMapped(position.x, minX, XRANGE);
+		float y = getMapped(position.y, minY, YRANGE);
+		float z = 1 - getMapped(position.z, minZ, ZRANGE);
+		return new PVector(x, y, z);
+	}
+	
+	private float getMapped(float val, float min, float range) {
+		return Math.max(0.0f, Math.min(1.0f, Math.abs(val - min) / range));
+	}
+
+
+	public PVector getTendency() {
+		int i = _positions.size() - 1;
+		int count = 0;
+		float xDiff = 0, yDiff = 0, zDiff = 0;
+
+		while (i > 0 && i > _positions.size() - SAMPLES + 1) {
+			PVector start = _positions.get(i - 1);
+			PVector finish = _positions.get(i);
+			xDiff += start.x - finish.x;
+			yDiff += start.y - finish.y;
+			zDiff += start.z - finish.z;
+			i--;
+			count++;
+		}
+
+		xDiff /= count;
+		yDiff /= count;
+		zDiff /= count;
+
+		return new PVector(xDiff, yDiff, zDiff);
+	}
+
+	private void updateRanges(PVector pos){
 
 		if (minX > pos.x) {
 			minX = ease(minX, pos.x, _dampening);// minX + (pos.x - minX)*0.1f;
@@ -178,67 +225,9 @@ public class DomainData {
 			maxZ = ease(maxZ, pos.z, _dampening);
 			minZ = maxZ - ZRANGE;
 		}
-
-		// println("add pos : " + pos + " :" + minX + " / " + minY + " / " +
-		// minZ);
-
 	}
 
 	private float ease(float start, float dest, float easing) {
 		return start + (dest - start) * easing;
 	}
-
-	private void init(PVector pos) {
-		position = pos;
-		_positions = new ArrayList<PVector>();
-
-		minX = pos.x - XRANGE / 2;
-		maxX = minX + XRANGE;
-
-		minY = pos.y - YRANGE / 2;
-		maxY = minY + YRANGE;
-
-		minZ = pos.z - ZRANGE / 2;
-		maxZ = minZ + XRANGE;
-	}
-
-	private float getMapped(float val, float min, float range) {
-		// println(position.z + " : " + minZ + " : " + maxZ);
-		return Math.max(0.0f, Math.min(1.0f, Math.abs(val - min) / range));
-	}
-
-	public PVector getPosition() {
-		float x = getMapped(position.x, minX, XRANGE);
-		float y = getMapped(position.y, minY, YRANGE);
-		float z = 1 - getMapped(position.z, minZ, ZRANGE);
-
-		return new PVector(x, y, z);
-	}
-
-	private PVector getLastPosition() {
-		return _positions.get(_positions.size() - 3);
-	}
-
-	public PVector getTendency() {
-		int i = _positions.size() - 1;
-		int count = 0;
-		float xDiff = 0, yDiff = 0, zDiff = 0;
-
-		while (i > 0 && i > _positions.size() - SAMPLES + 1) {
-			PVector start = _positions.get(i - 1);
-			PVector finish = _positions.get(i);
-			xDiff += start.x - finish.x;
-			yDiff += start.y - finish.y;
-			zDiff += start.z - finish.z;
-			i--;
-			count++;
-		}
-
-		xDiff /= count;
-		yDiff /= count;
-		zDiff /= count;
-
-		return new PVector(xDiff, yDiff, zDiff);
-	}
-
 }

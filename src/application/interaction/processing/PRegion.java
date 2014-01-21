@@ -63,7 +63,7 @@ public class PRegion extends Region<PApplet> {
 	}
 
 	@Override
-	public void removeHand(int id) {
+	public void removeDomain(int id) {
 		// TODO Auto-generated method stub
 		
 	}

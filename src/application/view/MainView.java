@@ -8,6 +8,7 @@ import processing.core.PApplet;
 import application.interaction.RegionType;
 import application.view.avatar.AvatarView;
 import application.view.avatar.AvatarsView;
+import application.view.user.UserMenuView;
 import framework.BaseMainView;
 import framework.Controller;
 import framework.Rectangle;
@@ -21,10 +22,12 @@ public class MainView extends BaseMainView implements Observer {
 	
 	public static RegionType REGION_TYPE;
 
-	public static int LightGreyColor = 0xBADBD7D7;
+	public static int WHITE = 0XFFFFFFFF;
+	public static int LIGHT_GREY = 0xBADBD7D7;
+	public static int GREY = 0xBA6E6F72;
 	public static int ICON_COLOR = 0Xff333333;
 	public static int TEXT_COLOR = 0xff808080;
-	
+
 	public static int MESSAGE_WIDTH = 607;
 	public static int MESSAGE_HEIGHT = 492;
 	
@@ -46,10 +49,10 @@ public class MainView extends BaseMainView implements Observer {
 	}
 
 	private void createChilds() {
-		_userMenuView = new DomainView();
-		int width = (int) ((DomainView) _userMenuView).get_width();
-		((DomainView) _userMenuView).set_x((SCREEN_WIDTH - width) / 2);
-		addChild((DomainView) _userMenuView);
+		_userMenuView = new UserMenuView();
+		int width = (int) ((UserMenuView) _userMenuView).get_width();
+		((UserMenuView) _userMenuView).set_x((SCREEN_WIDTH - width) / 2);
+		addChild((UserMenuView) _userMenuView);
 	}
 
 	public void start() {

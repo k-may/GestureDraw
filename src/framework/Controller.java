@@ -159,7 +159,7 @@ public class Controller implements IController {
 	private void handleUserRemoved(UserRemovedEvent event) {
 		IInteractionRegion region = _mainView.get_region();
 		int id = event.get_user().get_id();
-		region.removeHand(id);
+		region.removeDomain(id);
 		_mainView.get_userMenuView().removeDomain(id);
 
 	}

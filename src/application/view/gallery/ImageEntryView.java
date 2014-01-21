@@ -1,6 +1,6 @@
 package application.view.gallery;
-import application.view.Image;
 import application.view.canvas.PGalleryEntry;
+import application.view.image.Image;
 import processing.core.PImage;
 
 public class ImageEntryView extends Image{

@@ -6,16 +6,20 @@ import java.util.HashMap;
 import processing.core.PVector;
 import application.view.avatar.AvatarsView;
 import framework.IMainView;
+import framework.cursor.CursorMode;
+import framework.cursor.CursorState;
 import framework.data.UserData;
 import framework.interaction.IAdapter;
 import framework.interaction.InteractionStreamData;
 import framework.interaction.InteractionTargetInfo;
 import framework.interaction.InteractionType;
+import framework.interaction.Types.HandType;
 import framework.pressing.PressStateData;
 import framework.pressing.PressStateFactory;
 import framework.view.IView;
 
 import framework.scenes.SceneManager;
+import framework.scenes.SceneType;
 
 import static processing.core.PApplet.println;
 
@@ -70,9 +74,7 @@ public class Adapter implements IAdapter {
 			}
 			overHoverTarget = overHoverTarget || target.isHoverTarget();
 		}
-
-		// println("pressTargetCount : " + pressTargetCount);
-
+		
 		info.set_targetID(pressTarget != null ? pressTarget.get_id() : -1);
 		info.set_isPressTarget(overPressTarget);
 		info.set_isHoverTarget(overHoverTarget);
@@ -111,6 +113,8 @@ public class Adapter implements IAdapter {
 	@Override
 	public void handleStreamData(ArrayList<InteractionStreamData> data) {
 
+		SceneType sceneType = SceneManager.GetSceneType();
+		
 		for (InteractionStreamData streamData : data) {
 
 			UserData user = _avatarsView.getUser(streamData.get_userId());
@@ -123,23 +127,30 @@ public class Adapter implements IAdapter {
 
 			user.setStreamData(streamData);
 
-			PressStateData pressStateData = _pressStateFactory.getStateData(streamData.get_z(), SceneManager.GetSceneType(), streamData.isOverTarget());
+			PressStateData pressStateData = _pressStateFactory.getStateData(streamData.get_z(), sceneType, streamData.isOverTarget());
 			_pressStateMap.put(streamData.get_userId(), pressStateData);
 			user.set_pressStateData(pressStateData);
-			user.set_updated(true);
+			
 			user.set_localX(localX);
 			user.set_localY(localY);
 			user.setHandType(streamData.getHandType());
-		}
+			
+			CursorState cursorState = _pressStateFactory.getCursorState(sceneType, pressStateData, streamData.isPressing(), streamData.isOverTarget(), user.getHandType(), user.getColor());
+			/*cursorState.set_color(user.getColor());
+			cursorState.set_handType(HandType.Left);
+			cursorState.set_pressure(0.5f);
+			*/
+			user.setCursorState(cursorState);
+			
+			user.set_updated(true);
 
+		}
 	}
 
 	@Override
-	public PressStateData getPressStateData(int handId) {
-		if (_pressStateMap.containsKey(handId))
-			return _pressStateMap.get(handId);
-
-		return null;
+	public UserData getUserForDomain(int id) {
+		return _avatarsView.getUser(id);
 	}
+
 
 }

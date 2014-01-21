@@ -5,8 +5,8 @@ import framework.view.View;
 import gesturedraw.GestureDraw;
 import application.AppBuilder;
 import application.interaction.RegionType;
-import application.view.GlowingImage;
 import application.view.MainView;
+import application.view.image.GlowingImage;
 
 public class WeclomeMessage extends View {
 

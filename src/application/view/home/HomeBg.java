@@ -2,8 +2,8 @@ package application.view.home;
 
 import static processing.core.PApplet.println;
 import application.content.ContentManager;
-import application.view.Image;
 import application.view.MainView;
+import application.view.image.Image;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;

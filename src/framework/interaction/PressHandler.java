@@ -21,12 +21,12 @@ public class PressHandler {
 		Boolean isPressTendency = getPressState(handData);
 		
 		float pressure = 0.0f;
-		float x = handData.getPosition().x;
-		float y = handData.getPosition().y;
+		float x = handData.getMappedPosition().x;
+		float y = handData.getMappedPosition().y;
 
 		PressHandle pressHandle = getPressHandle(handData, info, isPressTendency);
 		if (pressHandle != null) {
-			pressHandle.update(handData.getTendency(), handData.getPosition());
+			pressHandle.update(handData.getTendency(), handData.getMappedPosition());
 			isPressTarget = true;
 			pressure = pressHandle.getPressure();
 
@@ -40,7 +40,7 @@ public class PressHandler {
 	}
 
 	private Boolean getPressState(DomainData handData) {
-		Boolean pressState = handData.getPosition().z > PressHandle.PRESS_EXTENTS;
+		Boolean pressState = handData.getMappedPosition().z > PressHandle.PRESS_EXTENTS;
 		Boolean currentState = false;
 
 		if (_pressStates.containsKey(handData.get_id()))
@@ -76,7 +76,7 @@ public class PressHandler {
 		if (handle == null && info.get_isPressTarget() && !isPressTendency) {
 			//println("===>>" + "create new handle");
 			PVector targetPos = new PVector(info.get_pressAttractionX(), info.get_pressAttractionY(), 1.0f);
-			handle = new PressHandle(info.get_targetID(), targetPos, handData.getPosition());
+			handle = new PressHandle(info.get_targetID(), targetPos, handData.getMappedPosition());
 			_pressHandles.put(handData.get_id(), handle);
 		}
 

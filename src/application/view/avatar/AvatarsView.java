@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import framework.cursor.CursorMode;
 import framework.data.UserData;
 import framework.events.InActionEvent;
 import framework.events.UserAddedEvent;

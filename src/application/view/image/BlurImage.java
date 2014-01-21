@@ -1,4 +1,4 @@
-package application.view;
+package application.view.image;
 
 import application.content.ContentManager;
 import processing.core.PApplet;

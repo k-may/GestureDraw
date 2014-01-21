@@ -1,8 +1,8 @@
 package application.view.home;
 
 import processing.core.PApplet;
-import application.view.GlowingImage;
 import application.view.MainView;
+import application.view.image.GlowingImage;
 import application.view.menu.Menu;
 import application.view.menu.MenuButton;
 import framework.events.TouchEvent;

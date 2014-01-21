@@ -3,7 +3,7 @@ package application.view.gallery;
 import framework.events.BackEvent;
 import framework.events.TouchEvent;
 import framework.view.View;
-import application.view.Image;
+import application.view.image.Image;
 import processing.core.PApplet;
 import processing.core.PVector;
 

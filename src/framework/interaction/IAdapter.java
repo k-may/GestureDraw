@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observer;
 
 import framework.IMainView;
+import framework.data.UserData;
 import framework.pressing.PressStateData;
 
 
@@ -18,5 +19,5 @@ public interface IAdapter{
 	void handleStreamData(ArrayList<InteractionStreamData> data);
 	void beginInteractionFrame();
 	void endInteractionFrame();
-	PressStateData getPressStateData(int handId);
+	UserData getUserForDomain(int id);
 }
