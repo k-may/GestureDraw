@@ -26,4 +26,8 @@ public class HandData {
 	public int getUseCount() {
 		return _useCount;
 	}
+	
+	public int get_id(){
+		return _id;
+	}
 }

@@ -72,3 +72,5 @@
 [1/20 19:36:10] Region created : Processing
 [1/20 19:37:42] Region created : Processing
 [1/20 19:38:21] Region created : GestTrackOSC
+[1/21 14:39:36] Region created : GestTrackOSC
+[1/21 14:53:38] Region created : GestTrackOSC
