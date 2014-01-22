@@ -91,10 +91,12 @@ public class RegionInputData {
 
 	protected void updateMagnitude(PVector pos) {
 		_mappedPos = pos; // getMappedPosition();
-		updateMagnitude();
+		_magnitude = getMagnitude();
 
 		_pos.sub(_magnitude);
 		normalizeVector(_pos);
+		
+		_pos.z = pos.z;
 	}
 
 	protected void normalizeVector(PVector v) {
@@ -199,29 +201,38 @@ public class RegionInputData {
 		return new PVector(_pos.x, _pos.y, _mappedPos.z);
 	}
 
-	protected void updateMagnitude() {
+	protected PVector getMagnitude() {
 
+		PVector magnitude = new PVector();
 		PVector prevIntent = new PVector(_currTarget.x, _currTarget.y);
-
+		PVector positionMag = new PVector();
 		Boolean isDrawing = get_isDrawing();
 
 		if (isDrawing) {
+			_currTarget = PVector.lerp(_currTarget, _mappedPos, 0.1f);
 			_currTarget.lerp(_mappedPos, 0.1f);
 		} else {
 			if (_isSnap) {
 				// project real position from virtual position
-				PVector positionMag = PVector.sub(_mappedPos, _pos);
+				positionMag = PVector.sub(_mappedPos, _pos);
+				
 				_currTarget = PVector.add(positionMag, _currTarget);
 			} else
 				_currTarget = _mappedPos;
 		}
 
-		_magnitude = PVector.sub(prevIntent, _currTarget);
+		magnitude = PVector.sub(prevIntent, _currTarget);
+		
+		if(magnitude.x > 1)
+			println("wtf");
 
 		float distance = PVector.dist(new PVector(prevIntent.x, prevIntent.y), new PVector(_currTarget.x, _currTarget.y));
 		float multFactor = getMagFactor(isDrawing, distance);
 
-		_magnitude.mult(multFactor);
+		magnitude.mult(multFactor);
+		
+		println(printV(positionMag) + " : " + printV(magnitude) + "  * " + multFactor + " : " + distance);
+	return magnitude;
 	}
 
 	private String printV(PVector v) {
@@ -262,7 +273,7 @@ public class RegionInputData {
 		return PApplet.map(ratio * ratio, 0f, 1f, 0.01f, 0.5f);
 	}
 
-	private void startDraw() {
+	protected void startDraw() {
 		_currTarget = _position; // getMappedPosition();
 	}
 

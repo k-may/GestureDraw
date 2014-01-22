@@ -32,6 +32,7 @@ public class DataXMLClient implements IDataClient {
 	}
 
 	private void loadDataXML() {
+		
 		dataXML = GestureDraw.instance.loadXML(_filePath);
 
 		if (dataXML == null) {

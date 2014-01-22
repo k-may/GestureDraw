@@ -43,7 +43,7 @@ public class DomainData extends KinectHandData {
 
 	@Override
 	public PVector getPosition() {
-		return new PVector(_pos.x, _pos.y, _mappedPos.z);
+		return _pos;//new PVector(_pos.x, _pos.y, _mappedPos.z);
 	}
 
 	public HandData getPrimaryHand() {
@@ -71,13 +71,15 @@ public class DomainData extends KinectHandData {
 		if (primary.get_id() == handId)
 			super.addPosition(pos, dampening, handId);
 
+		//_pos = getMappedPosition();
 		updateMagnitude(getMappedPosition());
 
 		_isUpdated = true;
 	}
 
-	private String printV(PVector v) {
-		return "[" + v.x + "," + v.y + "]";
-	}
+	@Override
+	protected void startDraw() {
+		_currTarget = getMappedPosition();
 
+	}
 }
