@@ -8,3 +8,5 @@
 [1/21 20:03:46] Region created : GestTrackOSC
 [1/21 20:08:35] Region created : GestTrackOSC
 [1/21 20:12:40] Region created : GestTrackOSC
+[1/22 13:55:02] Region created : GestTrackOSC
+[1/22 13:55:41] Region created : GestTrackOSC

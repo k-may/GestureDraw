@@ -2,12 +2,10 @@ package application.interaction.processing;
 
 import java.util.ArrayList;
 
-import framework.pressing.PressState;
-
-import application.view.MainView;
-
 import processing.core.PApplet;
 import processing.core.PVector;
+import application.view.MainView;
+import framework.pressing.PressState;
 
 public class RegionInputData {
 
@@ -84,9 +82,18 @@ public class RegionInputData {
 		else
 			update(pos);
 
-		updateMagnitude(pos);
+		// updateMagnitude(pos);
+		updatePosition();
 
 		_isUpdated = true;
+	}
+
+	private void updatePosition() {
+		if (get_isDrawing()) {
+
+		} else {
+
+		}
 	}
 
 	protected void updateMagnitude(PVector pos) {
@@ -95,7 +102,7 @@ public class RegionInputData {
 
 		_pos.sub(_magnitude);
 		normalizeVector(_pos);
-		
+
 		_pos.z = pos.z;
 	}
 
@@ -215,24 +222,22 @@ public class RegionInputData {
 			if (_isSnap) {
 				// project real position from virtual position
 				positionMag = PVector.sub(_mappedPos, _pos);
-				
+
 				_currTarget = PVector.add(positionMag, _currTarget);
 			} else
 				_currTarget = _mappedPos;
 		}
 
 		magnitude = PVector.sub(prevIntent, _currTarget);
-		
-		if(magnitude.x > 1)
-			println("wtf");
 
 		float distance = PVector.dist(new PVector(prevIntent.x, prevIntent.y), new PVector(_currTarget.x, _currTarget.y));
 		float multFactor = getMagFactor(isDrawing, distance);
 
 		magnitude.mult(multFactor);
-		
-		println(printV(positionMag) + " : " + printV(magnitude) + "  * " + multFactor + " : " + distance);
-	return magnitude;
+
+		// println(printV(positionMag) + " : " + printV(magnitude) + "  * " +
+		// multFactor + " : " + distance);
+		return magnitude;
 	}
 
 	private String printV(PVector v) {
@@ -254,9 +259,7 @@ public class RegionInputData {
 			maxDist = distance;
 
 		if (isDrawing) {
-			// float distance = (float) Math.hypot(_magnitude.x, _magnitude.y);
 			float factor = PApplet.map(distance, 0f, 0.1f, 0.5f, 2.5f);
-			//System.out.println(distance + " / " + factor + " :: " + maxDist);
 			return factor;
 		} else {
 			if (_isSnap) {

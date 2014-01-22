@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
   <!--valid input values include mouse, gesttracker, soni(SimpleOpenNI)  -->
-  <input>gesttracker</input>
+  <input>mouse</input>
   <!--valid gestures include wave, click, raise -->
   <!-- only works with soni input -->
   <soni_start_gesture>wave</soni_start_gesture>
