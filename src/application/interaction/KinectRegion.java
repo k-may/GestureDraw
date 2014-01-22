@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import application.interaction.processing.RegionInputData;
+
 import processing.core.PVector;
 import framework.events.HandDetectedEvent;
 import framework.events.LogEvent;
@@ -38,13 +40,13 @@ public abstract class KinectRegion<T> extends Region<T> {
 		_handIdDomainIdMap = new HashMap<Integer, Integer>();
 		_pressStateMap = new HashMap<Integer, PressStateData>();
 		if (xRange != -1)
-			DomainData.XRANGE = xRange;
+			RegionInputData.XRANGE = xRange;
 
 		if (yRange != -1)
-			DomainData.YRANGE = yRange;
+			RegionInputData.YRANGE = yRange;
 
 		if (zRange != -1)
-			DomainData.ZRANGE = zRange;
+			RegionInputData.ZRANGE = zRange;
 
 		_adapter = new Adapter();
 	}
@@ -106,7 +108,7 @@ public abstract class KinectRegion<T> extends Region<T> {
 	 */
 	protected InteractionStreamData processInput(DomainData handData) {
 
-		PVector position = handData.getMappedPosition();
+		PVector position = handData.getPosition();
 
 		if (_regionType == RegionType.SimpleOpenNI)
 			MapValuesToCurvedPlane(position);
@@ -155,9 +157,12 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 		// TODO change dampening strategy (color wheel will have static
 		// location)
-		if (data != null)
-			data.addPosition(pos, getDampeningForHand(domain), handId);
-
+		if (data != null) {
+			PressState state = getPressStateForHand(domain);
+			data.setPressState(state);
+			data.addPosition(pos, PressStateDampening(state), handId);
+		}
+		
 		return data;
 
 	}
@@ -183,19 +188,29 @@ public abstract class KinectRegion<T> extends Region<T> {
 			return -1;
 	}
 
-	private float getDampeningForHand(int id) {
+	private PressState getPressStateForHand(int id) {
 		try {
 			PressState state = _adapter.getUserForDomain(id).getPressState();
 			if (state != null) {
-				if (state == PressState.ColorSelection)
-					return MAX_DAMPENING;
+				return state;
 			}
 		} catch (NullPointerException e) {
 
 		}
 
-		return MIN_DAMPENING;
+		return PressState.Start;
+	}
 
+	private float getDampeningForHand(int id) {
+		PressState state = _adapter.getUserForDomain(id).getPressState();
+		return PressStateDampening(state);
+	}
+
+	private static float PressStateDampening(PressState state) {
+		if (state == PressState.ColorSelection)
+			return MAX_DAMPENING;
+
+		return MIN_DAMPENING;
 	}
 
 }

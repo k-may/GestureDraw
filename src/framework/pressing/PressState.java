@@ -1,7 +1,7 @@
 package framework.pressing;
 
 public enum PressState {
-	Start("start"), ColorSelection("colorSelection"), PreDrawing("preDraw"), Drawing(
+	None("none"), Start("start"), ColorSelection("colorSelection"), PreDrawing("preDraw"), Drawing(
 			"draw");
 
 	private String _name;

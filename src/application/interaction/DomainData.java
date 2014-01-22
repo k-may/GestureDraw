@@ -2,6 +2,7 @@ package application.interaction;
 
 import java.util.HashMap;
 
+import processing.core.PApplet;
 import processing.core.PVector;
 import framework.data.HandData;
 import framework.interaction.Types.HandType;
@@ -16,20 +17,7 @@ public class DomainData extends KinectHandData {
 	public DomainData(int domain) {
 		super(domain);// _id = domain;
 		_handMap = new HashMap<Integer, HandData>();
-	}
-
-	@Override
-	protected void addPosition(PVector pos, float dampening, int handId) {
-
-		if (_handMap.containsKey(handId))
-			_handMap.get(handId).updateCount();
-		else
-			addHand(pos, handId);
-
-		primary = getPrimaryHand();
-
-		if (primary.get_id() == handId)
-			super.addPosition(pos, dampening, handId);
+		_currTarget = _pos = new PVector(0.5f, 0.5f, 0);
 	}
 
 	private void addHand(PVector pos, int handId) {
@@ -43,7 +31,7 @@ public class DomainData extends KinectHandData {
 			_handMap.put(handId, primary);
 		} else {
 
-			HandType newHandType = pos.x < position.x ? HandType.Right
+			HandType newHandType = pos.x < _position.x ? HandType.Right
 					: HandType.Left;
 
 			// test if not the same
@@ -51,6 +39,11 @@ public class DomainData extends KinectHandData {
 				_handMap.put(handId, new HandData(handId, newHandType));
 			}
 		}
+	}
+
+	@Override
+	public PVector getPosition() {
+		return new PVector(_pos.x, _pos.y, _mappedPos.z);
 	}
 
 	public HandData getPrimaryHand() {
@@ -65,26 +58,26 @@ public class DomainData extends KinectHandData {
 		return data;
 	}
 
-	private PVector getMagnitude(PressState state) {
-		PVector magnitude = null;
-		if (state == PressState.PreDrawing || state == PressState.Drawing) {
-			// PVector target = position;
-			getDrawingMagnitude();
-		} else {
-			getNavigationMagnitude();
-			// PVector target =
-		}
-		return magnitude;
+	@Override
+	public void addPosition(PVector pos, float dampening, int handId) {
+
+		if (_handMap.containsKey(handId))
+			_handMap.get(handId).updateCount();
+		else
+			addHand(pos, handId);
+
+		primary = getPrimaryHand();
+
+		if (primary.get_id() == handId)
+			super.addPosition(pos, dampening, handId);
+
+		updateMagnitude(getMappedPosition());
+
+		_isUpdated = true;
 	}
 
-	private void getDrawingMagnitude() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void getNavigationMagnitude() {
-		// TODO Auto-generated method stub
-
+	private String printV(PVector v) {
+		return "[" + v.x + "," + v.y + "]";
 	}
 
 }
