@@ -83,6 +83,10 @@ public class UserData {
 		return _streamData.isOverPressTarget();//_isOverPressTarget;
 	}
 
+	public PressStateData get_pressStateData(){
+		return _pressStateData;
+	}
+	
 	public float getPressPressure(){
 		return _pressStateData.get_pressure();
 	}

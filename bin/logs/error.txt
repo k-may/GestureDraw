@@ -10,3 +10,63 @@
 [1/21 20:12:41] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
 [1/22 13:55:03] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
 [1/22 13:55:42] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 19:43:59] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 19:52:00] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 19:57:31] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 19:57:50] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 19:59:45] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:00:18] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:01:01] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:01:34] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:02:18] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:02:37] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:04:43] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:28:02] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:28:53] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:29:51] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:34:18] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:38:58] [Asset Error] path '/C:/work/GestureDraw/bin/images/44_31.jpg' could not be found
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:05] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:06] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error
+[1/22 20:39:09] [Kinect Error] GestTracker error

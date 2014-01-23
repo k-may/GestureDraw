@@ -2,11 +2,9 @@ package application.interaction;
 
 import java.util.HashMap;
 
-import processing.core.PApplet;
 import processing.core.PVector;
 import framework.data.HandData;
 import framework.interaction.Types.HandType;
-import framework.pressing.PressState;
 
 public class DomainData extends KinectHandData {
 
@@ -17,7 +15,6 @@ public class DomainData extends KinectHandData {
 	public DomainData(int domain) {
 		super(domain);// _id = domain;
 		_handMap = new HashMap<Integer, HandData>();
-		_currTarget = _pos = new PVector(0.5f, 0.5f, 0);
 	}
 
 	private void addHand(PVector pos, int handId) {
@@ -41,11 +38,6 @@ public class DomainData extends KinectHandData {
 		}
 	}
 
-	@Override
-	public PVector getPosition() {
-		return _pos;//new PVector(_pos.x, _pos.y, _mappedPos.z);
-	}
-
 	public HandData getPrimaryHand() {
 		int count = -1;
 		HandData data = null;
@@ -59,7 +51,7 @@ public class DomainData extends KinectHandData {
 	}
 
 	@Override
-	public void addPosition(PVector pos, float dampening, int handId) {
+	public void addPosition(PVector pos, int handId) {
 
 		if (_handMap.containsKey(handId))
 			_handMap.get(handId).updateCount();
@@ -69,17 +61,9 @@ public class DomainData extends KinectHandData {
 		primary = getPrimaryHand();
 
 		if (primary.get_id() == handId)
-			super.addPosition(pos, dampening, handId);
-
-		//_pos = getMappedPosition();
-		updateMagnitude(getMappedPosition());
+			super.addPosition(pos, handId);
 
 		_isUpdated = true;
 	}
 
-	@Override
-	protected void startDraw() {
-		_currTarget = getMappedPosition();
-
-	}
 }

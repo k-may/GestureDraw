@@ -34,6 +34,10 @@ public class InteractionTargetInfo {
 		this._y = _y;
 	}
 
+	public Boolean get_isOverTarget(){
+		return _isPressTarget || _isHoverTarget;
+	}
+	
 	public Boolean get_isPressTarget() {
 		return _isPressTarget;
 	}

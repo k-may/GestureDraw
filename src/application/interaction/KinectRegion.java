@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import application.interaction.processing.RegionInputData;
-
 import processing.core.PVector;
+import application.interaction.processing.RegionInputData;
 import framework.events.HandDetectedEvent;
-import framework.events.LogEvent;
-import framework.interaction.Types.HandType;
 import framework.interaction.InteractionStreamData;
 import framework.interaction.InteractionTargetInfo;
 import framework.interaction.PressData;
 import framework.interaction.Region;
-import framework.pressing.PressState;
 import framework.pressing.PressStateData;
 
 public abstract class KinectRegion<T> extends Region<T> {
@@ -157,11 +153,13 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 		// TODO change dampening strategy (color wheel will have static
 		// location)
-		if (data != null) {
+		/*if (data != null) {
 			PressState state = getPressStateForHand(domain);
 			data.setPressState(state);
 			data.addPosition(pos, PressStateDampening(state), handId);
-		}
+		}*/
+		
+		data.addPosition(pos, handId);
 		
 		return data;
 
@@ -186,31 +184,6 @@ public abstract class KinectRegion<T> extends Region<T> {
 			return 2;
 		else
 			return -1;
-	}
-
-	private PressState getPressStateForHand(int id) {
-		try {
-			PressState state = _adapter.getUserForDomain(id).getPressState();
-			if (state != null) {
-				return state;
-			}
-		} catch (NullPointerException e) {
-
-		}
-
-		return PressState.Start;
-	}
-
-	private float getDampeningForHand(int id) {
-		PressState state = _adapter.getUserForDomain(id).getPressState();
-		return PressStateDampening(state);
-	}
-
-	private static float PressStateDampening(PressState state) {
-		if (state == PressState.ColorSelection)
-			return MAX_DAMPENING;
-
-		return MIN_DAMPENING;
 	}
 
 }

@@ -44,28 +44,19 @@ public class KinectHandData extends RegionInputData {
 	}
 
 	@Override
-	protected void update(PVector pos) {
+	protected void addPosition(PVector pos) {
+		//check for corrupt data
 		if (isPositionBad(pos)) {
 			_invalidDataCount++;
 			return;
 		} else {
 			_invalidDataCount = 0;
-			addPosition(pos);
+			_position = pos;
+			_positions.add(_position);
+			updateRanges(_position);
 		}
 
 		_sampleCount++;
-	}
-
-	@Override
-	protected void addPosition(PVector pos, float dampening, int handId) {
-		_dampening = dampening;
-
-		if (_positions == null)
-			init(pos);
-		else
-			update(pos);
-
-		_isUpdated = true;
 	}
 
 	protected PVector getMappedPosition() {

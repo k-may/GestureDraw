@@ -50,31 +50,22 @@ public class Adapter implements IAdapter {
 		float attrY = 0.0f;
 		// IView
 		IView pressTarget = null;
-
-		// int pressTargetCount = 0;
-
+		// take last one
 		for (IView target : targets) {
-
-			// if (target.isPressTarget())
-			// pressTargetCount++;
-
-			if (!overPressTarget && target.isPressTarget()) {
-
-				// take first one!
+			if (target.isHoverTarget() || target.isPressTarget())
 				pressTarget = target;
-				overPressTarget = true;
-				PVector targetAbsPos = target.get_absPos();
-				float targetWidth = target.get_width();
-				float targetHeight = target.get_height();
-				attrX = (targetAbsPos.x + targetWidth / 2)
-						/ _canvas.get_width();
-				attrY = (targetAbsPos.y + targetHeight / 2)
-						/ _canvas.get_height();
-
-			}
-			overHoverTarget = overHoverTarget || target.isHoverTarget();
 		}
-		
+
+		if (pressTarget != null) {
+			overPressTarget = pressTarget.isPressTarget();
+			overHoverTarget = pressTarget.isHoverTarget();
+			PVector targetAbsPos = pressTarget.get_absPos();
+			float targetWidth = pressTarget.get_width();
+			float targetHeight = pressTarget.get_height();
+			attrX = (targetAbsPos.x + targetWidth / 2) / _canvas.get_width();
+			attrY = (targetAbsPos.y + targetHeight / 2) / _canvas.get_height();
+		}
+
 		info.set_targetID(pressTarget != null ? pressTarget.get_id() : -1);
 		info.set_isPressTarget(overPressTarget);
 		info.set_isHoverTarget(overHoverTarget);
@@ -114,13 +105,10 @@ public class Adapter implements IAdapter {
 	public void handleStreamData(ArrayList<InteractionStreamData> data) {
 
 		SceneType sceneType = SceneManager.GetSceneType();
-		
+
 		for (InteractionStreamData streamData : data) {
 
 			UserData user = _avatarsView.getUser(streamData.get_userId());
-
-			if (user == null)
-				user = _avatarsView.addUser(streamData.get_userId());
 
 			float localX = streamData.get_x() * _canvas.get_width();
 			float localY = streamData.get_y() * _canvas.get_height();
@@ -130,18 +118,19 @@ public class Adapter implements IAdapter {
 			PressStateData pressStateData = _pressStateFactory.getStateData(streamData.get_z(), sceneType, streamData.isOverTarget());
 			_pressStateMap.put(streamData.get_userId(), pressStateData);
 			user.set_pressStateData(pressStateData);
-			
+
 			user.set_localX(localX);
 			user.set_localY(localY);
 			user.setHandType(streamData.getHandType());
-			
+
 			CursorState cursorState = _pressStateFactory.getCursorState(sceneType, pressStateData, streamData.isPressing(), streamData.isOverTarget(), user.getHandType(), user.getColor());
-			/*cursorState.set_color(user.getColor());
-			cursorState.set_handType(HandType.Left);
-			cursorState.set_pressure(0.5f);
-			*/
+			/*
+			 * cursorState.set_color(user.getColor());
+			 * cursorState.set_handType(HandType.Left);
+			 * cursorState.set_pressure(0.5f);
+			 */
 			user.setCursorState(cursorState);
-			
+
 			user.set_updated(true);
 
 		}
@@ -149,8 +138,11 @@ public class Adapter implements IAdapter {
 
 	@Override
 	public UserData getUserForDomain(int id) {
-		return _avatarsView.getUser(id);
+		UserData user = _avatarsView.getUser(id);
+		if (user == null) {
+			user = _avatarsView.addUser(id);
+		}
+		return user;
 	}
-
 
 }

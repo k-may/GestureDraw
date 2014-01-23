@@ -117,7 +117,7 @@ public class MainView extends BaseMainView implements Observer {
 						elements.add(child);
 
 					// exit recursion if press target found
-					if (child.isPressTarget())
+					if (child.isPressTarget() || child.isHoverTarget())
 						throw new Exception();
 
 					x -= child.get_x();

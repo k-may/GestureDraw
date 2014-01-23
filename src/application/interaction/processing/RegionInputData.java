@@ -5,32 +5,36 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PVector;
 import application.view.MainView;
+import framework.interaction.InteractionTargetInfo;
 import framework.pressing.PressState;
+import framework.pressing.PressStateData;
 
 public class RegionInputData {
 
 	protected int _id;
 
-	float maxDist = 0;
+	// float maxDist = 0;
 
 	private final int SAMPLES = 7;
 
-	protected PVector _currTarget;
-	private int _snapCount = 0;
-	private Boolean _isSnap = true;
+	// protected PVector _currTarget;
+	// private int _snapCount = 0;
+	// private Boolean _isSnap = true;
 
 	// private PVector _intent;
-	protected PVector _pos;
+	// protected PVector _pos;
 
-	protected PVector _magnitude;
-	protected PVector _mappedPos;
-	protected PressState _pressState = PressState.None;
+	// protected PVector _magnitude;
+	// protected PVector _mappedPos;
+	// protected PressState _pressState = PressState.None;
 
-	protected float _dampening;
+	protected float _dampening = 0.01f;
 	protected int _sampleCount = 0;
 
 	protected ArrayList<PVector> _positions;
 	protected PVector _position;
+	protected PVector _cursorPos;
+	private PVector _prevPos;
 
 	protected Boolean _isUpdated = false;
 
@@ -49,11 +53,11 @@ public class RegionInputData {
 		_id = 0;
 	}
 
-	protected void init(PVector pos) {
-		_position = pos;
+	protected void init(PVector position) {
+		_position = position;
 		_positions = new ArrayList<PVector>();
 
-		_pos = _currTarget = new PVector(0.5f, 0.5f);
+		_cursorPos = _position;
 
 		minX = 0;
 		maxX = MainView.SCREEN_WIDTH;
@@ -74,63 +78,19 @@ public class RegionInputData {
 	/*
 	 * Screen new positions for spikes, irregular values, etc
 	 */
-	protected void addPosition(PVector pos, float dampening, int handId) {
-		_dampening = dampening;
-
+	protected void addPosition(PVector pos, int handId) {
 		if (_positions == null)
 			init(pos);
 		else
-			update(pos);
-
-		// updateMagnitude(pos);
-		updatePosition();
+			addPosition(pos);
 
 		_isUpdated = true;
 	}
 
-	private void updatePosition() {
-		if (get_isDrawing()) {
-
-		} else {
-
-		}
-	}
-
-	protected void updateMagnitude(PVector pos) {
-		_mappedPos = pos; // getMappedPosition();
-		_magnitude = getMagnitude();
-
-		_pos.sub(_magnitude);
-		normalizeVector(_pos);
-
-		_pos.z = pos.z;
-	}
-
-	protected void normalizeVector(PVector v) {
-		if (v.x > 1f)
-			v.x = 1f;
-		else if (v.x < 0f)
-			v.x = 0f;
-
-		if (v.y > 1f)
-			v.y = 1f;
-		else if (v.y < 0)
-			v.y = 0;
-
-		if (v.z > 1f)
-			v.z = 1f;
-		else if (v.z < 0)
-			v.z = 0;
-	}
-
-	protected void update(PVector pos) {
-		addPosition(pos);
-	}
-
 	protected void addPosition(PVector pos) {
-		_position = PVector.lerp(_position, pos, _dampening);
+		_position = pos;
 		_positions.add(_position);
-		updateRanges(pos);
+		updateRanges(_position);
 	}
 
 	public PVector getTendency() {
@@ -153,19 +113,6 @@ public class RegionInputData {
 		zDiff /= count;
 
 		return new PVector(xDiff, yDiff, zDiff);
-	}
-
-	public void setPressState(PressState state) {
-		Boolean changed = _pressState != state;
-		_pressState = state;
-
-		if (changed) {
-			if (_pressState == PressState.Drawing
-					|| _pressState == PressState.PreDrawing)
-				startDraw();
-			else
-				endDraw();
-		}
 	}
 
 	protected void updateRanges(PVector pos) {
@@ -205,90 +152,79 @@ public class RegionInputData {
 	}
 
 	public PVector getPosition() {
-		return new PVector(_pos.x, _pos.y, _mappedPos.z);
+		return _cursorPos;
 	}
 
-	protected PVector getMagnitude() {
+	public PVector digest(InteractionTargetInfo info,
+			PressStateData pressStateData) {
+		PVector pos = new PVector(_position.x, _position.y);
+		Boolean isDrawing = false;
 
-		PVector magnitude = new PVector();
-		PVector prevIntent = new PVector(_currTarget.x, _currTarget.y);
-		PVector positionMag = new PVector();
-		Boolean isDrawing = get_isDrawing();
-
+		if (pressStateData != null) {
+			PressState state = pressStateData.get_state();
+			isDrawing = state == PressState.Drawing
+					|| state == PressState.PreDrawing;
+		}
+		
 		if (isDrawing) {
-			_currTarget = PVector.lerp(_currTarget, _mappedPos, 0.1f);
-			_currTarget.lerp(_mappedPos, 0.1f);
+			_cursorPos.add(getDrawingAttr());
 		} else {
-			if (_isSnap) {
-				// project real position from virtual position
-				positionMag = PVector.sub(_mappedPos, _pos);
-
-				_currTarget = PVector.add(positionMag, _currTarget);
-			} else
-				_currTarget = _mappedPos;
+			if (info.get_isOverTarget()) {
+				PVector target = new PVector(info.get_pressAttractionX(), info.get_pressAttractionY());
+				_cursorPos.add(getTargetAttr(_cursorPos, target, 0.05f));
+			}
+			_cursorPos.lerp(_position, 0.2f);
 		}
 
-		magnitude = PVector.sub(prevIntent, _currTarget);
+		_prevPos = new PVector(_position.x, _position.y);
 
-		float distance = PVector.dist(new PVector(prevIntent.x, prevIntent.y), new PVector(_currTarget.x, _currTarget.y));
-		float multFactor = getMagFactor(isDrawing, distance);
-
-		magnitude.mult(multFactor);
-
-		// println(printV(positionMag) + " : " + printV(magnitude) + "  * " +
-		// multFactor + " : " + distance);
-		return magnitude;
+		return _cursorPos;
 	}
 
-	private String printV(PVector v) {
+	private PVector getTargetAttr(PVector start, PVector dest, float mass) {
+		PVector dir = PVector.sub(dest, start);
+		float mag = dir.mag();
+		if (mag > mass) {
+			float scalar = mass / mag;
+			System.out.println(scalar);
+			dir.mult(scalar);
+		}
+		return dir;
+	}
+
+	private PVector getDrawingAttr() {
+		PVector dir = PVector.sub(new PVector(_position.x, _position.y), _prevPos);
+		float mag = dir.mag();
+		float scalar = PApplet.map(mag, 0f, MainView.SCREEN_WIDTH, 0.5f, 2f);
+		dir.mult(scalar);
+		return dir;
+	}
+
+	// utility func
+
+	protected String printV(PVector v) {
 		return "[" + (int) v.x + "," + (int) v.y + "]";
-
-	}
-
-	private Boolean get_isDrawing() {
-		if (_pressState == PressState.PreDrawing
-				|| _pressState == PressState.Drawing)
-			return true;
-		else
-			return false;
-	}
-
-	private float getMagFactor(Boolean isDrawing, float distance) {
-
-		if (distance > maxDist)
-			maxDist = distance;
-
-		if (isDrawing) {
-			float factor = PApplet.map(distance, 0f, 0.1f, 0.5f, 2.5f);
-			return factor;
-		} else {
-			if (_isSnap) {
-				return getSnapValue();
-			} else
-				return 0.5f;
-		}
-	}
-
-	private float getSnapValue() {
-		_snapCount = _snapCount < 100 ? _snapCount + 1 : 100;
-		float ratio = _snapCount / 100.0f;
-
-		return PApplet.map(ratio * ratio, 0f, 1f, 0.01f, 0.5f);
-	}
-
-	protected void startDraw() {
-		_currTarget = _position; // getMappedPosition();
-	}
-
-	private void endDraw() {
-		if (_mappedPos != null) {
-			_snapCount = 0;
-			_currTarget = _mappedPos;
-		}
 	}
 
 	protected void println(String msg) {
 		System.out.println(msg);
+	}
+
+	protected void normalizeVector(PVector v) {
+		if (v.x > 1f)
+			v.x = 1f;
+		else if (v.x < 0f)
+			v.x = 0f;
+
+		if (v.y > 1f)
+			v.y = 1f;
+		else if (v.y < 0)
+			v.y = 0;
+
+		if (v.z > 1f)
+			v.z = 1f;
+		else if (v.z < 0)
+			v.z = 0;
 	}
 
 }

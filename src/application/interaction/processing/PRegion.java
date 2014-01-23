@@ -9,6 +9,7 @@ import framework.interaction.InteractionType;
 import framework.interaction.Region;
 import framework.interaction.Types.HandType;
 import framework.pressing.PressState;
+import framework.pressing.PressStateData;
 
 import application.interaction.Adapter;
 import application.interaction.DomainData;
@@ -31,7 +32,7 @@ public class PRegion extends Region<PApplet> {
 
 		data = new RegionInputData();
 
-		//source.noCursor();
+		// source.noCursor();
 
 		_type = InteractionType.Mouse;
 		_adapter = new Adapter();
@@ -48,17 +49,15 @@ public class PRegion extends Region<PApplet> {
 		float mZ = _source.mousePressed ? 1 : 0.25f;
 
 		PVector pos = new PVector(mX, mY, mZ);
-		
-		PressState state = mZ == 1 ? PressState.Drawing : PressState.ColorSelection;
-		data.setPressState(state);
-		data.addPosition(pos, 1, 0);
-		
+		data.addPosition(pos, 0);
+
 		pos = data.getPosition();
-		//pos = MapValuesToCurvedPlane(pos);
 
 		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(pos.x, pos.y, 1, _type);
+		PressStateData pressStateData = _adapter.getUserForDomain(0).get_pressStateData();
+		pos = data.digest(info, pressStateData);
 
-		InteractionStreamData data = new InteractionStreamData(pos.x, pos.y, mZ, 1, _type, info.get_isHoverTarget(), info.get_isPressTarget(), mZ == 1.0f, mZ, HandType.None);
+		InteractionStreamData data = new InteractionStreamData(pos.x, pos.y, mZ, 0, _type, info.get_isHoverTarget(), info.get_isPressTarget(), mZ == 1.0f, mZ, HandType.None);
 		// data.set_isOverPressTarget(info.get_isPressTarget());
 
 		_stream = new ArrayList<InteractionStreamData>();
