@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import application.audio.MinimAudioPlayer;
+import application.view.MainView;
 import application.view.menu.Menu;
 import framework.audio.IAudioView;
 import framework.data.MusicEntry;
@@ -34,10 +35,8 @@ public class TrackView extends View implements IAudioView {
 
 		for (TrackEntryView view : _trackViews) {
 			if (currentEntry != null && view.get_entry() == currentEntry) {
-				view.setActive(true);
 				view.setPlaying(isPlaying);
 			} else {
-				view.setActive(false);
 				view.setPlaying(false);
 			}
 		}
@@ -51,21 +50,24 @@ public class TrackView extends View implements IAudioView {
 		ArrayList<MusicEntry> entries = player.get_entries();
 		for (MusicEntry entry : entries) {
 			TrackEntryView view = new TrackEntryView(entry);
-			// addChild(view);
+
 			view.set_x(x);
 			x += view.get_width();
 			_trackViews.add(view);
 			addChild(view);
 		}
 
-		_width = x - Menu.DividorWidth;
-		_height = Menu.BUTTON_HEIGHT;
+		_width = x - MainView.DividorWidth;
+		_height = MainView.BUTTON_HEIGHT;
 
 	}
 
 	@Override
 	public void show() {
 		_isShowing = true;
+		
+		for(TrackEntryView view : _trackViews)
+			view.setClosed();
 	}
 
 	@Override

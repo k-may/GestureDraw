@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import framework.cursor.CursorMode;
 import framework.data.UserData;
 import framework.events.InActionEvent;
-import framework.events.RemoveUserEvent;
+import framework.events.UserAddedEvent;
+import framework.events.UserRemovedEvent;
 import framework.interaction.IInteractionView;
 import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
@@ -67,7 +69,7 @@ public class AvatarsView extends View implements IInteractionView {
 			_updated = true;
 		}
 
-		new RemoveUserEvent(user).dispatch();
+		new UserRemovedEvent(user).dispatch();
 	}
 
 	@Override
@@ -81,6 +83,8 @@ public class AvatarsView extends View implements IInteractionView {
 		addChild(view);
 
 		_updated = true;
+		
+		new UserAddedEvent(user).dispatch();
 
 		return user;
 	}
@@ -104,20 +108,6 @@ public class AvatarsView extends View implements IInteractionView {
 	@Override
 	public Boolean isTouchEnabled() {
 		return false;
-	}
-
-	public void setScene(SceneType scene) {
-		updateCursorMode();
-	}
-
-	private void updateCursorMode() {
-		// CursorMode mode = getMode();
-	}
-
-	private CursorMode getMode() {
-		CursorMode mode = SceneManager.GetSceneType() == SceneType.Canvas ? CursorMode.Drawing
-				: CursorMode.Navigating;
-		return mode;
 	}
 
 	public AvatarView getAvatarById(int id) {

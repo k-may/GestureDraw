@@ -15,6 +15,7 @@ import application.canvas.PCanvasController;
 import application.clients.DataXMLClient;
 import application.clients.XMLClient;
 import application.content.ContentManager;
+import application.interaction.KinectRegion;
 import application.interaction.RegionType;
 import application.interaction.RegionTypeHelper;
 import application.interaction.gestTrackOSC.GestTrackOSCRegion;
@@ -43,8 +44,6 @@ import gesturedraw.GestureDraw;
 public class AppBuilder {
 
 	public static String logPath;
-
-	private RegionType REGION_TYPE;
 	private IInteractionRegion _region;
 	GestureDraw _parent;
 	IMainView _root;
@@ -82,10 +81,10 @@ public class AppBuilder {
 			contentManager.loadGalleryEntries(_parent, dataClient.readImageEntries());
 
 			ArrayList<MusicEntry> trackEntries = dataClient.readMusicEntries();
-			if (trackEntries.size() > 0)
-				_player.setEntries(dataClient.readMusicEntries());
-			else
-				Menu.TRACKS = false;
+			_player.setEntries(trackEntries);
+
+			if (trackEntries.size() == 0)
+				MainView.TRACKS = false;
 
 		} catch (NullPointerException e) {
 			new ErrorEvent(ErrorType.AssetError, e.getMessage()).dispatch();
@@ -110,21 +109,27 @@ public class AppBuilder {
 	private void initControllers() {
 		_controller = Controller.getInstance();
 
+		String path = getClassPath();
+
+		PathUtil.SetDataPath(path);
+		_canvasController = new PCanvasController();
+		_controller.registerController(_canvasController);
+
+	}
+
+	private String getClassPath() {
 		String path = AppBuilder.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		try {
 			path = URLDecoder.decode(path, "UTF-8");
-			PathUtil.SetDataPath(path);// "C:\\work\\gesturetek\\KinectApp\\KinectApp\\bin\\data\\";
-										// //URLDecoder.decode(path, "UTF-8");
+			return path;
 		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
 			new ErrorEvent(ErrorType.Decode, "Couldn't decode path, '" + path
 					+ "' : " + e1.getMessage()).dispatch();
 
 			e1.printStackTrace();
+			return null;
 		}
-		_canvasController = new PCanvasController();
-		_controller.registerController(_canvasController);
-
 	}
 
 	private void initMainView() {
@@ -134,7 +139,7 @@ public class AppBuilder {
 	}
 
 	private void initPlayer() {
-		if (Menu.TRACKS) {
+		if (MainView.TRACKS) {
 			_player = new MinimAudioPlayer();
 			_controller.registerTrackPlayer(_player);
 		}
@@ -147,7 +152,11 @@ public class AppBuilder {
 
 	private void initScenes() {
 
-		Menu.CLEARABLE = DataXMLClient.getInstance().getClearable();
+		MainView.BUTTON_HEIGHT = MainView.BUTTON_WIDTH = DataXMLClient.getInstance().getButtonSize();
+		MainView.COLORWHEEL_RADIUS = DataXMLClient.getInstance().getColorWheelRadius();
+		MainView.ICON_MAX_RADIUS = DataXMLClient.getInstance().getMaxStroke();
+		MainView.ICON_MIN_RADIUS = DataXMLClient.getInstance().getMinStroke();
+		MainView.CLEARABLE = DataXMLClient.getInstance().getClearable();
 
 		_canvasScene = new CanvasScene();
 		_homeScene = new HomeScene();
@@ -160,60 +169,33 @@ public class AppBuilder {
 		SceneManager.getInstance().addObserver((MainView) _root);
 
 		ArrayList<GalleryEntry<PImage>> images = ContentManager.GetGalleyImages();
-
-		_canvasScene.setImages(images);
 		_homeScene.setImages(images);
 
-		if (Menu.TRACKS)
+		if (MainView.TRACKS)
 			_player.set_view(_canvasScene.get_audioView());
 
 		ArrayList<Observer> audioObservers = _canvasScene.get_audioObservers();
 		for (Observer ob : audioObservers) {
 			((Observable) _player).addObserver(ob);
 		}
-
 	}
 
 	private void initInteraction() {
 
-		DataXMLClient dataClient;
-		dataClient = DataXMLClient.getInstance();
-
+		DataXMLClient dataClient = DataXMLClient.getInstance();
 		_controller.registerDataClient(dataClient);
 
-		REGION_TYPE = RegionTypeHelper.GetTypeForString(dataClient.getInputType());
+		MainView.REGION_TYPE = RegionTypeHelper.GetTypeForString(dataClient.getInputType());
 
-		int maxNumHands = dataClient.getMaxNumHands();
-		int xRange = dataClient.getXInputRange();
-		int yRange = dataClient.getYInputRange();
-		int zRange = dataClient.getZInputRange();
-
-		switch (REGION_TYPE) {
+		switch (MainView.REGION_TYPE) {
 			case GestTrackOSC:
-				OscP5 osc = new OscP5(GestureDraw.instance, 12345);
-				_region = new GestTrackOSCRegion(osc, maxNumHands, xRange, yRange, zRange);
+				initGestTrackOSCRegion();
 				break;
 			case SimpleOpenNI:
-				String gestureType = dataClient.getStartGestureType();
-				try {
-					SimpleOpenNI context = new SimpleOpenNI(GestureDraw.instance);
-					if (context.init()) {
-						_region = new SONRegion(context, maxNumHands, xRange, yRange, zRange, gestureType);
-					} else {
-						new ErrorEvent(ErrorType.KinectError, "Unable to initate SimpleOpenNI, make sure all KinectAPI drivers are properly installed").dispatch();
-						_region = new PRegion(_parent);
-					}
-				} catch (UnsatisfiedLinkError e) {
-					new ErrorEvent(ErrorType.SimpleOpenNI, "Unable to load framework : "
-							+ e.getMessage()).dispatch();
-					_region = new PRegion(_parent);
-
-				}
-
+				initSimpleOpenNIRegion();
 				break;
 			default:
 				_region = new PRegion(_parent);
-
 		}
 
 		new LogEvent("Region created : " + _region.getType().toString()).dispatch();
@@ -221,6 +203,42 @@ public class AppBuilder {
 		_region.get_adapter().set_canvas(_root);
 		_root.set_region(_region);
 
+	}
+
+	private void initSimpleOpenNIRegion() {
+		DataXMLClient dataClient = DataXMLClient.getInstance();
+		int xRange = dataClient.getXInputRange();
+		int yRange = dataClient.getYInputRange();
+		int zRange = dataClient.getZInputRange();
+		String gestureType = dataClient.getStartGestureType();
+		int maxNumHands = dataClient.getMaxNumHands();
+		try {
+			SimpleOpenNI context = new SimpleOpenNI(GestureDraw.instance);
+			if (context.init()) {
+				_region = new SONRegion(context, maxNumHands, xRange, yRange, zRange, gestureType);
+			} else {
+				new ErrorEvent(ErrorType.KinectError, "Unable to initate SimpleOpenNI, make sure all KinectAPI drivers are properly installed").dispatch();
+				_region = new PRegion(_parent);
+			}
+		} catch (UnsatisfiedLinkError e) {
+			new ErrorEvent(ErrorType.SimpleOpenNI, "Unable to load framework : "
+					+ e.getMessage()).dispatch();
+			_region = new PRegion(_parent);
+
+		}
+	}
+
+	private void initGestTrackOSCRegion() {
+		DataXMLClient dataClient = DataXMLClient.getInstance();
+		int xRange = dataClient.getXInputRange();
+		int yRange = dataClient.getYInputRange();
+		int zRange = dataClient.getZInputRange();
+		float firstRegion = dataClient.getHorUserRegion1();
+		float secondRegion = dataClient.getHorUserRegion2();
+
+		OscP5 osc = new OscP5(GestureDraw.instance, 12345);
+		_region = new GestTrackOSCRegion(osc, xRange, yRange, zRange);
+		(( GestTrackOSCRegion)_region).setDomains(firstRegion, secondRegion);
 	}
 
 }

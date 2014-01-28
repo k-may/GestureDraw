@@ -1,5 +1,6 @@
 package framework;
 import static processing.core.PApplet.println;
+import framework.events.ErrorEvent;
 
 public class PathUtil {
 
@@ -10,6 +11,7 @@ public class PathUtil {
 
 	public static void SetDataPath(String path) {
 		int rootIndex = path.indexOf("GestureDraw/");
+		try{
 		path = path.substring(0, rootIndex);
 		path += "GestureDraw/bin/";
 		
@@ -18,6 +20,9 @@ public class PathUtil {
 		DATA_PATH = path;
 		IMAGE_PATH = path + "images/";
 		LOG_PATH = path + "logs/";
+		}catch(Exception e){
+			new ErrorEvent(ErrorType.PathError, "can't find 'GestureDraw/bin' on application path, you may need to rename or move the application").dispatch();
+		}
 	}
 
 	public static String GetDataPath() {

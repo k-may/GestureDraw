@@ -37,11 +37,14 @@
 	<asset name="savedTitle" type="image">savedTitle.png</asset>
 	<asset name="savedMessage" type="image">savedMessage.png</asset>
 	<asset name="welcomeTitle" type="image">welcomeTitle.png</asset>
-	<asset name="welcomeMessagePress" type="image">welcomeMessage.png</asset>
-	<asset name="welcomeMessageWave" type="image">welcomeMessageWave.png
-	</asset>
-	<asset name="startTitle" type="image">startTitle.png</asset>
+	<asset name="welcomeTitleBlur" type="image">welcomeTitleBlur.png</asset>
 
+	<asset name="startTitle" type="image">startTitle.png</asset>
+	<asset name="startTitleBlur" type="image">startTitleBlur.png</asset>
+	
+	<asset name="hand1" type="image">hand1.png</asset>
+	<asset name="hand2" type="image">hand2.png</asset>
+	<asset name="hand3" type="image">hand3.png</asset>
 
 	<font name="large" size="48">GillSansMT-48.vlw</font>
 	<font name="small" size="17">CenturyGothic-17.vlw</font>

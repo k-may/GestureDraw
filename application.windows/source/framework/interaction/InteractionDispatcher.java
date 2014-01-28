@@ -4,20 +4,22 @@ import static processing.core.PApplet.println;
 
 import java.util.ArrayList;
 
+import application.view.canvas.Canvas;
+
 import framework.IMainView;
 import framework.interaction.Types.InteractionEventType;
 import framework.view.IView;
 
 public class InteractionDispatcher {
 
-	public IMainView _canvas;
+	public IMainView _mainView;
 	public ArrayList<InteractionHandle> _handles;
 	private ArrayList<InteractionHandle> _completeHandles;
 
 	public static int HOVER_ELAPSE = 1000;
 
-	public InteractionDispatcher(IMainView canvas) {
-		_canvas = canvas;
+	public InteractionDispatcher(IMainView mainView) {
+		_mainView = mainView;
 		_handles = new ArrayList<InteractionHandle>();
 	}
 
@@ -32,37 +34,52 @@ public class InteractionDispatcher {
 	private void seeData(InteractionStreamData data) {
 		float x = data.get_x();
 		float y = data.get_y();
-		ArrayList<IView> targets = _canvas.getTargetsAtLocation(x, y);
+		ArrayList<IView> targets = data.getTargets(); // _mainView.getTargetsAtLocation(x,
+														// y);
 
-		for (InteractionHandle handle : _handles) {
-			if (handle.get_id() == data.get_userId()) {
-				for (int i = 0; i < targets.size(); i++) {
-					if (handle.get_target() == targets.get(i)) {
-						handle.add(data);
-						targets.remove(i);
-						break;
+		// if press button is found, no other targets will be added to stack
+		// need to check if handle exists which overrides press button (ie.
+		// canvas)
+
+		
+		//TODO create drawing dispatcher
+		
+		if (data.isDrawing()) {
+			for (InteractionHandle handle : _handles) {
+				if (handle.get_id() == data.get_userId() && handle.isDrawing()) {
+					// println("pressing : " + data.isPressing());
+					handle.add(data);
+					break;
+				}
+			}
+		} else {
+			for (InteractionHandle handle : _handles) {
+				if (handle.get_id() == data.get_userId()) {
+					for (int i = 0; i < targets.size(); i++) {
+						if (handle.get_target() == targets.get(i)) {
+							handle.add(data);
+							targets.remove(i);
+							break;
+						}
 					}
 				}
 			}
-		}
-
-		if (!data.isPressing()) {
-			for (IView target : targets) {
-				if (target != null) {
+			// }
+			if (!data.isPressing() && !data.isDrawing()) {
+				for (IView target : targets) {
+					//System.out.println("add handle " + target.isPressTarget() + " / " + target.isDrawTarget());
 					InteractionHandle handle = new InteractionHandle(data.get_userId(), target);
 					handle.add(data);
 					_handles.add(handle);
 				}
 			}
 		}
-
 	}
 
 	public void process(int millis) {
 
 		_completeHandles = new ArrayList<InteractionHandle>();
-		// ArrayList<InteractionEvent> events = new
-		// ArrayList<InteractionEvent>();
+
 		for (InteractionHandle handle : _handles) {
 			if (!handle.isUpdated()) {
 				disposeHandle(handle);
@@ -86,29 +103,32 @@ public class InteractionDispatcher {
 		float y = handle.get_currentY();
 		float pressure = handle.getCurrentPressure();
 		int id = handle.get_id();
-		/*
-		 * if (currentInteraction.isPressing()) { if (!handle.isPressing())
-		 * dispatchEvent(target, InteractionEventType.PressDown, x, y, pressure,
-		 * id); } else { if (handle.isPressing()) dispatchEvent(target,
-		 * InteractionEventType.PressUp, x, y, pressure, id); }
-		 */
+
+		if (handle.get_dX() != 0.0f || handle.get_dY() != 0.0f)
+			dispatchEvent(target, InteractionEventType.Move, x, y, id);
+
+		// if (handle.get_target().isDrawTarget())
+		// System.out.println("cR press: " + currentInteraction.isPressing()+
+		// " / " + handle.isPressing());
 
 		if (currentInteraction.isPressing() && !handle.isPressing())
-			dispatchEvent(target, InteractionEventType.PressDown, x, y, pressure, id);
+			dispatchEvent(target, InteractionEventType.PressDown, x, y, id);
+		else if (currentInteraction.isDrawing() && !handle.isDrawing())
+			dispatchEvent(target, InteractionEventType.PressDown, x, y, id);
 
 		if (!currentInteraction.isPressing() && handle.isPressing())
-			dispatchEvent(target, InteractionEventType.PressUp, x, y, pressure, id);
+			dispatchEvent(target, InteractionEventType.PressUp, x, y, id);
 
 		if (handle.isHovering()) {
-			int elapsed = millis - handle.get_startMillis();
-			if (elapsed > HOVER_ELAPSE) {
-				dispatchEvent(target, InteractionEventType.HoverEnd, x, y, pressure, id);
-				handle.endHovering();
+			if (handle.isPreHovering()) {
+				int elapsed = millis - handle.get_startMillis();
+				if (elapsed > HOVER_ELAPSE) {
+					dispatchEvent(target, InteractionEventType.HoverEnd, x, y, id);
+					handle.endPreHovering();
+				}
 			}
 		}
 
-		if (handle.get_dX() != 0.0f || handle.get_dY() != 0.0f)
-			dispatchEvent(target, InteractionEventType.Move, x, y, pressure, id);
 	}
 
 	private void initHandle(InteractionHandle handle, int millis) {
@@ -120,11 +140,11 @@ public class InteractionDispatcher {
 		float pressure = handle.getCurrentPressure();
 
 		if (target.isHoverTarget()) {
-			dispatchEvent(handle.get_target(), InteractionEventType.HoverStart, x, y, pressure, id);
+			dispatchEvent(handle.get_target(), InteractionEventType.HoverStart, x, y, id);
 			handle.startHover();
 		}
 
-		dispatchEvent(target, InteractionEventType.RollOver, x, y, pressure, id);
+		dispatchEvent(target, InteractionEventType.RollOver, x, y, id);
 	}
 
 	private void resetHandles() {
@@ -135,7 +155,7 @@ public class InteractionDispatcher {
 
 	private void disposeHandle(InteractionHandle handle) {
 		_completeHandles.add(handle);
-		dispatchEvent(handle.get_target(), InteractionEventType.Cancel, -1f, -1f, 0.0f, handle.get_id());
+		dispatchEvent(handle.get_target(), InteractionEventType.Cancel, -1f, -1f, handle.get_id());
 	}
 
 	private void disposeHandles() {
@@ -146,31 +166,31 @@ public class InteractionDispatcher {
 	}
 
 	private void dispatchEvent(IView target, InteractionEventType type,
-			float x, float y, float pressure, int id) {
+			float x, float y, int id) {
 		// println("dispatch : " + type);
 		switch (type) {
 			case None:
 				break;
 			case PressDown:
-				_canvas.addPressDownEvent(target, x, y, pressure, id);
+				_mainView.addPressDownEvent(target, x, y, id);
 				break;
 			case PressUp:
-				_canvas.addPressReleaseEvent(target, x, y, pressure, id);
+				_mainView.addPressReleaseEvent(target, x, y, id);
 				break;
 			case Cancel:
-				_canvas.addCancelEvent(target, x, y, pressure, id);
+				_mainView.addCancelEvent(target, x, y, id);
 				break;
 			case RollOver:
-				_canvas.addRollOverEvent(target, x, y, pressure, id);
+				_mainView.addRollOverEvent(target, x, y, id);
 				break;
 			case Move:
-				_canvas.addMoveEvent(target, x, y, pressure, id);
+				_mainView.addMoveEvent(target, x, y, id);
 				break;
 			case HoverStart:
-				_canvas.addHoverStartEvent(target, x, y, pressure, id);
+				_mainView.addHoverStartEvent(target, x, y, id);
 				break;
 			case HoverEnd:
-				_canvas.addHoverEndEvent(target, x, y, pressure, id);
+				_mainView.addHoverEndEvent(target, x, y, id);
 				break;
 		}
 	}

@@ -1,6 +1,11 @@
 package framework.interaction;
 
+import java.util.ArrayList;
+
 import framework.data.UserData;
+import framework.depth.DepthState;
+import framework.depth.DepthStateData;
+import framework.view.IView;
 
 public class InteractionTargetInfo {
 
@@ -12,8 +17,15 @@ public class InteractionTargetInfo {
 	private float _pressAttractionY;
 	private UserData _user;
 	private int _targetID = -1;
+	private ArrayList<IView> _targets;
+	private IView _canvas;
 
-	public InteractionTargetInfo() {
+	public ArrayList<IView> get_targets() {
+		return _targets;
+	}
+
+	public InteractionTargetInfo(ArrayList<IView> targets) {
+		_targets = targets;
 	}
 
 	public float get_x() {
@@ -30,6 +42,10 @@ public class InteractionTargetInfo {
 
 	public void set_y(float _y) {
 		this._y = _y;
+	}
+
+	public Boolean get_isOverTarget() {
+		return _isPressTarget || _isHoverTarget;
 	}
 
 	public Boolean get_isPressTarget() {
@@ -73,11 +89,19 @@ public class InteractionTargetInfo {
 	}
 
 	public void set_targetID(int i) {
-		_targetID  = i;
+		_targetID = i;
 	}
 
 	public int get_targetID() {
 		return _targetID;
+	}
+
+	public void set_canvas(IView canvas) {
+		_canvas = canvas;
+	}
+	
+	public IView get_canvas(){
+		return _canvas;
 	}
 
 }

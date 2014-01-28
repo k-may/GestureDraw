@@ -1,13 +1,11 @@
 package framework;
 
-import static processing.core.PApplet.println;
 import framework.data.GalleryEntry;
 import framework.events.Event;
 import framework.events.EventType;
-import framework.events.GalleryNavigationEvent;
 import framework.events.SaveCanvasEvent;
 import framework.scenes.IHomeScene;
-import framework.view.CanvasState;
+import framework.scenes.SceneManager;
 import framework.view.ICanvasScene;
 import framework.view.IGallery;
 
@@ -33,35 +31,20 @@ public abstract class CanvasController<T> implements IController {
 			case CloseTracks:
 				handleCloseTracks();
 				break;
-			case GalleryNavigation:
-				handleGalleryNavigation((GalleryNavigationEvent) event);
+			case YesPressed:
+				handleYesPressed();
+			case NoPressed:
+				handleContinue();
 				break;
-			case CanvasStateUpdate:
-				handleCanvasState((CanvasStateUpdateEvent) event);
-				break;
-		}
-	}
-
-	private void handleCanvasState(CanvasStateUpdateEvent event) {
-		CanvasState state = event.getState();
-
-		switch (state) {
-			case Canvas:
-				_canvasScene.hideGallery();
-				break;
-			case Gallery:
-				_canvasScene.showGallery();
-
-				break;
-			default:
-				// home
+			case ClearCanvas:
+				handleClear();
 				break;
 		}
 	}
 
-	private void handleGalleryNavigation(GalleryNavigationEvent event) {
-		String direction = event.get_direction();
-		_canvasScene.navigate(direction);
+
+	private void handleClear() {
+		_canvasScene.clearCanvas();
 	}
 
 	private void handleCloseTracks() {
@@ -82,7 +65,15 @@ public abstract class CanvasController<T> implements IController {
 		IGallery<T> homeGallery = (IGallery<T>) _homeScene.getGallery();
 		homeGallery.addImage(galleryEntry);
 		
+		_canvasScene.set_isSaving(true);
+	}
+	
+	private void handleYesPressed(){
 		_canvasScene.clearCanvas();
+	}
+	
+	private void handleContinue(){
+		_canvasScene.set_isSaving(false);
 	}
 
 }

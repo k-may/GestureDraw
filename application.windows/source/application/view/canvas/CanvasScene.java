@@ -4,27 +4,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observer;
 
+import processing.core.PApplet;
+import processing.core.PImage;
+import application.view.MainView;
+import application.view.menu.Menu;
+import application.view.scene.Scene;
 import framework.audio.IAudioView;
 import framework.data.GalleryEntry;
 import framework.data.ImageEntry;
+import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
 import framework.stroke.ICanvas;
-import framework.view.CanvasState;
 import framework.view.ICanvasScene;
-import framework.view.IGallery;
-import application.view.MainView;
-import application.view.gallery.GalleryView;
-import application.view.menu.Menu;
-import application.view.scene.Scene;
-import processing.core.PApplet;
-import processing.core.PImage;
 
 public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 
-	private GalleryView _gallery;
-
 	private Menu _menu;
 	private Canvas _canvas;
+	private SaveScreen _saveScreen;
+	private Boolean _isSaving = false;
 
 	public CanvasScene() {
 		super(SceneType.Canvas);
@@ -37,17 +35,15 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 
 	private void createChilds() {
 
-		_canvas = new Canvas();
+		_canvas = new CanvasGL();
 		_canvas.set_width(_width);
 		_canvas.set_height(_height);
-		// addChild(_canvas);
+		addChild(_canvas);
 
-		_gallery = new GalleryView();
-		addChild(_gallery);
-		// if (_menu == null) {
 		_menu = new Menu();
-		// addChild(_menu);
-		// }
+		addChild(_menu);
+
+		_saveScreen = new SaveScreen();
 
 	}
 
@@ -60,10 +56,6 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 
 	public ICanvas<PImage> getCanvas() {
 		return _canvas;
-	}
-
-	public IGallery<PImage> getGallery() {
-		return _gallery;
 	}
 
 	@Override
@@ -85,39 +77,14 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 	}
 
 	@Override
-	public void showGallery() {
-		addChild(_gallery);
-		removeChild(_canvas);
-		removeChild(_menu);
-	}
-
-	@Override
-	public void hideGallery() {
-		addChild(_canvas);
-		addChild(_menu);
-		removeChild(_gallery);
-	}
-
-	@Override
-	public void navigate(String direction) {
-		_gallery.navigate(direction);
-	}
-
-	@Override
 	public GalleryEntry<PImage> save(String filePath, String date) {
 
 		ImageEntry entry = new ImageEntry(filePath, "", new String[] { "me" }, date);
 
 		GalleryEntry<PImage> galleryEntry = new PGalleryEntry(entry, _canvas.getImage());// KinectApp.instance.loadImage(filePath));
-		_gallery.addImage(galleryEntry);
 		_canvas.save(filePath);
-		
-		return galleryEntry;
-	}
 
-	@Override
-	public void setImages(ArrayList<GalleryEntry<PImage>> images) {
-		_gallery.setImages(images);
+		return galleryEntry;
 	}
 
 	@Override
@@ -130,5 +97,25 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 		_canvas.clear();
 	}
 
+	@Override
+	public void set_isSaving(Boolean value) {
+		_isSaving = value;
+		if (_isSaving) {
+			_saveScreen = new SaveScreen();
+			removeChild(_menu);
+			addChild(_saveScreen);
+		} else {
+			addChild(_menu);
+			removeChild(_saveScreen);
+			_saveScreen = null;
+		}
+
+		SceneManager.getInstance().invalidate();
+	}
+
+	@Override
+	public Boolean get_isSaving() {
+		return _isSaving;
+	}
 
 }

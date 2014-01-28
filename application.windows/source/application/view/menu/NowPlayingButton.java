@@ -5,9 +5,9 @@ import framework.data.MusicEntry;
 import framework.events.TracksShowEvent;
 import framework.events.TouchEvent;
 import application.content.ContentManager;
-import application.view.Image;
 import application.view.MainView;
 import application.view.ShadowButton;
+import application.view.image.Image;
 import application.view.labels.LabelView;
 
 public class NowPlayingButton extends ShadowButton {
@@ -23,7 +23,7 @@ public class NowPlayingButton extends ShadowButton {
 	public NowPlayingButton() {
 		super();
 		_width = 362;
-		_height = Menu.BUTTON_HEIGHT;
+		_height = MainView.BUTTON_HEIGHT;
 
 		createChilds();
 	}

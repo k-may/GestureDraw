@@ -12,11 +12,8 @@ public interface ICanvasScene<T> {
 	ArrayList<Observer> get_audioObservers();
 	void showTracks();
 	void hideTracks();
-	void showGallery();
-	void hideGallery();
-	void navigate(String direction);
-	//IGallery<T> getGallery();
 	GalleryEntry<T> save(String filePath, String date);
-	void setImages(ArrayList<GalleryEntry<T>> images);
 	void clearCanvas();
+	void set_isSaving(Boolean value);
+	Boolean get_isSaving();
 }

@@ -153,8 +153,7 @@ public class ContentManager {
 			image = instance.loadImage(path);
 			if (image == null) {
 				dispatchAssetError(path);
-				break;
-			}
+			}else
 			addGalleryImage(entry, instance.loadImage(entry.filePath));
 		}
 	}

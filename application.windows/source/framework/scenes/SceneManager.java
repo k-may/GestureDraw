@@ -6,16 +6,12 @@ import java.util.Observable;
 
 import framework.view.IView;
 
-import application.view.scene.Scene;
-
-
-
 public class SceneManager extends Observable {
 
 	private static SceneManager instance;
-	
+
 	private static SceneType _type;
-	
+
 	private static Map<SceneType, IView> _sceneMap;
 
 	public static void registerScene(IView scene, SceneType type) {
@@ -28,28 +24,28 @@ public class SceneManager extends Observable {
 	public static IView getScene() {
 		return _sceneMap.get(_type);
 	}
-	
-	public static SceneType  GetSceneType(){
+
+	public static SceneType GetSceneType() {
 		return _type;
 	}
-	
-	public static void setScene(SceneType type){
-		if(_type != type){
+
+	public static void setScene(SceneType type) {
+		if (_type != type) {
 			_type = type;
 			getInstance().invalidate();
 		}
 	}
-	
-	public static SceneManager getInstance(){
-		if(instance == null)
+
+	public static SceneManager getInstance() {
+		if (instance == null)
 			instance = new SceneManager();
-		
+
 		return instance;
 	}
-	
-	private void invalidate(){
+
+	public void invalidate() {
 		setChanged();
 		notifyObservers(_type);
-		
+
 	}
 }

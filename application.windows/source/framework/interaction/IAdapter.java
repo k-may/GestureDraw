@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Observer;
 
 import framework.IMainView;
+import framework.data.UserData;
+import framework.depth.DepthStateData;
 
 
 
@@ -17,4 +19,5 @@ public interface IAdapter{
 	void handleStreamData(ArrayList<InteractionStreamData> data);
 	void beginInteractionFrame();
 	void endInteractionFrame();
+	UserData getUserForDomain(int id);
 }

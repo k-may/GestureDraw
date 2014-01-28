@@ -12,8 +12,8 @@ import framework.interaction.InteractionDispatcher;
 import framework.interaction.Types.InteractionEventType;
 import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
+import framework.view.IUserMenuView;
 import framework.view.IView;
-
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -22,16 +22,32 @@ public abstract class BaseMainView implements IMainView {
 	protected InteractionDispatcher _dispatcher;
 	protected ArrayList<IView> _childs;
 	protected PApplet _parent;
+	
+	public static SceneState CurrentState;
+	
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
-	protected SceneType _currentScene;
+
+	public static int SRC_WIDTH = 640;
+	public static int SRC_HEIGHT = 480;
+	
+	public static final float PRESS_POS_EXTENTS = 0.7F;
+	public static final float PRESS_MAX_PRESSURE = 0.7f;
+	
+	//protected SceneType _currentScene;
 	protected IInteractionRegion _region;
 	protected IInteractionView _interactionView;
+	protected IUserMenuView _userMenuView;
 
 	public BaseMainView(PApplet parent) {
 		_parent = parent;
 
 		init();
+	}
+
+	@Override
+	public IUserMenuView get_userMenuView() {
+		return _userMenuView;
 	}
 
 	private void init() {
@@ -45,56 +61,49 @@ public abstract class BaseMainView implements IMainView {
 	}
 
 	@Override
-	public void addPressDownEvent(IView target, float x, float y,
-			float pressure, int id) {
-		addInteractionEvent(InteractionEventType.PressDown, target, x, y, pressure, id);
+	public void addPressDownEvent(IView target, float x, float y, int id) {
+		addInteractionEvent(InteractionEventType.PressDown, target, x, y,  id);
 	}
 
 	@Override
-	public void addPressReleaseEvent(IView target, float x, float y,
-			float pressure, int id) {
-		addInteractionEvent(InteractionEventType.PressUp, target, x, y, pressure, id);
+	public void addPressReleaseEvent(IView target, float x, float y,int id) {
+		addInteractionEvent(InteractionEventType.PressUp, target, x, y, id);
 	}
 
 	@Override
-	public void addRollOverEvent(IView target, float x, float y,
-			float pressure, int id) {
-		addInteractionEvent(InteractionEventType.RollOver, target, x, y, pressure, id);
+	public void addRollOverEvent(IView target, float x, float y,int id) {
+		addInteractionEvent(InteractionEventType.RollOver, target, x, y, id);
 	}
 
 	@Override
-	public void addCancelEvent(IView target, float x, float y, float pressure,
-			int id) {
-		addInteractionEvent(InteractionEventType.Cancel, target, x, y, pressure, id);
+	public void addCancelEvent(IView target, float x, float y,int id) {
+		addInteractionEvent(InteractionEventType.Cancel, target, x, y, id);
 
 		endHover(id);
 	}
 
 	@Override
-	public void addMoveEvent(IView target, float x, float y, float pressure,
-			int id) {
-		addInteractionEvent(InteractionEventType.Move, target, x, y, pressure, id);
+	public void addMoveEvent(IView target, float x, float y,int id) {
+		addInteractionEvent(InteractionEventType.Move, target, x, y,id);
 	}
 
 	@Override
-	public void addHoverStartEvent(IView target, float x, float y,
-			float pressure, int id) {
-		addInteractionEvent(InteractionEventType.HoverStart, target, x, y, pressure, id);
+	public void addHoverStartEvent(IView target, float x, float y, int id) {
+		addInteractionEvent(InteractionEventType.HoverStart, target, x, y, id);
 
 		startHover(id, InteractionDispatcher.HOVER_ELAPSE, target);
 	}
 
 	@Override
-	public void addHoverEndEvent(IView target, float x, float y,
-			float pressure, int id) {
+	public void addHoverEndEvent(IView target, float x, float y, int id) {
 
-		addInteractionEvent(InteractionEventType.HoverEnd, target, x, y, pressure, id);
+		addInteractionEvent(InteractionEventType.HoverEnd, target, x, y,id);
 
 		endHover(id);
 	}
 
 	protected void addInteractionEvent(InteractionEventType type, IView target,
-			float x, float y, float pressure, int id) {
+			float x, float y, int id) {
 		PVector pos = target.get_absPos();
 
 		UserData user = _interactionView.getUser(id);
@@ -102,7 +111,7 @@ public abstract class BaseMainView implements IMainView {
 		if (user != null) {
 			float localX = x * SCREEN_WIDTH - pos.x;
 			float localY = y * SCREEN_HEIGHT - pos.y;
-			new TouchEvent(type, target, localX, localY, pressure, _interactionView.getUser(id), _parent.millis()).dispatch();
+			new TouchEvent(type, target, localX, localY,_interactionView.getUser(id), _parent.millis()).dispatch();
 		}
 	}
 

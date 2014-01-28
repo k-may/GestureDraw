@@ -4,11 +4,14 @@ import static processing.core.PApplet.println;
 import processing.core.PApplet;
 import processing.core.PImage;
 import application.content.ContentManager;
+import application.view.MainView;
 import application.view.colorwheel.ColorWheel;
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.easing.Easing;
+import framework.cursor.CursorMode;
 import framework.data.UserData;
-import framework.pressing.PressState;
+import framework.depth.DepthState;
+import framework.events.UpdateColorEvent;
 import framework.view.IView;
 import framework.view.View;
 
@@ -20,16 +23,14 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 	private Boolean _isColorWheelVisible = false;
 	private float _colorWheelX;
 	private float _colorWheelY;
-	// private PImage _colorWheel;
 	private ColorWheel _colorWheel;
 	private Ani _hoverAnimation;
-
-	public static int LightGreyColor = 0xBADBD7D7;
+	private Ani _colorWheelAnimation;
 
 	private AvatarCursor _cursor;
 
 	public AvatarView(UserData user) {
-		//println("new AvatarView : " + user.get_id());
+		// println("new AvatarView : " + user.get_id());
 		_user = user;
 
 		createChilds();
@@ -46,80 +47,38 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 
 		if (!_user.isOverButton())
 			drawPressState(p);
-		else
+		else{
 			_isColorWheelVisible = false;
 
+		}
 		updateCursor();
 
 		super.draw(p);
 	}
 
 	private void updateCursor() {
-		_cursor.set_pressing(_user.isPressing(), _user.get_pressPressure());
-		_cursor.set_mode(getCursorMode());
-		_cursor.set_navPressure(_user.get_navigationPressure());
-		_cursor.set_strokePressure(_user.get_strokePressure());
+		_cursor.setState(_user.getCursorState());//getCursorMode());
 		_cursor.set_x(_user.get_localX());
 		_cursor.set_y(_user.get_localY());
-		_cursor.setColor(_user.getColor());
-
 	}
 
 	private void drawPressState(PApplet p) {
 		float x = _user.get_localX();
 		float y = _user.get_localY();
-		PressState state = _user.getPressState();
-		float pressure = _user.getPressPressure();
-		switch (state) {
-			case Start:
-				drawStart(p);
-				break;
-			case ColorSelection:
-				if (!_isColorWheelVisible)
-					showColorWheel(x, y);
+		DepthState state = _user.getDepthState();
+		
+		if (state == DepthState.ColorSelection) {
+			if (!_isColorWheelVisible)
+				animateColorWheel(x, y);
 
-				drawColorSelection(p, pressure);
-				break;
-			case PreDrawing:
-				drawPreDrawing(p, pressure, x, y);
-				break;
-			case Drawing:
-				drawDrawing(p);
-				break;
-		}
-		_isColorWheelVisible = state == PressState.ColorSelection;
-
-	}
-
-	public CursorMode getCursorMode() {
-		PressState state = _user.getPressState();
-		CursorMode mode = CursorMode.Navigating;
-
-		switch (state) {
-			case Drawing:
-				mode = CursorMode.Drawing;
-				break;
+			drawColorWheel(p);
 		}
 
-		mode = _user.isOverPressTarget() ? mode.Pressing : mode;
+		_isColorWheelVisible = state == DepthState.ColorSelection;
 
-		return mode;
 	}
 
-	private void drawDrawing(PApplet p) {
-	}
-
-	private void drawPreDrawing(PApplet p, float pressure, float x, float y) {
-		p.strokeWeight(1);
-		p.stroke(_user.getColor());
-		pressure = 1 - pressure;
-		float size = pressure * AvatarCursor.MAX_RADIUS * 2;
-		float localX = _user.get_localX();
-		float localY = _user.get_localY();
-		p.ellipse(localX, localY, size, size);
-	}
-
-	private void drawColorSelection(PApplet p, float pressure) {
+	private void drawColorWheel(PApplet p) {
 		// hide color wheel slightly if over press target
 		float localX = _user.get_localX();
 		float localY = _user.get_localY();
@@ -134,17 +93,9 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		// draw wheel in static position
 		p.image(_colorWheel.getImage(), _colorWheelX, _colorWheelY);
 
-		if (isOverWheel)
+		if (isOverWheel && _colorWheelAnimation.isEnded())
 			updateColor();
 
-		p.strokeWeight(4);
-		p.stroke(_user.getColor());
-		p.noFill();
-		float size = AvatarCursor.MAX_RADIUS * 2;
-		p.ellipse(localX, localY, size, size);
-	}
-
-	private void drawStart(PApplet p) {
 	}
 
 	private void updateColor() {
@@ -152,10 +103,12 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		int y = (int) (_user.get_localY() - _colorWheelY);
 		int color = _colorWheel.getColor(x, y); // GetColor((int) x, (int) y);
 		_user.setColor(color);
+
+		new UpdateColorEvent(_user, color).dispatch();
 	}
 
 	private Boolean isOverWheel(float x, float y) {
-		float radius = ColorWheel.WHEEL_RADIUS;
+		float radius = MainView.COLORWHEEL_RADIUS;
 		float cX = _colorWheelX + radius;
 		float cY = _colorWheelY + radius;
 
@@ -164,13 +117,12 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		return dist <= radius;
 	}
 
-	public void showColorWheel(float x, float y) {
+	public void animateColorWheel(float x, float y) {
 		_isColorWheelVisible = true;
-		_colorWheelX = x - ColorWheel.WHEEL_RADIUS;
-		_colorWheelY = y - ColorWheel.WHEEL_RADIUS;
-
+		_colorWheelX = Math.max(x - MainView.COLORWHEEL_RADIUS, 0);
+		_colorWheelY = Math.max(y - MainView.COLORWHEEL_RADIUS, 0);
 		colorWheelAlpha = 0;
-		Ani.to(this, 1, "colorWheelAlpha", 255, Easing.EXPO_OUT);
+		_colorWheelAnimation = Ani.to(this, 0.2f, "colorWheelAlpha", 255, Easing.EXPO_IN);
 	}
 
 	public int get_userId() {
@@ -179,7 +131,7 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 
 	public void startLoad(int interval, float value, IView target) {
 		_hoverTarget = target;
-		_hoverAnimation = new Ani(_cursor, interval / 1000, "loadRatio", value, Ani.EXPO_OUT, "onEnd:onHoverEnd");
+		_hoverAnimation = new Ani(_cursor, interval / 1000, "loadRatio", value, Ani.EXPO_OUT);
 	}
 
 	public void cancelHover() {
@@ -190,10 +142,6 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 			_hoverAnimation.end();
 
 		_cursor.loadRatio = 0.0f;
-	}
-	
-	public void onHoverEnd(){
-		//println("hoverend");
 	}
 
 	@Override

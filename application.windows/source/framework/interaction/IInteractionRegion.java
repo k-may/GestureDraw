@@ -16,5 +16,5 @@ public interface IInteractionRegion {
 	String get_name();
 	Object get_source();
 	RegionType getType();
-	void removeHand(int id);
+	void removeDomain(int id);
 }

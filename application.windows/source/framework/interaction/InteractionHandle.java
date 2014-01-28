@@ -12,6 +12,8 @@ public class InteractionHandle {
 	private ArrayList<InteractionStreamData> _data;
 	private Boolean _isCancelled = false;
 	private Boolean _isPressing = false;
+	private Boolean _isDrawing = false;
+	private Boolean _isPreHovering = false;
 	private Boolean _isHovering = false;
 	private Boolean _updated = false;
 	private int _startMillis;
@@ -74,6 +76,7 @@ public class InteractionHandle {
 	public void reset() {
 		// only update press state after initial processing
 		_isPressing = get_currentInteraction().isPressing();
+		_isDrawing = get_currentInteraction().isDrawing();
 		_updated = false;
 	}
 
@@ -102,11 +105,20 @@ public class InteractionHandle {
 		return get_currentY() - get_lastInteraction().get_y();
 	}
 
-	public void endHovering() {
-		_isHovering = false;
+	public void endPreHovering() {
+		_isPreHovering = false;
 	}
 
 	public void startHover() {
 		_isHovering = true;
+		_isPreHovering = true;
+	}
+
+	public boolean isPreHovering() {
+		return _isPreHovering;
+	}
+	
+	public Boolean isDrawing(){
+		return _target.isDrawTarget();
 	}
 }

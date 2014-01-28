@@ -12,19 +12,17 @@ public class TouchEvent extends Event {
 	private IView _target;
 	private float _localX;
 	private float _localY;
-	private float _pressure;
 	private UserData _user;
 	private int _time;
 	private Boolean _propogation = true;
 
 	public TouchEvent(InteractionEventType type, IView target, float localX,
-			float localY, float pressure, UserData user, int time) {
+			float localY, UserData user, int time) {
 		super(EventType.Touch);
 		_type = type;
 		_target = target;
 		_localX = localX;
 		_localY = localY;
-		_pressure = pressure;
 		_user = user;
 		_time = time;
 	}
@@ -71,10 +69,6 @@ public class TouchEvent extends Event {
 
 	public Boolean isRollOut() {
 		return _type == InteractionEventType.Cancel;
-	}
-
-	public float get_pressure() {
-		return _pressure;
 	}
 
 	public UserData getUser() {

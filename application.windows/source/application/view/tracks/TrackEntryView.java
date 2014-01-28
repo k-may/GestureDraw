@@ -1,11 +1,12 @@
 package application.view.tracks;
 
 import application.content.ContentManager;
-import application.view.Image;
 import application.view.MainView;
 import application.view.ShadowButton;
+import application.view.image.Image;
 import application.view.labels.LabelView;
 import application.view.menu.Menu;
+import application.view.menu.MenuButton;
 import de.looksgood.ani.Ani;
 import framework.data.MusicEntry;
 import framework.events.PauseTrackEvent;
@@ -16,7 +17,7 @@ import processing.core.PApplet;
 
 import static processing.core.PApplet.println;
 
-public class TrackEntryView extends ShadowButton {
+public class TrackEntryView extends MenuButton { // ShadowButton {
 	private MusicEntry _entry;
 
 	private Boolean _isActive = false;
@@ -38,22 +39,21 @@ public class TrackEntryView extends ShadowButton {
 	public int alpha = 0x00;
 
 	public TrackEntryView(MusicEntry entry) {
-		super();
+		super("playIcon", "playIcon", "playText");
 		_entry = entry;
-		
+
+		_width += MainView.DividorWidth;
+
+		// override the default border behavior, we want to always show the
+		// border
+		// for the tracks
+		addChild(_border);
+		_border.hoverOut();
 
 		createChilds();
 	}
 
 	private void createChilds() {
-
-		_width = Menu.BUTTON_WIDTH;
-		_height = Menu.BUTTON_HEIGHT;
-
-		set_height(_height);
-
-		_bg.set_width(_width);
-		_bg.set_height(_height);
 
 		_playIcon = new Image("playIcon");
 		_playIcon.set_color(MainView.ICON_COLOR);
@@ -71,86 +71,103 @@ public class TrackEntryView extends ShadowButton {
 		_pauseText = new Image("pauseText");
 		_pauseText.set_color(0xff000000);
 		_pauseText.set_y(_textPaddingTop);
-
-		_width +=  Menu.DividorWidth;
-		_invalidated = true;
 	}
 
 	public MusicEntry get_entry() {
-		// TODO Auto-generated method stub
 		return _entry;
 	}
 
-	public void setActive(boolean b) {
-		_isActive = b;
-	}
-
 	public void setPlaying(Boolean isPlaying) {
+
 		_isPlaying = isPlaying;
+		removeChild(_icon);
+		_icon = _isPlaying ? _playIcon : _pauseIcon;
+		addChild(_icon);
 
-		if (!_isPlaying) {
-			addChild(_playText);
-			addChild(_playIcon);
+		_invalidated = true;
 
-			removeChild(_pauseIcon);
-			removeChild(_pauseText);
-		} else {
-			removeChild(_playIcon);
-			removeChild(_playText);
-
-			addChild(_pauseText);
-			addChild(_pauseIcon);
-		}
-
-		if (_trackLabel != null)
-			addChild(_trackLabel);
-
-		if (_artistLabel != null)
-			addChild(_artistLabel);
 	}
 
 	@Override
 	public void draw(PApplet p) {
 		if (_invalidated) {
-			_trackLabel = new LabelView(_entry.trackName, MainView.TEXT_COLOR, ContentManager.GetFont("smallItalic"));
-			addChild(_trackLabel);
-			_trackLabel.set_y(_trackPaddingTop);
-			_trackLabel.set_x(_width - _trackLabel.get_width() - 5);
+			if (_trackLabel == null)
+				createLabels(p);
 
-			_artistLabel = new LabelView(_entry.artist, MainView.TEXT_COLOR, ContentManager.GetFont("small"));
-			addChild(_artistLabel);
-			_artistLabel.set_x(_width - _artistLabel.get_width() - 5);
-			_artistLabel.set_y(_artistPaddingTop);
 			_invalidated = false;
 		}
 
 		super.draw(p);
 	}
 
+	private void createLabels(PApplet p) {
+		_trackLabel = new LabelView(_entry.trackName, MainView.TEXT_COLOR, ContentManager.GetFont("smallItalic"));
+		addChild(_trackLabel);
+		_trackLabel.set_y(5);
+		_trackLabel.set_x(5);
+
+		_artistLabel = new LabelView(_entry.artist, MainView.TEXT_COLOR, ContentManager.GetFont("small"));
+		addChild(_artistLabel);
+		_artistLabel.set_x(5);
+		_artistLabel.set_y(25);
+
+	}
+
 	@Override
-	public Boolean isPressTarget() {
-		return true;
+	protected void onHoverEnd(TouchEvent event) {
+		//System.out.println("hoverEnd : " + _artistLabel.get_text() + " : "
+				//+ event.get_time());
+		super.onHoverEnd(event);
+
+		_openColor = event.getColor();
+		setOpen();
 	}
 
 	@Override
 	protected void onHover(TouchEvent event) {
-		super.onHover(event);
-		//println("hover track view");
-		_playIcon.set_color(_color);
-		_pauseIcon.set_color(_color);
-		_artistLabel.set_color(_color);
-		_trackLabel.set_color(_color);
+		int color = event.getColor();
+		_playIcon.set_color(color);
+		_pauseIcon.set_color(color);
+		_icon.set_color(color);
+		_border.set_color(color);
 	}
 
 	@Override
 	protected void onHoverOut(TouchEvent event) {
-		// TODO Auto-generated method stub
-		super.onHoverOut(event);
-		println("hover out!");
-		_playIcon.set_color(_color);
-		_pauseIcon.set_color(_color);
+		_icon.set_color(MainView.ICON_COLOR);
+		_playIcon.set_color(MainView.ICON_COLOR);
+		_pauseIcon.set_color(MainView.ICON_COLOR);
 		_artistLabel.set_color(MainView.TEXT_COLOR);
 		_trackLabel.set_color(MainView.TEXT_COLOR);
+
+		setClosed();
+	}
+
+	@Override
+	protected void setClosed() {
+		//System.out.println("closed : " + _artistLabel.get_text());
+		_isPressTarget = false;
+		removeChild(_text);
+		removeChild(_bg);
+		_isOpen = false;
+
+		_border.hoverOut();
+
+	}
+	
+	@Override
+	protected void setOpen() {
+		_isPressTarget = true;
+		addChild(_bg);
+		addChild(_artistLabel);
+		addChild(_trackLabel);
+		addChild(_text);
+		addChild(_icon);
+		//by default the border is only
+		//visible in the open state
+		addChild(_border);
+		_border.hoverOver();
+		_isOpen = true;
 	}
 
 	@Override

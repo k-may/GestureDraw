@@ -57,6 +57,6 @@ public class Rectangle {
 
 	public boolean contains(float x, float y) {
 		// TODO Auto-generated method stub
-		return (x >= _x && x < _x + _width && y >= _y && y < _y + _height);
+		return (x >= _x && x <= _x + _width && y >= _y && y <= _y + _height);
 	}
 }

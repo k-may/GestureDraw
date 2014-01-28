@@ -1,5 +1,6 @@
 package application.view.colorwheel;
 
+import application.view.MainView;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -8,7 +9,6 @@ import gesturedraw.GestureDraw;
 
 public class ColorWheel{
 
-	public static int WHEEL_RADIUS = 170;
 
 	private static PImage _wheel;
 
@@ -26,10 +26,11 @@ public class ColorWheel{
 	}
 
 	private PImage createWheel() {
-		PGraphics img = GestureDraw.instance.createGraphics(WHEEL_RADIUS*2,WHEEL_RADIUS*2);
+		PGraphics img = GestureDraw.instance.createGraphics(MainView.COLORWHEEL_RADIUS*2,MainView.COLORWHEEL_RADIUS*2);
 
-		int bLength = 20;
-		int radius = WHEEL_RADIUS - bLength;
+		//width of transparency region around outside
+		int bLength = 15;
+		int radius = MainView.COLORWHEEL_RADIUS - bLength;
 
 		img.beginDraw();
 		img.colorMode(PApplet.HSB, 100, 100, 100);
@@ -37,9 +38,11 @@ public class ColorWheel{
 
 		for (int r = radius + bLength; r >= 0; r--) {
 			float sat = r < radius ? ((float) r / radius) : 1;
-			sat = (float) (Math.pow(sat, 1.6) * 100);
+			sat *= 100;// (float) (Math.pow(sat, 1.6) * 100);
 			float br = r > radius ? (1 - (float) (r - radius) / bLength) : 1;
 
+			//System.out.println(sat + " : " + r);
+			
 			float alpha = (float) r / (radius + bLength);
 			alpha = (float) Math.pow(alpha, 3);
 			alpha = 1 - alpha;
@@ -58,15 +61,16 @@ public class ColorWheel{
 
 				img.fill(hue, sat, br, alpha * 255);
 
-				float x = (float) (Math.sin(rads) * r + WHEEL_RADIUS);
-				float y = (float) (Math.cos(rads) * r + WHEEL_RADIUS);
+				float x = (float) (Math.sin(rads) * r + MainView.COLORWHEEL_RADIUS);
+				float y = (float) (Math.cos(rads) * r + MainView.COLORWHEEL_RADIUS);
 
 				img.ellipse(x, y, 2, 2);
 			}
 		}
 
-		img.fill(17, 16, 17);
-		img.ellipse(WHEEL_RADIUS, WHEEL_RADIUS, 50, 50);
+		//erase color
+		img.fill(MainView.BG_COLOR);
+		img.ellipse(MainView.COLORWHEEL_RADIUS, MainView.COLORWHEEL_RADIUS, 50, 50);
 
 		img.endDraw();
 		

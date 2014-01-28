@@ -20,7 +20,7 @@ public class GestureDraw extends PApplet {
 		if (!isFullScreen) {
 			size(1024, 768, PApplet.P3D);
 		} else {
-			size(displayWidth, displayHeight, PApplet.OPENGL);//PApplet.JAVA2D);
+			size(displayWidth, displayHeight, PApplet.P3D);//PApplet.OPENGL);//PApplet.JAVA2D);//
 		}
 
 		instance = this;

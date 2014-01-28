@@ -2,39 +2,27 @@ package application.view.home;
 
 import java.util.ArrayList;
 
-import de.looksgood.ani.Ani;
-
 import processing.core.PApplet;
 import processing.core.PImage;
-import application.content.ContentManager;
-import application.view.GlowingImage;
-import application.view.Image;
 import application.view.MainView;
-import application.view.gallery.NavButton;
+import application.view.image.Image;
 import application.view.scene.Scene;
 import framework.data.GalleryEntry;
-import framework.events.LabelButtonPressed;
-import framework.events.TouchEvent;
 import framework.scenes.IHomeScene;
 import framework.scenes.SceneType;
 import framework.view.IGallery;
-
-import static processing.core.PApplet.println;
+import framework.view.View;
 
 public class HomeScene extends Scene implements IHomeScene<PImage> {
 
-	private Boolean _ready = false;
+	private View _currentScreen;
+
 	private HomeBg _bg;
 	private HomeGallery _gallery;
 
-	private GlowingImage _welcome;
-	private GlowingImage _start;
-
 	private Image _poweredByText;
-	private NavButton _rightButton;
 
-
-	public static int BG_COLOR = 0xff111011;
+	private HomeModel _model;
 
 	public HomeScene() {
 		super(SceneType.Home);
@@ -48,18 +36,11 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 	@Override
 	public void draw(PApplet p) {
 
+		_model.update(p.millis());
+
 		p.background(0xff000000);
 
 		if (_invalidated) {
-			float wX = (_width - _welcome.get_width()) / 2;
-			float wY = 50; //(_height - _welcome.get_height()) / 2;
-
-			_welcome.set_x(wX);
-			_welcome.set_y(wY);
-
-			_start.set_x((_width - _start.get_width()) / 2);
-			_start.set_y(50);//(_height - _start.get_height()) / 2);
-
 			float pX = (_width - _poweredByText.get_width()) / 2;
 			float pY = (_height - _poweredByText.get_height());
 
@@ -74,61 +55,62 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 
 	private void createChilds() {
 
+		_model = new HomeModel(this);
+
 		_bg = new HomeBg();
 		addChild(_bg);
 
 		createGallery();
-		_welcome = new GlowingImage("welcomeText", "welcomeBlur");
 
-		_start = new GlowingImage("startText", "startBlur");
-		
 		_poweredByText = new Image("poweredByText");
 		_poweredByText.set_alpha(200);
-		
 		addChild(_poweredByText);
 
-		_invalidated = true;	
-		
-		_rightButton = new NavButton("right");
-		//addChild(_rightButton);
-		_rightButton.set_x(_width - _rightButton.get_width());
-		_rightButton.set_y(567);
+		_invalidated = true;
 	}
 
 	private void createGallery() {
 
-		_gallery = new HomeGallery();
+		_gallery = new HomeGallery(_model);
 		addChild(_gallery);
-		float galleryScale = 0.5f;
-		
+		float galleryScale = 0.9f;
+
 		float galleryWidth = _width * galleryScale;
 		float galleryHeight = _height * galleryScale;
-		float galleryX = (_width - galleryWidth)/2;
-		float galleryY = (_height - galleryHeight)/2;
+		float galleryX = (_width - galleryWidth) / 2;
+		float galleryY = (_height - galleryHeight) / 2;
 
 		_gallery.set_x(galleryX);
 		_gallery.set_y(galleryY);
 		_gallery.set_width(galleryWidth);
 		_gallery.set_height(galleryHeight);
-		
+
 	}
 
 	@Override
 	public void setReady(Boolean value) {
-		if (value) {
-			addChild(_start);
-			removeChild(_welcome);
-			_isTouchEnabled = true;
-		} else {
-			removeChild(_start);
-			addChild(_welcome);
-			_isTouchEnabled = false;
+		System.out.println("=== HomeScreen === set ready : " + value);
+		
+		this._isTouchEnabled = value;
+		_model.setReady(value);
+	}
+
+	public void setScreen(View screen) {
+		if (_currentScreen != null) {
+			removeChild(_currentScreen);
+			_currentScreen = null;
 		}
-		_ready = value;
+		if (screen != null) {
+			_currentScreen = screen;
+			addChild(_currentScreen);
+
+			_currentScreen.set_x((_width - _currentScreen.get_width()) / 2);
+			_currentScreen.set_y((_height - _currentScreen.get_height()) / 2);
+		}
 	}
 
 	@Override
-	public IGallery getGallery() {
+	public IGallery<PImage> getGallery() {
 		return _gallery;
 	}
 
@@ -136,9 +118,5 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 	public void setImages(ArrayList<GalleryEntry<PImage>> images) {
 		_gallery.setImages(images);
 	}
-	
-	@Override
-	protected void onPress(TouchEvent event) {
-		new LabelButtonPressed("START").dispatch();
-	}
+
 }

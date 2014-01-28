@@ -1,6 +1,11 @@
 package framework.interaction;
 
-import framework.pressing.PressStateData;
+import java.util.ArrayList;
+
+import framework.depth.DepthState;
+import framework.depth.DepthStateData;
+import framework.interaction.Types.HandType;
+import framework.view.IView;
 
 public class InteractionStreamData {
 
@@ -12,8 +17,9 @@ public class InteractionStreamData {
 	private InteractionType _type;
 	private Boolean _isOverPressTarget = false;
 	private Boolean _isPressing = false;
-	private float _pressPressure = 0.0f;
 	private Boolean _isOverHoverTarget = false;
+	private DepthState _pressState;
+	private ArrayList<IView> _targets;
 	
 	public InteractionStreamData(float x, float y, float z, int userId,
 			InteractionType type) {
@@ -21,21 +27,23 @@ public class InteractionStreamData {
 		_z = (z);
 		_x = (x);
 		_y = (y);
+		//System.out.println("z : " + _z);
 		_type = (type);
 	}
 
 	public InteractionStreamData(float x, float y, float z, int userId,
-			InteractionType type, Boolean isOverHoverTarget, Boolean isOverPressTarget,Boolean isPressing,float pressPressure) {
+			InteractionType type, Boolean isOverHoverTarget,
+			Boolean isOverPressTarget,Boolean isPressing,
+			HandType handType, DepthState pressState, ArrayList<IView> targets) {
 		this(x, y, z, userId, type);
 		_isOverHoverTarget = isOverHoverTarget;
 		_isOverPressTarget = isOverPressTarget;
 		_isPressing = isPressing;
-		_pressPressure = pressPressure;
+		_handType = handType;
+		_pressState = pressState;
+		_targets = targets;
 	}
 
-	public float get_pressPressure() {
-		return _pressPressure;
-	}
 
 	public Boolean isPressing() {
 		return _isPressing;
@@ -70,8 +78,20 @@ public class InteractionStreamData {
 	}
 
 	public Boolean isOverTarget() {
-		// TODO Auto-generated method stub
 		return _isOverHoverTarget || _isOverPressTarget;
+	}
+
+	public HandType getHandType() {
+		return _handType;
+	}
+
+	public boolean isDrawing() {
+		// TODO Auto-generated method stub
+		return _pressState == DepthState.Drawing;// || _pressState == PressState.PreDrawing;
+	}
+
+	public ArrayList<IView> getTargets() {
+		return _targets;
 	}
 
 }

@@ -14,6 +14,7 @@ public interface IView {
 	Boolean isTouchEnabled();
 	Boolean isPressTarget();
 	Boolean isHoverTarget();
+	Boolean isDrawTarget();
 	void setVisible(Boolean isVisible);
 	Rectangle get_rect();
 	int get_numChildren();

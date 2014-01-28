@@ -9,18 +9,9 @@ import framework.view.View;
 
 public class Menu extends View implements Observer {
 
-	public static final int BUTTON_WIDTH = 208;
-	public static final int BUTTON_HEIGHT = 208;
-
-	public static final int DividorWidth = 6;
-
-	public static Boolean CLEARABLE = true;
-	public static Boolean TRACKS = true;
-
 	private ClearButton _clearButton;
-	private GalleryButton _galleryButton;
 	private SaveButton _saveButton;
-	private TracksButton _tracksButton;
+	private TracksButtonCont _tracksButton;
 
 	public Menu() {
 		init();
@@ -36,21 +27,17 @@ public class Menu extends View implements Observer {
 	}
 
 	private void createChilds() {
-		if (TRACKS) {
-			_tracksButton = new TracksButton();
+		if (MainView.TRACKS) {
+			_tracksButton = new TracksButtonCont();
 			addChild(_tracksButton);
 		}
 		
-		if (CLEARABLE) {
+		if (MainView.CLEARABLE) {
 			_clearButton = new ClearButton();
 			addChild(_clearButton);
 			_clearButton.set_x(_width - _clearButton.get_width());
 			_clearButton.set_y(_height - _clearButton.get_height());
 		}
-
-		_galleryButton = new GalleryButton();
-		addChild(_galleryButton);
-		_galleryButton.set_y(_height - _galleryButton.get_height());
 
 		_saveButton = new SaveButton();
 		addChild(_saveButton);

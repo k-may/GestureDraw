@@ -240,4 +240,9 @@ public class View implements IView {
 	private int getUniquID(){
 		return ID_COUNT ++;
 	}
+
+	@Override
+	public Boolean isDrawTarget() {
+		return false;
+	}
 }

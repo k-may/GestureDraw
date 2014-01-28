@@ -32,14 +32,15 @@ public class DataXMLClient implements IDataClient {
 	}
 
 	private void loadDataXML() {
+		
 		dataXML = GestureDraw.instance.loadXML(_filePath);
 
 		if (dataXML == null) {
 			new ErrorEvent(ErrorType.XMLPath, "path '" + _filePath
 					+ "' could not be found").dispatch();
 			println("cant load");
-		}
-		setTracksPath();
+		} else
+			setTracksPath();
 	}
 
 	private void setTracksPath() {
@@ -127,6 +128,22 @@ public class DataXMLClient implements IDataClient {
 	public String getInputType() {
 		return getContent("input");
 	}
+	
+	public int getMaxStroke(){
+		return getIntContent("ui_max_stroke");
+	}
+	
+	public int getMinStroke(){
+		return getIntContent("ui_min_stroke");
+	}
+	
+	public int getColorWheelRadius(){
+		return getIntContent("ui_color_wheel_radius");
+	}
+	
+	public int getButtonSize(){
+		return getIntContent("ui_button_size");
+	}
 
 	@Override
 	public int getMaxNumHands() {
@@ -157,23 +174,39 @@ public class DataXMLClient implements IDataClient {
 		return getContent("soni_start_gesture");
 	}
 
-	private int getIntContent(String name){
+	private int getIntContent(String name) {
 		return Integer.parseInt(getContent(name));
 	}
-	private Boolean getBooleanContent(String name){
+
+	private float getFloatContent(String name) {
+		return Float.parseFloat(getContent(name));
+	}
+
+	private Boolean getBooleanContent(String name) {
 		Boolean value = true;
 		value = Boolean.parseBoolean(getContent(name));
 		return value;
 	}
-	
-	private String getContent(String name){
+
+	private String getContent(String name) {
 		String value = "";
 		try {
-			value = dataXML.getChild(name).getContent();//Integer.parseInt(dataXML.getChild("input_for_range").getContent());
+			value = dataXML.getChild(name).getContent();// Integer.parseInt(dataXML.getChild("input_for_range").getContent());
 		} catch (NullPointerException e) {
-			new ErrorEvent(ErrorType.XMLParsing, "couldn't find value for '"+ name + "' in config.xml").dispatch();
+			new ErrorEvent(ErrorType.XMLParsing, "couldn't find value for '"
+					+ name + "' in config.xml").dispatch();
 		}
 		return value;
+	}
+
+	@Override
+	public float getHorUserRegion1() {
+		return getFloatContent("user_region_ratio_1");
+	}
+
+	@Override
+	public float getHorUserRegion2() {
+		return getFloatContent("user_region_ratio_2");
 	}
 
 }

@@ -2,8 +2,9 @@ package application.view.menu;
 
 import processing.core.PApplet;
 import processing.core.PVector;
-import application.view.Image;
+import application.view.ButtonBorder;
 import application.view.MainView;
+import application.view.image.Image;
 import framework.events.TouchEvent;
 import framework.view.View;
 
@@ -13,12 +14,14 @@ public class MenuButton extends View {
 
 	protected int _iconPaddingLeft = 154;
 	protected int _iconPaddingTop = 121;
-	protected int _textPaddingTop = 134;
+
 	protected Image _bg;
 
 	protected Image _icon;
 	protected Image _iconLarge;
 	protected Image _text;
+
+	protected ButtonBorder _border;
 
 	protected float _origWidth;
 	protected float _origHeight;
@@ -32,12 +35,11 @@ public class MenuButton extends View {
 
 	public MenuButton(String icon, String iconLarge, String text) {
 		_isHoverEnabled = true;
-		_width = Menu.BUTTON_WIDTH;
-		_height = Menu.BUTTON_HEIGHT;
+		_width = MainView.BUTTON_WIDTH;
+		_height = MainView.BUTTON_HEIGHT;
 
 		_icon = new Image(icon);
 		_icon.set_color(MainView.ICON_COLOR);
-
 		addChild(_icon);
 
 		_iconLarge = new Image(iconLarge);
@@ -56,8 +58,10 @@ public class MenuButton extends View {
 
 		_text = new Image(text);
 		_text.set_color(0xff000000);
-		_text.set_y(_textPaddingTop);
+		_text.set_y(MainView.BUTTON_TEXT_TOP);
 
+		_border = new ButtonBorder();
+		_border.hoverOver();
 	}
 
 	@Override
@@ -70,9 +74,11 @@ public class MenuButton extends View {
 
 	@Override
 	protected void onHover(TouchEvent event) {
-		_icon.set_color(event.getColor());
+		int color = event.getColor();
+		_icon.set_color(color);
 		_icon.fadeIn();
-		_iconLarge.set_color(event.getColor());
+		_iconLarge.set_color(color);
+		_border.set_color(color);
 	}
 
 	@Override
@@ -95,8 +101,13 @@ public class MenuButton extends View {
 		addChild(_iconLarge);
 		addChild(_text);
 		
-		_iconLarge.fadeIn();
+		//by default the border is only
+		//visible in the open state
+		addChild(_border);
+		_border.hoverOver();
 		
+		_iconLarge.fadeIn();
+
 		removeChild(_icon);
 		_isOpen = true;
 	}
@@ -107,19 +118,8 @@ public class MenuButton extends View {
 		addChild(_icon);
 		removeChild(_text);
 		removeChild(_bg);
+		removeChild(_border);
 		_isOpen = false;
 	}
 
-	@Override
-	public void draw(PApplet p) {
-		super.draw(p);
-
-		PVector absPos = get_absPos();
-
-		if (_isOpen) {
-			p.noFill();
-			p.stroke(_openColor);
-			p.rect(absPos.x, absPos.y, _width, _height);
-		}
-	}
 }
