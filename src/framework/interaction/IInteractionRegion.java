@@ -2,6 +2,8 @@ package framework.interaction;
 
 import java.util.ArrayList;
 
+import framework.interaction.data.InteractionStreamData;
+
 import application.interaction.RegionType;
 
 /*

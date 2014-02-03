@@ -14,17 +14,22 @@
   <!-- whether to show a clear button on the canvas -->
   <ui_clearable>true</ui_clearable>
   <!-- absolute paths only! -->
+  
   <ui_min_stroke>4</ui_min_stroke>
   <ui_max_stroke>30</ui_max_stroke>
+  
   <ui_color_wheel_radius>120</ui_color_wheel_radius>
   <ui_button_size>208</ui_button_size>
+  
+  <!-- cursor attraction to center of screen -->
+  <mass_center>0.0005</mass_center>
+  <!--cursor attraction to button-->
+  <mass_button>0.005</mass_button>
+  
   <user_region_ratio_1>0.2</user_region_ratio_1>
   <user_region_ratio_2>0.8</user_region_ratio_2>
   <trackpath>c:\work\gesturetek\KinectApp\KinectApp\bin\tracks\</trackpath>
   <music artist="Caribou" name="Sun">Sun.mp3</music>
   <music artist="Peter King" name="African Dialects">African Dialects.mp3</music>
   <music artist="Saint-Germain" name="Sure Thing">Sure Thing.mp3</music>
-  <image artists="me" title="">/C:/work/GestureDraw/bin/images/40_1.jpg</image>
-  <image artists="me" title="">/C:/work/GestureDraw/bin/images/40_6.jpg</image>
-  <image artists="me" title="">/C:/work/GestureDraw/bin/images/4_44.jpg</image>
 </data>

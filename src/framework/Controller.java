@@ -26,6 +26,7 @@ import framework.events.UpdateColorEvent;
 import framework.events.UserAddedEvent;
 import framework.events.UserRemovedEvent;
 import framework.interaction.IInteractionRegion;
+import framework.interaction.IInteractionView;
 import framework.scenes.IHomeScene;
 import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
@@ -42,6 +43,7 @@ public class Controller implements IController {
 	private IHomeScene<?> _homeScene;
 	private ErrorLogClient _errorLogClient;
 	private LogClient _logClient;
+	private IInteractionView _interactionView;
 	// private int _actionTime;
 
 	private ArrayList<IController> _controllers;
@@ -129,8 +131,11 @@ public class Controller implements IController {
 			case StreamEnd:
 				handleStreamEnd();
 				break;
-			case InAction:
+			case Inaction:
 				handleInAction();
+				break;
+			case NoPressed:
+				navigateToHome();
 				break;
 		}
 	}
@@ -139,7 +144,8 @@ public class Controller implements IController {
 		int id = event.get_user().get_id();
 		float position = event.get_user().get_localX();
 		int color = event.get_color();
-		_mainView.get_userMenuView().updateDomain(id, position, color);//updateRegion(userRegion, color);
+		_mainView.get_userMenuView().updateDomain(id, position, color);// updateRegion(userRegion,
+																		// color);
 	}
 
 	private void handleInAction() {
@@ -153,7 +159,8 @@ public class Controller implements IController {
 	private void handleUserAdded(UserAddedEvent event) {
 		int id = event.get_user().get_id();
 		float position = event.get_user().get_localX();
-		_mainView.get_userMenuView().updateDomain(id, position, UserData.START_COLOR);//updateRegion(userRegion, UserData.START_COLOR);
+		_mainView.get_userMenuView().updateDomain(id, position, UserData.START_COLOR);// updateRegion(userRegion,
+																						// UserData.START_COLOR);
 	}
 
 	private void handleUserRemoved(UserRemovedEvent event) {
@@ -172,13 +179,18 @@ public class Controller implements IController {
 		_errorLogClient.addError(event);
 	}
 
-
 	private void handleHandDetected(HandDetectedEvent event) {
+		System.out.println("\n->> hand detected event");
 		switch (SceneManager.GetSceneType()) {
 			case Home:
 				_homeScene.setReady(true);
 				break;
 		}
+		
+		//prevent inaction event
+		if(_interactionView != null)
+			_interactionView.update();
+
 	}
 
 	private void handleLableButton(LabelButtonPressed event) {
@@ -271,6 +283,10 @@ public class Controller implements IController {
 			_controllers = new ArrayList<IController>();
 
 		_controllers.add(controller);
+	}
+
+	public void registerInteractionView(IInteractionView interactionView) {
+		_interactionView = interactionView;
 	}
 
 }

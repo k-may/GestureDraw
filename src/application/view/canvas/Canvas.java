@@ -11,6 +11,7 @@ import processing.core.PImage;
 import processing.core.PVector;
 import application.view.MainView;
 import application.view.avatar.AvatarCursor;
+import application.view.image.Image;
 import framework.data.UserData;
 import framework.events.TouchEvent;
 import framework.stroke.ICanvas;
@@ -24,6 +25,7 @@ public class Canvas extends View implements ICanvas<PImage> {
 	private PGraphics _strokeBuffer;
 	private StrokeHandler _handler;
 	private PGraphics _buffer;
+	private int _color = MainView.WHITE;
 	private HashMap<Integer, PGraphics> _buffers;
 	private ArrayList<PGraphics> _completedBuffers;
 
@@ -50,17 +52,14 @@ public class Canvas extends View implements ICanvas<PImage> {
 	}
 
 	private void drawCanvasBuffer(PApplet p) {
-		if (_buffer == null) {
-			_buffer = p.createGraphics((int) _width, (int) _height);//, PApplet.OPENGL);
-			_buffer.noFill();
-			_buffer.beginDraw();
-			_buffer.background(MainView.BG_COLOR);
-			_buffer.endDraw();
-		}else if (_completedBuffers.size() > 0) {
+		if (_buffer == null)
+			createMainBuffer(p);
+
+		if (_completedBuffers.size() > 0) {
 			_buffer.beginDraw();
 			for (PGraphics buffer : _completedBuffers) {
 				buffer.loadPixels();
-				//buffer.
+				// buffer.
 				_buffer.image(buffer, 0, 0);
 				buffer.dispose();
 				p.removeCache(buffer);
@@ -69,7 +68,22 @@ public class Canvas extends View implements ICanvas<PImage> {
 			_buffer.endDraw();
 		}
 
+		p.tint(_color);
 		p.image(_buffer, _x, _y);
+	}
+
+	@Override
+	public void set_alpha(float value) {
+		_color = Image.SetAlpha(_color, (int)value);
+	}
+
+	private void createMainBuffer(PApplet p) {
+		_buffer = p.createGraphics((int) _width, (int) _height);// ,
+																// PApplet.OPENGL);
+		_buffer.noFill();
+		_buffer.beginDraw();
+		_buffer.background(MainView.BG_COLOR);
+		_buffer.endDraw();
 	}
 
 	private void renderStrokeBuffers(PApplet p) {
@@ -148,15 +162,16 @@ public class Canvas extends View implements ICanvas<PImage> {
 
 		switch (event.get_interactionType()) {
 			case PressDown:
-				//println("press down");
+				// println("press down");
 				_handler.start(event.get_localX(), event.get_localY(), strokePressure, event.getUser());
 				break;
 			case PressUp:
-				//println("press up");
+				// println("press up");
 				_handler.end(event.get_localX(), event.get_localY(), strokePressure, event.getUser());
 				break;
 			case Move:
-				//println("move : " + event.get_localX() + " / " + event.get_localY());
+				// println("move : " + event.get_localX() + " / " +
+				// event.get_localY());
 				_handler.move(event.get_localX(), event.get_localY(), strokePressure, event.getUser());
 				break;
 		}
@@ -187,7 +202,7 @@ public class Canvas extends View implements ICanvas<PImage> {
 	public PImage getImage() {
 		return _buffer.get();
 	}
-	
+
 	@Override
 	public Boolean isDrawTarget() {
 		return true;

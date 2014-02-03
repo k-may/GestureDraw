@@ -2,6 +2,7 @@ package application.interaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import processing.core.PVector;
@@ -10,10 +11,12 @@ import application.view.MainView;
 import framework.depth.DepthState;
 import framework.depth.DepthStateData;
 import framework.events.HandDetectedEvent;
-import framework.interaction.InteractionStreamData;
-import framework.interaction.InteractionTargetInfo;
 import framework.interaction.Region;
+import framework.interaction.Vector;
 import framework.interaction.Types.HandType;
+import framework.interaction.data.InteractionData;
+import framework.interaction.data.InteractionStreamData;
+import framework.interaction.data.InteractionTargetInfo;
 
 public abstract class KinectRegion<T> extends Region<T> {
 
@@ -27,8 +30,9 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 	protected RegionType _regionType;
 
-	protected HashMap<Integer, Integer> _handIdDomainIdMap;
 	protected HashMap<Integer, DepthStateData> _pressStateMap;
+
+	private DomainManager _domainManager;
 
 	public KinectRegion(T source, int maxHands, int xRange, int yRange,
 			int zRange, RegionType type) {
@@ -40,7 +44,7 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 		_regionType = type;
 		_maxHands = maxHands;
-		_handIdDomainIdMap = new HashMap<Integer, Integer>();
+
 		_pressStateMap = new HashMap<Integer, DepthStateData>();
 		if (xRange != -1)
 			MainView.XRANGE = xRange;
@@ -58,16 +62,15 @@ public abstract class KinectRegion<T> extends Region<T> {
 	public void runInteractions() {
 		_stream = new ArrayList<InteractionStreamData>();
 
-		if (_domainData == null)
+		ArrayList<UserInputData> domainData = _domainManager.get_domainData();
+
+		if (domainData.size() == 0)
 			return;
 
 		_adapter.beginInteractionFrame();
 
-		for (DomainData domain : _domainData.values()) {
-			Boolean ready = domain.isReady();
-			Boolean updated = domain.isUpdated();
-			if (ready && updated)
-				_stream.add(digestInput(domain));
+		for (UserInputData domain : domainData) {
+			_stream.add(digestInput(domain));
 		}
 
 		// update user states
@@ -79,52 +82,46 @@ public abstract class KinectRegion<T> extends Region<T> {
 	 * Mapping values only seems to work for the SONRegion at the moment, (may
 	 * be skipping frames!?)
 	 */
-	protected InteractionStreamData digestInput(DomainData domainData) {
+	protected InteractionStreamData digestInput(UserInputData domainData) {
 
 		int id = domainData.get_id();
+		//returns current position
 		PVector position = domainData.getPosition();
 		HandType handType = domainData.handType;
 
-		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(position.x, position.y, id, _type);
+		//digest UI information relevant to current position
+		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(position.x, position.y, _type);
 		Boolean isHoverTarget = info.get_isHoverTarget();
 		Boolean isPressTarget = info.get_isPressTarget();
 
-		DepthStateData depthStateData = _adapter.getUserForDomain(id).get_depthStateData();
+		//digest depth state
+		DepthStateData depthStateData = _adapter.getInteractionInfoAtDepth(position.z);//getUserForDomain(id).get_depthStateData();
 		DepthState pressState = depthStateData == null ? DepthState.None
 				: depthStateData.get_state();
 
+		//handle press intention
 		Boolean isPressing = false;
-		if (isPressTarget) {
-			// PressData pressData = _pressHandler.getPressData(id, position.z,
-			// info.get_targetID());
-			isPressing = _pressHandler.getPressData(id, position.z, info.get_targetID());// pressData.get_isPressing();
-		}
+		if (isPressTarget)
+			isPressing = _pressHandler.getPressData(id, position.z, info.get_targetID());
 
+		//apply attraction forces
 		position = domainData.digest(info, pressState);
-		float x = position.x;
-		float y = position.y;
-		float z = position.z;
-
+	
+		//handle draw intention
 		Boolean isDrawing = info.get_canvas() != null
 				&& pressState == DepthState.Drawing;
+		
+		InteractionData data = new InteractionData(new Vector(position.x, position.y, position.z), isPressing, isDrawing);
 
-		return new InteractionStreamData(x, y, z, id, _type, isHoverTarget, isPressTarget, isPressing, handType, pressState, info.get_targets());
+		return new InteractionStreamData(data, id, _type, isHoverTarget, isPressTarget, handType, info.get_targets());
 
 	}
 
 	/*
 	 * in-point, takes data directly from framework
 	 */
-	protected DomainData updateHand(int handId, PVector pos) {
-
-		if (_domainData == null)
-			initialize();
-
-		int domain = getDomainForHand(pos.x);
-		if (domain == -1)
-			return null;
-
-		DomainData data = getDomainData(handId, domain);
+	protected UserInputData updateHand(int handId, PVector pos) {
+		UserInputData data = _domainManager.getDomainData(handId, pos);
 
 		if (data != null) {
 			data.addRawPosition(pos, handId);
@@ -133,64 +130,9 @@ public abstract class KinectRegion<T> extends Region<T> {
 
 	}
 
-	private DomainData getDomainData(int handId, int domain) {
-		// DomainData data = null;
-
-		if (_handIdDomainIdMap.containsKey(handId)) {
-			// check if hand has left domain
-			int d = _handIdDomainIdMap.get(handId);
-
-			if (d != domain)
-				println("hand outside of domain : " + d + " => " + domain);
-
-			return _domainData.get(d);
-
-		} else {
-
-			// if hand introduced in established domain we'll assume it's the other
-			// hand
-			if (_domainData.containsKey(domain)) {
-				_handIdDomainIdMap.put(handId, domain);
-				return _domainData.get(domain);
-			} else {
-				println("---->create domain : " + domain);
-
-				DomainData data = new DomainData(domain);
-
-				if (_domainData.size() == 0)
-					new HandDetectedEvent().dispatch();
-
-				_domainData.put(domain, data);
-				return data;
-			}
-		}
-	}
-
 	@Override
 	public void removeDomain(int id) {
-		println("-->remove domain : " + id);
-		try {
-			if (_domainData.containsKey(id)) {
-				DomainData data = _domainData.get(id);
-				
-				// remove domains / hand ids from map
-				ArrayList<Integer> entries = new ArrayList<Integer>();
-				for (Entry<Integer, Integer> set : _handIdDomainIdMap.entrySet()) {
-					if (set.getValue() == id)
-						entries.add(set.getKey());
-				}
-				for (int handId : entries) {
-					println("-->remove hand : " + handId);
-					_handIdDomainIdMap.remove(handId);
-				}
-
-				_domainData.remove(id);
-			} else {
-				println("wierd : remove hand that doesn't exist!");
-			}
-		} catch (Exception e) {
-			println("cant remove hand: " + id);
-		}
+		_domainManager.removeDomain(id);
 	}
 
 	@Override
@@ -198,38 +140,13 @@ public abstract class KinectRegion<T> extends Region<T> {
 		return _stream;
 	}
 
-	private void initialize() {
-		// initialize map
-		_domainData = new HashMap<Integer, DomainData>();
-		new HandDetectedEvent().dispatch();
-	}
-
-	private int getDomainForHand(float x) {
-		return getDomainForNormalizedPos(x / MainView.SRC_WIDTH);
-	}
-
-	private int getDomainForNormalizedPos(float x) {
-
-		int domain = -1;
-		if (x <= firstDomain)
-			domain = 0;
-		else if (x > firstDomain & x <= secondDomain)
-			domain = 1;
-		else if (x > secondDomain && x <= 1)
-			domain = 2;
-		return domain;
-	}
-
 	public void setDomains(float first, float second) {
-		firstDomain = first;
-		secondDomain = second;
-
-		println("DOMAINS ==> " + firstDomain * MainView.SRC_WIDTH + " / " + secondDomain
-				* MainView.SRC_HEIGHT);
+		if (_domainManager == null)
+			_domainManager = new DomainManager(first, second);
 	}
 
 	private void println(Object msg) {
-		//System.out.println(msg);
+		System.out.println(msg);
 	}
 
 }

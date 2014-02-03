@@ -12,8 +12,7 @@ public class KinectInputData extends RegionInputData {
 	private PVector lastPosition;
 	private static final int MAX_SAMPLES = 25;
 
-	public KinectInputData(int id) {
-		_id = id;
+	public KinectInputData() {
 	}
 
 	public Boolean isUpdated() {
@@ -94,8 +93,9 @@ public class KinectInputData extends RegionInputData {
 			distance = Math.hypot(pos.x - lastPosition.x, pos.y
 					- lastPosition.y);
 
+		//System.out.println(distance);
 		lastPosition = pos;
-		return distance > 10;
+		return distance > 0.5;
 	}
 
 }

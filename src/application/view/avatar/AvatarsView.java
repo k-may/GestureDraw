@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import framework.Controller;
 import framework.cursor.CursorMode;
 import framework.data.UserData;
-import framework.events.InActionEvent;
+import framework.events.InactionEvent;
 import framework.events.UserAddedEvent;
 import framework.events.UserRemovedEvent;
 import framework.interaction.IInteractionView;
@@ -30,6 +31,8 @@ public class AvatarsView extends View implements IInteractionView {
 	public AvatarsView() {
 		_users = new ArrayList<UserData>();
 		_avatarViews = new HashMap<Integer, AvatarView>();
+		
+		Controller.getInstance().registerInteractionView(this);
 	}
 
 	@Override
@@ -49,14 +52,21 @@ public class AvatarsView extends View implements IInteractionView {
 		if (_updated)
 			_lastUpdate = p.millis();
 
-		if (time - _lastUpdate > 60000) {
-			new InActionEvent().dispatch();
+		if (time - _lastUpdate > getInactionValue()) {
+			System.out.println("------------>>>> inaction!!!");
+			new InactionEvent().dispatch();
 			_lastUpdate = time;
 		}
 
 		_updated = false;
 	}
 
+	private int getInactionValue(){
+		if(SceneManager.GetSceneType() == SceneType.Canvas)
+			return 60000;
+		else
+			return 5000;
+	}
 	@Override
 	public void removeUser(UserData user) {
 		if (_users.contains(user))
@@ -115,6 +125,11 @@ public class AvatarsView extends View implements IInteractionView {
 			return _avatarViews.get(id);
 
 		return null;
+	}
+	
+	public void update(){
+		System.out.println("===================>>>>> UPDATE!!!!!");
+		_updated = true;
 	}
 
 }

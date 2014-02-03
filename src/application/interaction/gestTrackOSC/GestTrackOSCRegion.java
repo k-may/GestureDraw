@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import framework.ErrorType;
 import framework.events.ErrorEvent;
-import framework.interaction.InteractionStreamData;
+import framework.interaction.data.InteractionStreamData;
 import gesturedraw.GestureDraw;
 
 import application.interaction.Adapter;
-import application.interaction.DomainData;
+import application.interaction.UserInputData;
 import application.interaction.KinectRegion;
 import application.interaction.RegionType;
 import application.view.MainView;

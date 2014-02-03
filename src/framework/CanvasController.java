@@ -31,9 +31,9 @@ public abstract class CanvasController<T> implements IController {
 			case CloseTracks:
 				handleCloseTracks();
 				break;
-			case YesPressed:
-				handleYesPressed();
 			case NoPressed:
+				handleNoPressed();
+			case YesPressed:
 				handleContinue();
 				break;
 			case ClearCanvas:
@@ -68,7 +68,7 @@ public abstract class CanvasController<T> implements IController {
 		_canvasScene.set_isSaving(true);
 	}
 	
-	private void handleYesPressed(){
+	private void handleNoPressed(){
 		_canvasScene.clearCanvas();
 	}
 	

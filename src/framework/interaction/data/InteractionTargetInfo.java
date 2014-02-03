@@ -1,4 +1,4 @@
-package framework.interaction;
+package framework.interaction.data;
 
 import java.util.ArrayList;
 

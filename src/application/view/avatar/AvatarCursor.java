@@ -121,14 +121,17 @@ public class AvatarCursor extends View {
 
 	private void drawNavigationEllipse(PApplet p) {
 		p.strokeWeight(1);
-		p.stroke(_color);
+		p.stroke(MainView.LIGHT_GREY);//_color);
 		p.noFill();
 		float cRadius = GetRadiusForPressure(1 - _pressure);
 		p.ellipse(_x, _y, cRadius * 2, cRadius * 2);
 	}
 
 	public static float GetRadiusForPressure(float pressure) {
-		return (MainView.ICON_MAX_RADIUS - MainView.ICON_MIN_RADIUS) * pressure + MainView.ICON_MIN_RADIUS;
+		int diff = (MainView.ICON_MAX_RADIUS - MainView.ICON_MIN_RADIUS);
+		float p = diff * pressure + MainView.ICON_MIN_RADIUS;
+		//p *= p;
+		return p;
 	}
 
 	public void setState(CursorState _state) {

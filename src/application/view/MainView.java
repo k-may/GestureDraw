@@ -60,6 +60,7 @@ public class MainView extends BaseMainView implements Observer {
 	public static float DRAW_LERP = 0.5f;
 	public static float CURSOR_LERP = 0.05F;
 	public static float TARGET_MASS = 0.005F;
+	public static float CENTER_SCREEN_MASS = 0.0005F;
 
 	public MainView(PApplet parent) {
 		super(parent);

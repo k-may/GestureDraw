@@ -157,7 +157,9 @@ public class AppBuilder {
 		MainView.ICON_MAX_RADIUS = DataXMLClient.getInstance().getMaxStroke();
 		MainView.ICON_MIN_RADIUS = DataXMLClient.getInstance().getMinStroke();
 		MainView.CLEARABLE = DataXMLClient.getInstance().getClearable();
-
+		MainView.CENTER_SCREEN_MASS = DataXMLClient.getInstance().getCenterMass();
+		MainView.TARGET_MASS = DataXMLClient.getInstance().getTargetMass();
+		
 		_canvasScene = new CanvasScene();
 		_homeScene = new HomeScene();
 
@@ -238,7 +240,7 @@ public class AppBuilder {
 
 		OscP5 osc = new OscP5(GestureDraw.instance, 12345);
 		_region = new GestTrackOSCRegion(osc, xRange, yRange, zRange);
-		(( GestTrackOSCRegion)_region).setDomains(firstRegion, secondRegion);
+		((GestTrackOSCRegion) _region).setDomains(firstRegion, secondRegion);
 	}
 
 }

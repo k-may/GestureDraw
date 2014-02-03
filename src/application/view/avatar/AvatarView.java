@@ -122,7 +122,7 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		_colorWheelX = Math.max(x - MainView.COLORWHEEL_RADIUS, 0);
 		_colorWheelY = Math.max(y - MainView.COLORWHEEL_RADIUS, 0);
 		colorWheelAlpha = 0;
-		_colorWheelAnimation = Ani.to(this, 0.2f, "colorWheelAlpha", 255, Easing.EXPO_IN);
+		_colorWheelAnimation = Ani.to(this, 0.4f, "colorWheelAlpha", 255, Easing.EXPO_IN);
 	}
 
 	public int get_userId() {

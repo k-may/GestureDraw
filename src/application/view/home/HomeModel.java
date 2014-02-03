@@ -15,7 +15,7 @@ public class HomeModel extends Observable {
 
 	private HomeScene _home;
 	private HomeGallery _gallery;
-	
+
 	private HandsScreen _handsScreen;
 
 	private final int ROTATION_COUNT = 3;
@@ -48,7 +48,7 @@ public class HomeModel extends Observable {
 
 		_welcomeScreen = new WeclomeMessage();
 		_screens.add(_welcomeScreen);
-		
+
 		_handsScreen = new HandsScreen();
 		_screens.add(_handsScreen);
 	}
@@ -69,19 +69,18 @@ public class HomeModel extends Observable {
 
 		nextImage();
 
-		
 		if (_rotationCount == 0) {
 			nextScreen();
 			_rotationCount = ROTATION_COUNT;
-		}else 
+		} else
 			clearScreen();
 
 		_rotationCount--;
 	}
 
 	private void clearScreen() {
-		if(!_ready)
-		_home.setScreen(null);
+		if (!_ready)
+			_home.setScreen(null);
 	}
 
 	private void nextImage() {
@@ -100,10 +99,10 @@ public class HomeModel extends Observable {
 		if (!_ready) {
 			_screenCount++;
 			_home.setScreen(_screens.get(_screenCount % _screens.size()));
-		}else
+		} else
 			_home.setScreen(_startScreen);
-		
-		//_home.setScreen(_handsScreen);
+
+		// _home.setScreen(_handsScreen);
 	}
 
 	public void registerHomeGallery(HomeGallery gallery) {
@@ -133,8 +132,11 @@ public class HomeModel extends Observable {
 	}
 
 	public void setReady(Boolean value) {
+		Boolean changed = value != _ready;
 		_ready = value;
-		nextScreen();
+
+		if (changed)
+			nextScreen();
 	}
 
 }

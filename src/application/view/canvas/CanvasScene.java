@@ -101,10 +101,12 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 	public void set_isSaving(Boolean value) {
 		_isSaving = value;
 		if (_isSaving) {
+			_canvas.set_alpha(50);
 			_saveScreen = new SaveScreen();
 			removeChild(_menu);
 			addChild(_saveScreen);
 		} else {
+			_canvas.set_alpha(255);
 			addChild(_menu);
 			removeChild(_saveScreen);
 			_saveScreen = null;
