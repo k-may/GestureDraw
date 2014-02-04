@@ -8,6 +8,9 @@ import application.view.canvas.Canvas;
 
 import framework.IMainView;
 import framework.interaction.Types.InteractionEventType;
+import framework.interaction.data.InteractionData;
+import framework.interaction.data.InteractionHandle;
+import framework.interaction.data.InteractionStreamData;
 import framework.view.IView;
 
 public class InteractionDispatcher {
@@ -48,7 +51,7 @@ public class InteractionDispatcher {
 			for (InteractionHandle handle : _handles) {
 				if (handle.get_id() == data.get_userId() && handle.isDrawing()) {
 					// println("pressing : " + data.isPressing());
-					handle.add(data);
+					handle.add(data.get_data());
 					break;
 				}
 			}
@@ -57,7 +60,7 @@ public class InteractionDispatcher {
 				if (handle.get_id() == data.get_userId()) {
 					for (int i = 0; i < targets.size(); i++) {
 						if (handle.get_target() == targets.get(i)) {
-							handle.add(data);
+							handle.add(data.get_data());
 							targets.remove(i);
 							break;
 						}
@@ -69,7 +72,7 @@ public class InteractionDispatcher {
 				for (IView target : targets) {
 					//System.out.println("add handle " + target.isPressTarget() + " / " + target.isDrawTarget());
 					InteractionHandle handle = new InteractionHandle(data.get_userId(), target);
-					handle.add(data);
+					handle.add(data.get_data());
 					_handles.add(handle);
 				}
 			}
@@ -97,7 +100,7 @@ public class InteractionDispatcher {
 	}
 
 	private void processHandle(InteractionHandle handle, int millis) {
-		InteractionStreamData currentInteraction = handle.get_currentInteraction();
+		InteractionData currentInteraction = handle.get_currentInteraction();
 		IView target = handle.get_target();
 		float x = handle.get_currentX();
 		float y = handle.get_currentY();
@@ -111,12 +114,12 @@ public class InteractionDispatcher {
 		// System.out.println("cR press: " + currentInteraction.isPressing()+
 		// " / " + handle.isPressing());
 
-		if (currentInteraction.isPressing() && !handle.isPressing())
+		if (currentInteraction.isPressing && !handle.isPressing())
 			dispatchEvent(target, InteractionEventType.PressDown, x, y, id);
-		else if (currentInteraction.isDrawing() && !handle.isDrawing())
+		else if (currentInteraction.isDrawing && !handle.isDrawing())
 			dispatchEvent(target, InteractionEventType.PressDown, x, y, id);
 
-		if (!currentInteraction.isPressing() && handle.isPressing())
+		if (!currentInteraction.isPressing && handle.isPressing())
 			dispatchEvent(target, InteractionEventType.PressUp, x, y, id);
 
 		if (handle.isHovering()) {

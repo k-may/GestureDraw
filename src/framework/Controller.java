@@ -10,11 +10,9 @@ import framework.clients.LogClient;
 import framework.data.ImageEntry;
 import framework.data.MusicEntry;
 import framework.data.UserData;
-import framework.events.BackEvent;
 import framework.events.ErrorEvent;
 import framework.events.Event;
 import framework.events.EventType;
-import framework.events.GallerySelectedEvent;
 import framework.events.HandDetectedEvent;
 import framework.events.LabelButtonPressed;
 import framework.events.LogEvent;
@@ -124,6 +122,7 @@ public class Controller implements IController {
 				break;
 			case UserAdded:
 				handleUserAdded((UserAddedEvent) event);
+				handleHandDetected(null);
 				break;
 			case UpdateColor:
 				handleUpdateColor((UpdateColorEvent) event);
@@ -169,6 +168,15 @@ public class Controller implements IController {
 		region.removeDomain(id);
 		_mainView.get_userMenuView().removeDomain(id);
 
+		println("-->remove user : inputCount = " + region.get_inputCount() + " / avatars = " + _interactionView.get_numChildren());
+		
+		if(region.get_inputCount() != _interactionView.get_numChildren())
+			println("wtf!?");
+
+	}
+
+	private void println(Object msg) {
+		System.out.println(msg);
 	}
 
 	private void handleLog(LogEvent event) {
@@ -180,7 +188,7 @@ public class Controller implements IController {
 	}
 
 	private void handleHandDetected(HandDetectedEvent event) {
-		System.out.println("\n->> hand detected event");
+		System.out.println("->> hand detected event");
 		switch (SceneManager.GetSceneType()) {
 			case Home:
 				_homeScene.setReady(true);

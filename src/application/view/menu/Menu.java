@@ -4,10 +4,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import application.view.MainView;
+import application.view.PView;
 import application.view.tracks.TrackView;
-import framework.view.View;
 
-public class Menu extends View implements Observer {
+public class Menu extends PView implements Observer {
 
 	private ClearButton _clearButton;
 	private SaveButton _saveButton;

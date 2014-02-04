@@ -1,14 +1,12 @@
 package application.view.menu;
 
-import processing.core.PApplet;
-import processing.core.PVector;
 import application.view.ButtonBorder;
 import application.view.MainView;
+import application.view.PView;
 import application.view.image.Image;
 import framework.events.TouchEvent;
-import framework.view.View;
 
-public class MenuButton extends View {
+public class MenuButton extends PView {
 
 	protected Boolean _isOpen = false;
 

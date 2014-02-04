@@ -2,15 +2,12 @@ package application.view;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PImage;
 import application.content.ContentManager;
-import application.view.image.BlurImage;
 import application.view.image.GlowingImage;
 import application.view.image.Image;
-import framework.view.View;
 import gesturedraw.GestureDraw;
 
-public class ButtonBorder extends View {
+public class ButtonBorder extends PView {
 
 	private  Image _bottom;
 	private  GlowingImage _top;

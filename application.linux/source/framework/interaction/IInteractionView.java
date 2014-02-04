@@ -20,4 +20,6 @@ public interface IInteractionView extends IView {
 	UserData addUser(int id);
 
 	UserData getUser(int id);
+	
+	void update();
 }

@@ -29,7 +29,7 @@ public class ColorWheel{
 		PGraphics img = GestureDraw.instance.createGraphics(MainView.COLORWHEEL_RADIUS*2,MainView.COLORWHEEL_RADIUS*2);
 
 		//width of transparency region around outside
-		int bLength = 15;
+		int bLength = 25;
 		int radius = MainView.COLORWHEEL_RADIUS - bLength;
 
 		img.beginDraw();
@@ -40,16 +40,12 @@ public class ColorWheel{
 			float sat = r < radius ? ((float) r / radius) : 1;
 			sat *= 100;// (float) (Math.pow(sat, 1.6) * 100);
 			float br = r > radius ? (1 - (float) (r - radius) / bLength) : 1;
-
-			//System.out.println(sat + " : " + r);
 			
 			float alpha = (float) r / (radius + bLength);
 			alpha = (float) Math.pow(alpha, 3);
 			alpha = 1 - alpha;
 
-			// br =1- log(br);
 			br = (float) (br + 0.5);
-			//println(br);
 			br = br * 100;
 
 			int circumference = (int) (2 * Math.PI * r);

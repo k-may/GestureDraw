@@ -4,8 +4,8 @@ import framework.cursor.CursorState;
 import framework.depth.DepthState;
 import framework.depth.DepthStateData;
 import framework.events.HandChangedEvent;
-import framework.interaction.InteractionStreamData;
 import framework.interaction.Types.HandType;
+import framework.interaction.data.InteractionStreamData;
 
 public class UserData {
 	public static int START_COLOR = 0xffffffff;

@@ -23,6 +23,9 @@ public abstract class KinectRegion<T> extends Region<T> {
 	protected static final float MIN_DAMPENING = 0.1f;
 	protected static final float MAX_DAMPENING = 0.05f;
 
+	//private Map<Integer, ArrayList<PVector>> _inputQueue;
+	private Map<Integer, PVector> _inputQueue;
+	
 	protected float firstDomain;
 	protected float secondDomain;
 
@@ -38,6 +41,8 @@ public abstract class KinectRegion<T> extends Region<T> {
 			int zRange, RegionType type) {
 		super(source);
 
+		_inputQueue =  new HashMap<Integer, PVector>();//new HashMap<Integer, ArrayList<PVector>>();
+		
 		MainView.SRC_WIDTH = 640;
 		MainView.SRC_HEIGHT = 480;
 		MainView.TARGET_MASS = 0.01f;
@@ -62,10 +67,13 @@ public abstract class KinectRegion<T> extends Region<T> {
 	public void runInteractions() {
 		_stream = new ArrayList<InteractionStreamData>();
 
+		//digest input queue
+		for(Entry<Integer, PVector> entry : _inputQueue.entrySet()){
+			digestPosition(entry.getKey(), entry.getValue());
+		}
+		_inputQueue.clear();
+		
 		ArrayList<UserInputData> domainData = _domainManager.get_domainData();
-
-		if (domainData.size() == 0)
-			return;
 
 		_adapter.beginInteractionFrame();
 
@@ -113,16 +121,20 @@ public abstract class KinectRegion<T> extends Region<T> {
 		
 		InteractionData data = new InteractionData(new Vector(position.x, position.y, position.z), isPressing, isDrawing);
 
-		return new InteractionStreamData(data, id, _type, isHoverTarget, isPressTarget, handType, info.get_targets());
+		return new InteractionStreamData(data, id, _type, isHoverTarget, isPressTarget, handType, info.get_targets(), depthStateData);
 
 	}
 
 	/*
 	 * in-point, takes data directly from framework
+	 * add to queue to avoid threading issues
 	 */
-	protected UserInputData updateHand(int handId, PVector pos) {
-		UserInputData data = _domainManager.getDomainData(handId, pos);
-
+	protected void updateHand(int handId, PVector pos) {
+		_inputQueue.put(handId, pos);
+	}
+	
+	private UserInputData digestPosition(int handId, PVector pos){
+		UserInputData data = _domainManager.getDomainData(handId, pos.x);
 		if (data != null) {
 			data.addRawPosition(pos, handId);
 		}
@@ -141,12 +153,19 @@ public abstract class KinectRegion<T> extends Region<T> {
 	}
 
 	public void setDomains(float first, float second) {
+		MainView.DOMAIN_1 = first;
+		MainView.DOMAIN_2 = second;
+		
 		if (_domainManager == null)
-			_domainManager = new DomainManager(first, second);
+			_domainManager = DomainManager.getInstance(); //new DomainManager(first, second);
 	}
 
 	private void println(Object msg) {
 		System.out.println(msg);
 	}
 
+	@Override
+	public int get_inputCount() {
+		return _domainManager.getDataCount();
+	}
 }

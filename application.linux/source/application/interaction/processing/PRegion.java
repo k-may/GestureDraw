@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import framework.depth.DepthState;
 import framework.depth.DepthStateData;
 import framework.events.HandDetectedEvent;
-import framework.interaction.InteractionStreamData;
-import framework.interaction.InteractionTargetInfo;
-import framework.interaction.InteractionType;
 import framework.interaction.Region;
+import framework.interaction.Vector;
 import framework.interaction.Types.HandType;
+import framework.interaction.Types.InteractionType;
+import framework.interaction.data.InteractionData;
+import framework.interaction.data.InteractionStreamData;
+import framework.interaction.data.InteractionTargetInfo;
 import application.interaction.Adapter;
 import application.interaction.PRegionInputData;
 import application.interaction.RegionType;
@@ -61,7 +63,7 @@ public class PRegion extends Region<PApplet> {
 		position = data.getPosition();
 
 		// digest stream info
-		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(position.x, position.y, 1, _type);
+		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(position.x, position.y, _type);
 		Boolean isHoverTarget = info.get_isHoverTarget();
 		Boolean isPressTarget = info.get_isPressTarget();
 		Boolean isDrawTarget = info.get_canvas() != null;
@@ -76,12 +78,15 @@ public class PRegion extends Region<PApplet> {
 		if (isPressTarget || isDrawTarget)
 			isPressing = _pressHandler.getPressData(id, mZ, info.get_targetID());
 
-		//System.out.println("pressing : " + isPressing + " / " + position.z);
+		Boolean isDrawing = info.get_canvas() != null
+				&& state == DepthState.Drawing;
+		
+		InteractionData data = new InteractionData(new Vector(position.x, position.y, mZ), isPressing, isDrawing);
 
-		InteractionStreamData data = new InteractionStreamData(position.x, position.y, mZ, 0, _type, isHoverTarget, isPressTarget, isPressing, HandType.None, state, info.get_targets());
+		InteractionStreamData streamData = new InteractionStreamData(data, 0, _type, isHoverTarget, isPressTarget, HandType.None, info.get_targets(),pressStateData);
 
 		_stream = new ArrayList<InteractionStreamData>();
-		_stream.add(data);
+		_stream.add(streamData);
 
 		_adapter.handleStreamData(_stream);
 	}
@@ -93,13 +98,15 @@ public class PRegion extends Region<PApplet> {
 
 	@Override
 	public RegionType getType() {
-		// TODO Auto-generated method stub
 		return RegionType.Processing;
 	}
 
 	@Override
 	public void removeDomain(int id) {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public int get_inputCount() {
+		return 1;
 	}
 }

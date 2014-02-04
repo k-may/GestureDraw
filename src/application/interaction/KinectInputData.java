@@ -10,21 +10,23 @@ public class KinectInputData extends RegionInputData {
 	private static final int MAX_INVALID = 15;
 	private int _invalidDataCount = 0;
 	private PVector lastPosition;
-	private static final int MAX_SAMPLES = 25;
+	private static final int MIN_SAMPLES = 25;
 
 	public KinectInputData() {
 	}
 
-	public Boolean isUpdated() {
-		_invalidDataCount = _isUpdated ? _invalidDataCount
-				: _invalidDataCount + 1;
-		Boolean updated = _invalidDataCount < MAX_INVALID;
-		_isUpdated = false;
-		return updated;
+	
+	public Boolean isGood() {
+		
+		if(!updated)
+			_invalidDataCount ++;
+		
+		Boolean isGood= _invalidDataCount < MAX_INVALID;
+		return isGood;
 	}
 
 	public Boolean isReady() {
-		return _sampleCount > MAX_SAMPLES;
+		return _sampleCount > MIN_SAMPLES;
 	}
 
 	@Override

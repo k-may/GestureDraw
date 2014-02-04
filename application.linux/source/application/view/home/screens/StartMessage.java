@@ -2,16 +2,14 @@ package application.view.home.screens;
 
 import processing.core.PApplet;
 import application.view.MainView;
+import application.view.PView;
 import application.view.image.GlowingImage;
 import framework.events.TouchEvent;
-import framework.view.View;
 
-public class StartMessage extends View {
+public class StartMessage extends PView {
 
 	public GlowingImage _title;
-	private int _titlePaddingTop = 53;
 	private PressButton _pressButton;
-	private int _buttonPaddingTop = 254;
 
 	public StartMessage() {
 		_width = MainView.SCREEN_WIDTH;

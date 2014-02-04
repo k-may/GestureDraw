@@ -1,10 +1,10 @@
 package application.view.image;
 
 import static processing.core.PApplet.println;
+import application.view.PView;
 import processing.core.PApplet;
-import framework.view.View;
 
-public class GlowingImage extends View {
+public class GlowingImage extends PView {
 
 	private String _name;
 

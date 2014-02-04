@@ -83,7 +83,7 @@ public class PRegion extends Region<PApplet> {
 		
 		InteractionData data = new InteractionData(new Vector(position.x, position.y, mZ), isPressing, isDrawing);
 
-		InteractionStreamData streamData = new InteractionStreamData(data, 0, _type, isHoverTarget, isPressTarget, HandType.None, info.get_targets());
+		InteractionStreamData streamData = new InteractionStreamData(data, 0, _type, isHoverTarget, isPressTarget, HandType.None, info.get_targets(),pressStateData);
 
 		_stream = new ArrayList<InteractionStreamData>();
 		_stream.add(streamData);
@@ -98,13 +98,15 @@ public class PRegion extends Region<PApplet> {
 
 	@Override
 	public RegionType getType() {
-		// TODO Auto-generated method stub
 		return RegionType.Processing;
 	}
 
 	@Override
 	public void removeDomain(int id) {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public int get_inputCount() {
+		return 1;
 	}
 }

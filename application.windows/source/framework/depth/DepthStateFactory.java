@@ -47,7 +47,7 @@ public class DepthStateFactory {
 
 	private DepthStateData getCanvasSceneDepthData(float pressure) {
 		DepthStateData data = null;
-
+		float p = 0.0f;
 		if (pressure >= _startS && pressure < _startE) {// || overTarget) {
 			data = new DepthStateData(DepthState.Start, map(pressure, _startS, _startE));
 		} else if (pressure >= _colorS && pressure < _colorE) {
@@ -55,7 +55,9 @@ public class DepthStateFactory {
 		} else if (pressure >= _preDrawS && pressure < _preDrawE) {
 			data = new DepthStateData(DepthState.PreDrawing, map(pressure, _preDrawS, _preDrawE));
 		} else {
-			data = new DepthStateData(DepthState.Drawing, map(pressure, _drawS, _drawE));
+			p = map(pressure, _drawS, _drawE);
+			p *= p;
+			data = new DepthStateData(DepthState.Drawing, p);
 		}
 		// System.out.println("pressure ==>" + pressure + " : "+
 		// data.get_state().toString());
@@ -76,7 +78,7 @@ public class DepthStateFactory {
 			Boolean isOverTarget, HandType type, int color) {
 
 		CursorState mode;
-		
+
 		/*
 		 * Drawing state should take precidence over pressing (ie. if already
 		 * drawing we don't want the cursor to change)
@@ -89,8 +91,8 @@ public class DepthStateFactory {
 		} else {
 			if (sceneType == SceneState.Canvas) {
 				mode = getCanvasCursorState(depthStateData.get_state());
-			}else{
-				//if home or saving
+			} else {
+				// if home or saving
 				mode = getHomeCursorState();
 			}
 		}

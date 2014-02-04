@@ -1,30 +1,21 @@
 package application.interaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import processing.core.PVector;
 import application.view.MainView;
+import application.view.PView;
 import application.view.avatar.AvatarsView;
-import framework.Controller;
 import framework.IMainView;
-import framework.SceneState;
-import framework.cursor.CursorMode;
 import framework.cursor.CursorState;
 import framework.data.UserData;
 import framework.depth.DepthStateData;
 import framework.depth.DepthStateFactory;
 import framework.interaction.IAdapter;
-import framework.interaction.Types.HandType;
 import framework.interaction.Types.InteractionType;
 import framework.interaction.data.InteractionStreamData;
 import framework.interaction.data.InteractionTargetInfo;
 import framework.view.IView;
-
-import framework.scenes.SceneManager;
-import framework.scenes.SceneType;
-
-import static processing.core.PApplet.println;
 
 public class Adapter implements IAdapter {
 
@@ -67,7 +58,7 @@ public class Adapter implements IAdapter {
 			overPressTarget = target.isPressTarget();
 			// println("over press target : " + overPressTarget);
 			overHoverTarget = target.isHoverTarget();
-			PVector targetAbsPos = target.get_absPos();
+			PVector targetAbsPos = ((PView)target).get_absPos();
 			float targetWidth = target.get_width();
 			float targetHeight = target.get_height();
 			attrX = (targetAbsPos.x + targetWidth / 2) / _canvas.get_width();
@@ -124,7 +115,7 @@ public class Adapter implements IAdapter {
 
 	private void digestStream(InteractionStreamData data) {
 
-		UserData user = _avatarsView.getUser(data.get_userId());
+		UserData user = getUserForDomain(data.get_userId());//_avatarsView.getUser(data.get_userId());
 
 		float localX = data.get_x() * _canvas.get_width();
 		float localY = data.get_y() * _canvas.get_height();

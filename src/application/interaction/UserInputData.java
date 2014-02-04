@@ -64,7 +64,7 @@ public class UserInputData extends KinectInputData {
 		if (primary.get_id() == handId)
 			super.addRawPosition(pos, handId);
 
-		_isUpdated = true;
+		updated = true;
 	}
 
 }

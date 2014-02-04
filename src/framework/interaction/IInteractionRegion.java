@@ -19,4 +19,5 @@ public interface IInteractionRegion {
 	Object get_source();
 	RegionType getType();
 	void removeDomain(int id);
+	int get_inputCount();
 }

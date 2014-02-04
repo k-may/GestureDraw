@@ -1,21 +1,17 @@
 package application.view.avatar;
 
-import static processing.core.PApplet.println;
 import processing.core.PApplet;
-import processing.core.PImage;
-import application.content.ContentManager;
 import application.view.MainView;
+import application.view.PView;
 import application.view.colorwheel.ColorWheel;
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.easing.Easing;
-import framework.cursor.CursorMode;
 import framework.data.UserData;
 import framework.depth.DepthState;
 import framework.events.UpdateColorEvent;
 import framework.view.IView;
-import framework.view.View;
 
-public class AvatarView extends View implements Comparable<AvatarView> {
+public class AvatarView extends PView implements Comparable<AvatarView> {
 
 	public int colorWheelAlpha = 255;
 	private IView _hoverTarget;
@@ -122,7 +118,7 @@ public class AvatarView extends View implements Comparable<AvatarView> {
 		_colorWheelX = Math.max(x - MainView.COLORWHEEL_RADIUS, 0);
 		_colorWheelY = Math.max(y - MainView.COLORWHEEL_RADIUS, 0);
 		colorWheelAlpha = 0;
-		_colorWheelAnimation = Ani.to(this, 0.2f, "colorWheelAlpha", 255, Easing.EXPO_IN);
+		_colorWheelAnimation = Ani.to(this, 0.4f, "colorWheelAlpha", 255, Easing.EXPO_IN);
 	}
 
 	public int get_userId() {

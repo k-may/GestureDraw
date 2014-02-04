@@ -2,10 +2,10 @@ package application.view.canvas;
 
 import processing.core.PApplet;
 import application.view.MainView;
+import application.view.PView;
 import application.view.image.GlowingImage;
-import framework.view.View;
 
-public class SaveScreen extends View {
+public class SaveScreen extends PView {
 
 	private YesButton _yesButton;
 	private NoButton _noButton;

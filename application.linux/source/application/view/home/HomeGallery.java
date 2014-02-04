@@ -1,7 +1,8 @@
 package application.view.home;
 
-import java.awt.List;
 import java.util.ArrayList;
+
+import application.view.PView;
 
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.easing.Easing;
@@ -11,9 +12,8 @@ import processing.core.PImage;
 import processing.core.PVector;
 import framework.data.GalleryEntry;
 import framework.view.IGallery;
-import framework.view.View;
 
-public class HomeGallery extends View implements IGallery<PImage> {
+public class HomeGallery extends PView implements IGallery<PImage> {
 
 	private PImage _currentImage;
 	private PImage _previousImage;

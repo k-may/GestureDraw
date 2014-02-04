@@ -6,7 +6,6 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import application.view.MainView;
 import framework.depth.DepthState;
-import framework.interaction.Region;
 import framework.interaction.data.InteractionTargetInfo;
 
 public abstract class RegionInputData {
@@ -28,7 +27,7 @@ public abstract class RegionInputData {
 	protected PVector _cursorPos;
 	private PVector _prevPos;
 
-	protected Boolean _isUpdated = false;
+	public Boolean updated = true;
 
 	protected int minZ = 0;
 	protected int maxZ = 1;
@@ -57,7 +56,7 @@ public abstract class RegionInputData {
 		else
 			addPosition(pos);
 
-		_isUpdated = true;
+		updated = true;
 	}
 
 	protected void init(PVector position) {

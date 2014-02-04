@@ -5,11 +5,12 @@ import de.looksgood.ani.Ani;
 import de.looksgood.ani.easing.Easing;
 import framework.view.View;
 import application.content.ContentManager;
+import application.view.PView;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
-public class Image extends View {
+public class Image extends PView {
 
 	protected float _scaleX = 1.0f;
 	protected float _scaleY = 1.0f;

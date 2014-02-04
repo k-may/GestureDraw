@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 import application.interaction.RegionType;
 import application.view.avatar.AvatarView;
 import application.view.avatar.AvatarsView;
@@ -14,6 +15,9 @@ import framework.BaseMainView;
 import framework.Controller;
 import framework.Rectangle;
 import framework.SceneState;
+import framework.data.UserData;
+import framework.events.TouchEvent;
+import framework.interaction.Types.InteractionEventType;
 import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
 import framework.view.IView;
@@ -61,16 +65,22 @@ public class MainView extends BaseMainView implements Observer {
 	public static float CURSOR_LERP = 0.05F;
 	public static float TARGET_MASS = 0.005F;
 	public static float CENTER_SCREEN_MASS = 0.0005F;
+	
+	public static float DOMAIN_1 = 0.2f;
+	public static float DOMAIN_2 = 0.8f;
+
+	private PApplet _parent;
 
 	public MainView(PApplet parent) {
-		super(parent);
+		super();
+		_parent = parent;
 		init();
 		createChilds();
 	}
 
 	private void init() {
 		_parent.smooth();
-		//_currentScene = DefaultScene;
+		// _currentScene = DefaultScene;
 		_controller = Controller.getInstance();
 
 		SCREEN_WIDTH = _parent.width;
@@ -88,7 +98,6 @@ public class MainView extends BaseMainView implements Observer {
 		_parent.loop();
 	}
 
-	@Override
 	public void draw(PApplet p) {
 		// gets inputs from region and process
 		_region.runInteractions();
@@ -100,10 +109,10 @@ public class MainView extends BaseMainView implements Observer {
 
 		_controller.update(time);
 
-		SceneManager.getScene().draw(p);
+		((PView) SceneManager.getScene()).draw(p);
 
 		for (IView child : _childs)
-			child.draw(p);
+			((PView) child).draw(p);
 
 	}
 
@@ -177,14 +186,14 @@ public class MainView extends BaseMainView implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		SceneType sceneType = SceneManager.GetSceneType();
-		
-		if(sceneType == SceneType.Canvas){
+
+		if (sceneType == SceneType.Canvas) {
 			CanvasScene canvas = (CanvasScene) SceneManager.getScene();
-			if(canvas.get_isSaving())
+			if (canvas.get_isSaving())
 				CurrentState = SceneState.Saving;
 			else
 				CurrentState = SceneState.Canvas;
-		}else
+		} else
 			CurrentState = SceneState.Home;
 	}
 
@@ -202,5 +211,28 @@ public class MainView extends BaseMainView implements Observer {
 	public Boolean isDrawTarget() {
 		return false;
 	}
+
+	@Override
+	protected void addInteractionEvent(InteractionEventType type, IView target,
+			float x, float y, int id) {
+		PVector pos = ((PView) target).get_absPos();
+
+		UserData user = _interactionView.getUser(id);
+
+		if (user != null) {
+			float localX = x * SCREEN_WIDTH - pos.x;
+			float localY = y * SCREEN_HEIGHT - pos.y;
+			new TouchEvent(type, target, localX, localY, _interactionView.getUser(id), _parent.millis()).dispatch();
+		}
+	}
+
+	public float get_width() {
+		return _parent.width;
+	}
+
+	public float get_height() {
+		return _parent.height;
+	}
+
 
 }

@@ -145,6 +145,14 @@ public class DataXMLClient implements IDataClient {
 		return getIntContent("ui_button_size");
 	}
 
+	public float getCenterMass(){
+		return getFloatContent("mass_center");
+	}
+	
+	public float getTargetMass(){
+		return getFloatContent("mass_button");
+	}
+	
 	@Override
 	public int getMaxNumHands() {
 		return getIntContent("input_max_handnum");

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import application.view.PView;
+
 import framework.Controller;
 import framework.cursor.CursorMode;
 import framework.data.UserData;
@@ -20,7 +22,7 @@ import framework.view.View;
 import processing.core.PApplet;
 import static processing.core.PApplet.println;
 
-public class AvatarsView extends View implements IInteractionView {
+public class AvatarsView extends PView implements IInteractionView {
 
 	private ArrayList<UserData> _users;
 	private Map<Integer, AvatarView> _avatarViews;
@@ -53,7 +55,7 @@ public class AvatarsView extends View implements IInteractionView {
 			_lastUpdate = p.millis();
 
 		if (time - _lastUpdate > getInactionValue()) {
-			System.out.println("------------>>>> inaction!!!");
+			//System.out.println("------------>>>> inaction!!!");
 			new InactionEvent().dispatch();
 			_lastUpdate = time;
 		}
@@ -69,6 +71,7 @@ public class AvatarsView extends View implements IInteractionView {
 	}
 	@Override
 	public void removeUser(UserData user) {
+		println("Avatar View ------->remove : " + user.get_id());
 		if (_users.contains(user))
 			_users.remove(user);
 
@@ -85,6 +88,8 @@ public class AvatarsView extends View implements IInteractionView {
 	@Override
 	public UserData addUser(int id) {
 
+		println("Avatar View ------->add : " + id);
+		
 		UserData user = new UserData(id);
 		_users.add(user);
 
@@ -128,7 +133,7 @@ public class AvatarsView extends View implements IInteractionView {
 	}
 	
 	public void update(){
-		System.out.println("===================>>>>> UPDATE!!!!!");
+		//System.out.println("===================>>>>> UPDATE!!!!!");
 		_updated = true;
 	}
 

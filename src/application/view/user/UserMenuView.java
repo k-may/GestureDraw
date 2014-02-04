@@ -4,13 +4,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
-
+import application.view.PView;
 import processing.core.PApplet;
 import processing.core.PVector;
 import framework.view.IUserMenuView;
-import framework.view.View;
 
-public class UserMenuView extends View implements IUserMenuView {
+public class UserMenuView extends PView implements IUserMenuView {
 
 	private HashMap<Integer, UserMenuData> _domains;
 	private int _numRegions = 0;
@@ -33,7 +32,7 @@ public class UserMenuView extends View implements IUserMenuView {
 
 		p.stroke(150);
 		p.strokeWeight(1);
-		//p.ellipseMode(PApplet.CORNER);
+		// p.ellipseMode(PApplet.CORNER);
 
 		UserMenuData[] regions = getOrderedRegions();
 		for (int i = 0; i < _numRegions; i++) {

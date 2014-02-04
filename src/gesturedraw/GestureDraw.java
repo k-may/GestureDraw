@@ -4,13 +4,14 @@ import SimpleOpenNI.SimpleOpenNI;
 import application.AppBuilder;
 import application.interaction.RegionType;
 import application.interaction.soni.SONRegion;
+import application.view.MainView;
 import framework.IMainView;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class GestureDraw extends PApplet {
 
-	private IMainView _root;
+	private MainView _root;
 	public static PApplet instance;
 	private Boolean isFullScreen = true;
 
@@ -36,7 +37,7 @@ public class GestureDraw extends PApplet {
 		return isFullScreen;
 	}
 
-	public void setRoot(IMainView root) {
+	public void setRoot(MainView root) {
 		_root = root;
 	}
 

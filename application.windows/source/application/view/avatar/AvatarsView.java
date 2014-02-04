@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import application.view.PView;
+
+import framework.Controller;
 import framework.cursor.CursorMode;
 import framework.data.UserData;
-import framework.events.InActionEvent;
+import framework.events.InactionEvent;
 import framework.events.UserAddedEvent;
 import framework.events.UserRemovedEvent;
 import framework.interaction.IInteractionView;
@@ -19,7 +22,7 @@ import framework.view.View;
 import processing.core.PApplet;
 import static processing.core.PApplet.println;
 
-public class AvatarsView extends View implements IInteractionView {
+public class AvatarsView extends PView implements IInteractionView {
 
 	private ArrayList<UserData> _users;
 	private Map<Integer, AvatarView> _avatarViews;
@@ -30,6 +33,8 @@ public class AvatarsView extends View implements IInteractionView {
 	public AvatarsView() {
 		_users = new ArrayList<UserData>();
 		_avatarViews = new HashMap<Integer, AvatarView>();
+		
+		Controller.getInstance().registerInteractionView(this);
 	}
 
 	@Override
@@ -49,16 +54,24 @@ public class AvatarsView extends View implements IInteractionView {
 		if (_updated)
 			_lastUpdate = p.millis();
 
-		if (time - _lastUpdate > 60000) {
-			new InActionEvent().dispatch();
+		if (time - _lastUpdate > getInactionValue()) {
+			//System.out.println("------------>>>> inaction!!!");
+			new InactionEvent().dispatch();
 			_lastUpdate = time;
 		}
 
 		_updated = false;
 	}
 
+	private int getInactionValue(){
+		if(SceneManager.GetSceneType() == SceneType.Canvas)
+			return 60000;
+		else
+			return 5000;
+	}
 	@Override
 	public void removeUser(UserData user) {
+		println("Avatar View ------->remove : " + user.get_id());
 		if (_users.contains(user))
 			_users.remove(user);
 
@@ -75,6 +88,8 @@ public class AvatarsView extends View implements IInteractionView {
 	@Override
 	public UserData addUser(int id) {
 
+		println("Avatar View ------->add : " + id);
+		
 		UserData user = new UserData(id);
 		_users.add(user);
 
@@ -115,6 +130,11 @@ public class AvatarsView extends View implements IInteractionView {
 			return _avatarViews.get(id);
 
 		return null;
+	}
+	
+	public void update(){
+		//System.out.println("===================>>>>> UPDATE!!!!!");
+		_updated = true;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Observable;
 
 import application.audio.MinimAudioPlayer;
 import application.view.MainView;
+import application.view.PView;
 import application.view.menu.Menu;
 import framework.audio.IAudioView;
 import framework.data.MusicEntry;
@@ -12,7 +13,7 @@ import framework.events.TouchEvent;
 import framework.events.TracksHideEvent;
 import framework.view.View;
 
-public class TrackView extends View implements IAudioView {
+public class TrackView extends PView implements IAudioView {
 
 	private ArrayList<TrackEntryView> _trackViews;
 	private Boolean _isExpanded = false;

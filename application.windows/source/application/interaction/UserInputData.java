@@ -6,14 +6,15 @@ import processing.core.PVector;
 import framework.data.HandData;
 import framework.interaction.Types.HandType;
 
-public class DomainData extends KinectInputData {
+public class UserInputData extends KinectInputData {
 
 	private HashMap<Integer, HandData> _handMap;
 	public HandType handType = HandType.Right;
 	private HandData primary;
+	public int domain;
 
-	public DomainData(int domain) {
-		super(domain);// _id = domain;
+	public UserInputData() {
+		super();
 		_handMap = new HashMap<Integer, HandData>();
 	}
 
@@ -63,7 +64,7 @@ public class DomainData extends KinectInputData {
 		if (primary.get_id() == handId)
 			super.addRawPosition(pos, handId);
 
-		_isUpdated = true;
+		updated = true;
 	}
 
 }

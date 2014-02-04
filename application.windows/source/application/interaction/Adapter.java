@@ -1,29 +1,21 @@
 package application.interaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import processing.core.PVector;
 import application.view.MainView;
+import application.view.PView;
 import application.view.avatar.AvatarsView;
 import framework.IMainView;
-import framework.SceneState;
-import framework.cursor.CursorMode;
 import framework.cursor.CursorState;
 import framework.data.UserData;
 import framework.depth.DepthStateData;
 import framework.depth.DepthStateFactory;
 import framework.interaction.IAdapter;
-import framework.interaction.InteractionStreamData;
-import framework.interaction.InteractionTargetInfo;
-import framework.interaction.InteractionType;
-import framework.interaction.Types.HandType;
+import framework.interaction.Types.InteractionType;
+import framework.interaction.data.InteractionStreamData;
+import framework.interaction.data.InteractionTargetInfo;
 import framework.view.IView;
-
-import framework.scenes.SceneManager;
-import framework.scenes.SceneType;
-
-import static processing.core.PApplet.println;
 
 public class Adapter implements IAdapter {
 
@@ -34,20 +26,20 @@ public class Adapter implements IAdapter {
 
 	public Adapter() {
 		_avatarsView = new AvatarsView();
-		_depthStateFactory = new DepthStateFactory(0.2f, 0.4f, 0.6f);
+		_depthStateFactory = new DepthStateFactory(0.15f, 0.4f, 0.6f);
 	}
 
 	@Override
-	public InteractionTargetInfo getInteractionInfoAtLocation(float x, float y,
-			int userId, InteractionType type) {
+	public InteractionTargetInfo getInteractionInfoAtLocation(float x, float y, InteractionType type) {
 		// TODO Auto-generated method stub
-		ArrayList<IView> targets = _canvas.getTargetsAtLocation(x * MainView.SCREEN_WIDTH, y * MainView.SCREEN_HEIGHT);
-		
+		ArrayList<IView> targets = _canvas.getTargetsAtLocation(x
+				* MainView.SCREEN_WIDTH, y * MainView.SCREEN_HEIGHT);
+
 		InteractionTargetInfo info = new InteractionTargetInfo(targets);
 
 		Boolean overPressTarget = false;
 		Boolean overHoverTarget = false;
-		
+
 		float attrX = 0.0f;
 		float attrY = 0.0f;
 		// IView
@@ -58,15 +50,15 @@ public class Adapter implements IAdapter {
 			if (view.isHoverTarget() || view.isPressTarget()) {
 				target = view;
 			}
-			if(view.isDrawTarget())
+			if (view.isDrawTarget())
 				canvas = view;
 		}
 
 		if (target != null) {
 			overPressTarget = target.isPressTarget();
-			//println("over press target : " + overPressTarget);
+			// println("over press target : " + overPressTarget);
 			overHoverTarget = target.isHoverTarget();
-			PVector targetAbsPos = target.get_absPos();
+			PVector targetAbsPos = ((PView)target).get_absPos();
 			float targetWidth = target.get_width();
 			float targetHeight = target.get_height();
 			attrX = (targetAbsPos.x + targetWidth / 2) / _canvas.get_width();
@@ -84,9 +76,15 @@ public class Adapter implements IAdapter {
 	}
 
 	@Override
+	public DepthStateData getInteractionInfoAtDepth(float z) {
+		return _depthStateFactory.getStateData(z, MainView.CurrentState);
+	}
+
+	@Override
 	public void set_canvas(IMainView canvas) {
 		_canvas = canvas;
 		_canvas.addInteractionView(_avatarsView);
+
 	}
 
 	@Override
@@ -111,35 +109,28 @@ public class Adapter implements IAdapter {
 
 	@Override
 	public void handleStreamData(ArrayList<InteractionStreamData> data) {
-
-		//SceneType sceneType = SceneManager.GetSceneType();
-
-		SceneState sceneState = MainView.CurrentState;
-		
-		for (InteractionStreamData streamData : data) {
-			digestStream(streamData, sceneState);
-		}
+		for (InteractionStreamData streamData : data)
+			digestStream(streamData);
 	}
 
-	private void digestStream(InteractionStreamData data, SceneState sceneState) {
+	private void digestStream(InteractionStreamData data) {
 
-		UserData user = _avatarsView.getUser(data.get_userId());
+		UserData user = getUserForDomain(data.get_userId());//_avatarsView.getUser(data.get_userId());
 
 		float localX = data.get_x() * _canvas.get_width();
 		float localY = data.get_y() * _canvas.get_height();
 
 		user.setStreamData(data);
 
-		//sceneType = SceneType.Canvas;
-		
-		DepthStateData depthStateData = _depthStateFactory.getStateData(data.get_z(), sceneState);
+		DepthStateData depthStateData = data.get_depthState();
+
 		user.set_depthStateData(depthStateData);
 
 		user.set_localX(localX);
 		user.set_localY(localY);
 		user.setHandType(data.getHandType());
 
-		CursorState cursorState = _depthStateFactory.getCursorState(sceneState, depthStateData, data.isPressing(), data.isOverTarget(), user.getHandType(), user.getColor());
+		CursorState cursorState = _depthStateFactory.getCursorState(MainView.CurrentState, depthStateData, data.isPressing(), data.isOverTarget(), user.getHandType(), user.getColor());
 
 		user.setCursorState(cursorState);
 		user.set_updated(true);

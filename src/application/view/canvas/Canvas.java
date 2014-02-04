@@ -1,7 +1,5 @@
 package application.view.canvas;
 
-import static processing.core.PApplet.println;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,6 +8,7 @@ import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
 import application.view.MainView;
+import application.view.PView;
 import application.view.avatar.AvatarCursor;
 import application.view.image.Image;
 import framework.data.UserData;
@@ -18,9 +17,8 @@ import framework.stroke.ICanvas;
 import framework.stroke.StrokeFragment;
 import framework.stroke.StrokeHandler;
 import framework.stroke.StrokeType;
-import framework.view.View;
 
-public class Canvas extends View implements ICanvas<PImage> {
+public class Canvas extends PView implements ICanvas<PImage> {
 
 	private PGraphics _strokeBuffer;
 	private StrokeHandler _handler;

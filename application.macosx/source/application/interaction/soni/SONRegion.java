@@ -1,8 +1,10 @@
 package application.interaction.soni;
 
+import java.util.Map;
+
 import framework.events.StreamEndEvent;
 import application.interaction.Adapter;
-import application.interaction.DomainData;
+import application.interaction.UserInputData;
 import application.interaction.KinectRegion;
 import application.interaction.RegionType;
 import processing.core.PVector;
@@ -13,6 +15,8 @@ import static processing.core.PApplet.println;
 
 public class SONRegion extends KinectRegion<SimpleOpenNI> {
 
+	private Map<Integer, UserInputData> _domainData;
+	
 	public SONRegion(SimpleOpenNI source, int maxHands, int xRange, int yRange,
 			int zRange, String gestureType) {
  		super(source, maxHands, xRange, yRange, zRange,RegionType.SimpleOpenNI);
@@ -72,7 +76,7 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 
 		if (_domainData != null) {
 			if (_domainData.containsKey(id)) {
-				DomainData data = _domainData.get(id);
+				UserInputData data = _domainData.get(id);
 				_domainData.remove(id);
 
 			}

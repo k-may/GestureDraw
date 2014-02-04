@@ -6,11 +6,12 @@ import framework.interaction.Types.HandType;
 import framework.view.View;
 import application.content.ContentManager;
 import application.view.MainView;
+import application.view.PView;
 import processing.core.PApplet;
 import processing.core.PImage;
 import static processing.core.PApplet.println;
 
-public class AvatarCursor extends View {
+public class AvatarCursor extends PView {
 
 	private PImage _highlight;
 

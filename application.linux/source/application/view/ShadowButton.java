@@ -2,11 +2,10 @@ package application.view;
 
 import application.view.image.Image;
 import framework.events.TouchEvent;
-import framework.view.View;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public abstract class ShadowButton extends View {
+public abstract class ShadowButton extends PView {
 
 	protected Image _bg;
 	protected Boolean _isOver = false;

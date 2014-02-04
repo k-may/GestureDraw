@@ -1,18 +1,14 @@
-package framework.interaction;
+package framework.interaction.data;
 
 import java.util.ArrayList;
 
 import framework.view.IView;
 
-import static processing.core.PApplet.println;
-
 public class InteractionHandle {
 	private IView _target;
 	private int _id;
-	private ArrayList<InteractionStreamData> _data;
-	private Boolean _isCancelled = false;
+	private ArrayList<InteractionData> _data;
 	private Boolean _isPressing = false;
-	private Boolean _isDrawing = false;
 	private Boolean _isPreHovering = false;
 	private Boolean _isHovering = false;
 	private Boolean _updated = false;
@@ -23,9 +19,9 @@ public class InteractionHandle {
 		_id = id;
 	}
 
-	public void add(InteractionStreamData data) {
+	public void add(InteractionData data) {
 		if (_data == null)
-			_data = new ArrayList<InteractionStreamData>();
+			_data = new ArrayList<InteractionData>();
 
 		_data.add(data);
 
@@ -41,8 +37,6 @@ public class InteractionHandle {
 	}
 
 	public void cancel() {
-		// println("handle cancelled");
-		_isCancelled = true;
 	}
 
 	public Boolean isUpdated() {
@@ -50,14 +44,14 @@ public class InteractionHandle {
 	}
 
 	public float get_currentX() {
-		return _data.get(_data.size() - 1).get_x();
+		return _data.get(_data.size() - 1).getX();
 	}
 
 	public float get_currentY() {
-		return _data.get(_data.size() - 1).get_y();
+		return _data.get(_data.size() - 1).getY();
 	}
 
-	public InteractionStreamData get_lastInteraction() {
+	public InteractionData get_lastInteraction() {
 		if (_data.size() >= 2)
 			return _data.get(_data.size() - 2);
 
@@ -65,7 +59,7 @@ public class InteractionHandle {
 			return null;
 	}
 
-	public InteractionStreamData get_currentInteraction() {
+	public InteractionData get_currentInteraction() {
 		return _data.get(_data.size() - 1);
 	}
 
@@ -75,13 +69,12 @@ public class InteractionHandle {
 
 	public void reset() {
 		// only update press state after initial processing
-		_isPressing = get_currentInteraction().isPressing();
-		_isDrawing = get_currentInteraction().isDrawing();
+		_isPressing = get_currentInteraction().isPressing;
 		_updated = false;
 	}
 
 	public float getCurrentPressure() {
-		return get_currentInteraction().get_z();
+		return get_currentInteraction().getZ();
 	}
 
 	public boolean isHovering() {
@@ -98,11 +91,11 @@ public class InteractionHandle {
 	}
 
 	public float get_dX() {
-		return get_currentX() - get_lastInteraction().get_x();
+		return get_currentX() - get_lastInteraction().getX();
 	}
 
 	public float get_dY() {
-		return get_currentY() - get_lastInteraction().get_y();
+		return get_currentY() - get_lastInteraction().getY();
 	}
 
 	public void endPreHovering() {

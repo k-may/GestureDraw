@@ -1,9 +1,10 @@
 package application.view.tracks;
 
+import application.view.PView;
 import framework.view.View;
 import processing.core.PImage;
 
-public class PlayPauseButton extends View {
+public class PlayPauseButton extends PView {
 
 	private PImage _playOver;
 	private PImage _playOut;

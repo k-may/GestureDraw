@@ -3,17 +3,19 @@ package framework.interaction;
 import java.util.ArrayList;
 import java.util.Map;
 
+import framework.interaction.Types.InteractionType;
+import framework.interaction.data.InteractionStreamData;
 import framework.interaction.press.PressHandler;
 
 import processing.core.PVector;
 
-import application.interaction.DomainData;
+import application.interaction.UserInputData;
 import application.interaction.RegionType;
 
 public abstract class Region<T> implements IInteractionRegion {
 
 	
-	protected Map<Integer, DomainData> _domainData;
+	//protected Map<Integer, DomainData> _domainData;
 	protected PressHandler _pressHandler;
 	protected IAdapter _adapter;
 	protected int[] _users;

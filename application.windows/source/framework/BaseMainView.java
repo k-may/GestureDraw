@@ -21,7 +21,7 @@ import processing.core.PVector;
 public abstract class BaseMainView implements IMainView {
 	protected InteractionDispatcher _dispatcher;
 	protected ArrayList<IView> _childs;
-	protected PApplet _parent;
+	//protected PApplet _parent;
 	
 	public static SceneState CurrentState;
 	
@@ -34,14 +34,11 @@ public abstract class BaseMainView implements IMainView {
 	public static final float PRESS_POS_EXTENTS = 0.7F;
 	public static final float PRESS_MAX_PRESSURE = 0.7f;
 	
-	//protected SceneType _currentScene;
 	protected IInteractionRegion _region;
 	protected IInteractionView _interactionView;
 	protected IUserMenuView _userMenuView;
 
-	public BaseMainView(PApplet parent) {
-		_parent = parent;
-
+	public BaseMainView() {
 		init();
 	}
 
@@ -78,7 +75,6 @@ public abstract class BaseMainView implements IMainView {
 	@Override
 	public void addCancelEvent(IView target, float x, float y,int id) {
 		addInteractionEvent(InteractionEventType.Cancel, target, x, y, id);
-
 		endHover(id);
 	}
 
@@ -90,30 +86,17 @@ public abstract class BaseMainView implements IMainView {
 	@Override
 	public void addHoverStartEvent(IView target, float x, float y, int id) {
 		addInteractionEvent(InteractionEventType.HoverStart, target, x, y, id);
-
 		startHover(id, InteractionDispatcher.HOVER_ELAPSE, target);
 	}
 
 	@Override
 	public void addHoverEndEvent(IView target, float x, float y, int id) {
-
 		addInteractionEvent(InteractionEventType.HoverEnd, target, x, y,id);
-
 		endHover(id);
 	}
 
-	protected void addInteractionEvent(InteractionEventType type, IView target,
-			float x, float y, int id) {
-		PVector pos = target.get_absPos();
-
-		UserData user = _interactionView.getUser(id);
-
-		if (user != null) {
-			float localX = x * SCREEN_WIDTH - pos.x;
-			float localY = y * SCREEN_HEIGHT - pos.y;
-			new TouchEvent(type, target, localX, localY,_interactionView.getUser(id), _parent.millis()).dispatch();
-		}
-	}
+	protected abstract void addInteractionEvent(InteractionEventType type, IView target,
+			float x, float y, int id);
 
 	@Override
 	public Boolean isTouchEnabled() {
@@ -144,18 +127,12 @@ public abstract class BaseMainView implements IMainView {
 		return null;
 	}
 
-	public float get_width() {
-		return _parent.width;
-	}
-
-	public float get_height() {
-		return _parent.height;
-	}
-
+	@Override
+	public abstract float get_width();
+	
 	@Override
 	public void showMenu() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -198,9 +175,6 @@ public abstract class BaseMainView implements IMainView {
 	}
 
 	@Override
-	public abstract void draw(PApplet p);
-
-	@Override
 	public void start() {
 		// TODO Auto-generated method stub
 
@@ -218,9 +192,9 @@ public abstract class BaseMainView implements IMainView {
 	}
 
 	@Override
-	public PVector get_absPos() {
+	public Object get_absPos() {
 		// TODO Auto-generated method stub
-		return new PVector(0, 0);
+		return null;
 	}
 
 	@Override
@@ -243,5 +217,9 @@ public abstract class BaseMainView implements IMainView {
 	public abstract void startHover(int userID, int interval, IView target);
 
 	public abstract void endHover(int userID);
+	
+	@Override
+	public void draw() {
+	}
 
 }

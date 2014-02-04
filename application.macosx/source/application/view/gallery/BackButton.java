@@ -3,11 +3,12 @@ package application.view.gallery;
 import framework.events.BackEvent;
 import framework.events.TouchEvent;
 import framework.view.View;
+import application.view.PView;
 import application.view.image.Image;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class BackButton extends View {
+public class BackButton extends PView {
 
 	private Image _bg;
 	private Image _text;

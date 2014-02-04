@@ -1,16 +1,16 @@
 package application.view.tracks;
 
 import framework.data.MusicEntry;
-import framework.view.View;
 import application.content.ContentManager;
 import application.view.MainView;
+import application.view.PView;
 import application.view.labels.LabelView;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
-public class TrackSmallView extends View {
+public class TrackSmallView extends PView {
 
 	private PImage _musicIcon;
 	private PImage _nowPlayingText;

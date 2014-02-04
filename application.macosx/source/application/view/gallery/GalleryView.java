@@ -7,13 +7,14 @@ import framework.view.IGallery;
 import framework.view.View;
 
 import application.view.MainView;
+import application.view.PView;
 import application.view.canvas.PGalleryEntry;
 import application.view.image.Image;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class GalleryView extends View implements IGallery<PImage> {
+public class GalleryView extends PView implements IGallery<PImage> {
 
 	private ArrayList<ImageEntryView> _entries;
 	private ImageEntryView _currentImage;

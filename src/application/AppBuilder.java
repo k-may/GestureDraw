@@ -135,7 +135,7 @@ public class AppBuilder {
 	private void initMainView() {
 		_root = new MainView(_parent);
 		_controller.registerParent(_root);
-		_parent.setRoot(_root);
+		_parent.setRoot((MainView) _root);
 	}
 
 	private void initPlayer() {

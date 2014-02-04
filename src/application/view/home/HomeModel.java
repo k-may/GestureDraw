@@ -55,14 +55,14 @@ public class HomeModel extends Observable {
 
 	public void update(int millis) {
 
-		if (_imageCount == 0)
-			return;
-
 		if (millis - _lastUpdate > TTime) {
 			_lastUpdate = millis;
-			update();
+			if (_imageCount == 0) {
+				nextScreen();
+			} else {
+				update();
+			}
 		}
-
 	}
 
 	private void update() {

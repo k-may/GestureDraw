@@ -2,6 +2,8 @@ package framework.interaction;
 
 import java.util.ArrayList;
 
+import framework.interaction.data.InteractionStreamData;
+
 import application.interaction.RegionType;
 
 /*
@@ -17,4 +19,5 @@ public interface IInteractionRegion {
 	Object get_source();
 	RegionType getType();
 	void removeDomain(int id);
+	int get_inputCount();
 }

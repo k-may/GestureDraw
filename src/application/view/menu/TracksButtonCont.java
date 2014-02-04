@@ -1,13 +1,14 @@
 package application.view.menu;
 
 import application.view.MainView;
+import application.view.PView;
 import application.view.image.Image;
 import application.view.tracks.TrackView;
 import framework.events.TracksShowEvent;
 import framework.events.TouchEvent;
 import framework.view.View;
 
-public class TracksButtonCont extends View {
+public class TracksButtonCont extends PView {
 
 	private Boolean _tracksOpen = false;
 	private Image _icon;

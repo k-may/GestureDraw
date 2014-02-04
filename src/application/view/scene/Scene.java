@@ -1,10 +1,10 @@
 package application.view.scene;
 
+import application.view.PView;
 import framework.scenes.SceneManager;
 import framework.scenes.SceneType;
-import framework.view.View;
 
-public class Scene extends View {
+public class Scene extends PView {
 	public Scene(SceneType type) {
 		SceneManager.registerScene(this, type);
 		_isTouchEnabled = false;

@@ -29,12 +29,13 @@ public class InteractionStreamData {
 
 	public InteractionStreamData(InteractionData data, int userId,
 			InteractionType type, Boolean isOverHoverTarget,
-			Boolean isOverPressTarget,HandType handType, ArrayList<IView> targets) {
+			Boolean isOverPressTarget,HandType handType, ArrayList<IView> targets, DepthStateData depthState) {
 		this(data, userId, type);
 		_isOverHoverTarget = isOverHoverTarget;
 		_isOverPressTarget = isOverPressTarget;
 		_handType = handType;
 		_targets = targets;
+		_depthState = depthState;
 	}
 
 	

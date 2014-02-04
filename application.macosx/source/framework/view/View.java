@@ -11,7 +11,6 @@ import framework.events.TouchEvent;
 
 
 import processing.core.PApplet;
-import processing.core.PVector;
 
 public class View implements IView {
 
@@ -29,7 +28,7 @@ public class View implements IView {
 	protected float _height = -1;
 	protected String _name;
 	protected IView _parent;
-	private ArrayList<IView> _childs;
+	protected ArrayList<IView> _childs;
 	protected Boolean _invalidated = false;
 
 	public View() {
@@ -44,16 +43,16 @@ public class View implements IView {
 	public View(String name) {
 		this();
 		_name = name;
-		println("new view : " + _name);
+		//println("new view : " + _name);
 	}
 
 	@Override
-	public void draw(PApplet p) {
+	public void draw() {
 		if(!_isVisible)
 			return;
 		// TODO Auto-generated method stub
 		for (IView view : _childs)
-			view.draw(p);
+			view.draw();
 	}
 
 	@Override
@@ -120,20 +119,6 @@ public class View implements IView {
 	public IView get_parent() {
 		// TODO Auto-generated method stub
 		return _parent;
-	}
-
-	public PVector get_absPos() {
-		// TODO Auto-generated method stub
-
-		Rectangle rect = get_rect();
-		IView tempParent = _parent;
-
-		while (tempParent != null) {
-			rect = tempParent.get_rect().offset(new PVector(rect.get_x(), rect.get_y()));
-			tempParent = tempParent.get_parent();
-		}
-
-		return new PVector(rect.get_x(), rect.get_y());
 	}
 
 	@Override
@@ -244,5 +229,11 @@ public class View implements IView {
 	@Override
 	public Boolean isDrawTarget() {
 		return false;
+	}
+
+	@Override
+	public Object get_absPos() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

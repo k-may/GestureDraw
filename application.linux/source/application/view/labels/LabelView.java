@@ -1,14 +1,14 @@
 package application.view.labels;
 
-import framework.view.View;
 import gesturedraw.GestureDraw;
 import application.content.FontInfo;
 import application.content.Utils;
+import application.view.PView;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 
-public class LabelView extends View {
+public class LabelView extends PView {
 
 	protected int _size;
 	protected int _color;

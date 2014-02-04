@@ -2,11 +2,12 @@ package application.view.home.screens;
 
 import processing.core.PApplet;
 import application.view.MainView;
+import application.view.PView;
 import application.view.image.GlowingImage;
 import application.view.image.Image;
 import framework.view.View;
 
-public class HandsScreen extends View {
+public class HandsScreen extends PView {
 
 	private Image _hand1;
 	private Image _hand2;
@@ -16,7 +17,7 @@ public class HandsScreen extends View {
 	private GlowingImage _handGlow2;
 	private GlowingImage _handGlow3;
 
-	private View _currentHand;
+	private PView _currentHand;
 
 	private int _handCount = 0;
 	private int _lastTime = 0;

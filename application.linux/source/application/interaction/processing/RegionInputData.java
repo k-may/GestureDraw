@@ -6,10 +6,13 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import application.view.MainView;
 import framework.depth.DepthState;
-import framework.interaction.InteractionTargetInfo;
+import framework.interaction.data.InteractionTargetInfo;
 
 public abstract class RegionInputData {
 
+
+	private static int ID_COUNT = 0;
+	
 	protected int _id;
 
 	private final int SAMPLES = 7;
@@ -24,7 +27,7 @@ public abstract class RegionInputData {
 	protected PVector _cursorPos;
 	private PVector _prevPos;
 
-	protected Boolean _isUpdated = false;
+	public Boolean updated = true;
 
 	protected int minZ = 0;
 	protected int maxZ = 1;
@@ -34,7 +37,7 @@ public abstract class RegionInputData {
 	protected float maxY = 0;
 
 	public RegionInputData() {
-		_id = 0;
+		_id = GetUniqueID();
 
 		if (MainView.DRAW_MASS == 0.0)
 			MainView.DRAW_MASS = (float) (Math.hypot(MainView.SRC_WIDTH, MainView.SRC_HEIGHT) * 0.25f);
@@ -53,7 +56,7 @@ public abstract class RegionInputData {
 		else
 			addPosition(pos);
 
-		_isUpdated = true;
+		updated = true;
 	}
 
 	protected void init(PVector position) {
@@ -73,6 +76,9 @@ public abstract class RegionInputData {
 		float y = getMapped(_rawPosition.y, minY, MainView.YRANGE);
 		float z = 1f - getMapped(_rawPosition.z, minZ, MainView.ZRANGE);
 		PVector mapped = new PVector(x, y, z);
+		//mapped = Region.MapValuesToCurvedPlane(mapped);
+		//System.out.println(MainView.ZRANGE);
+		//MainView.ZRANGE = 175;
 		/*
 		 * System.out.println("========="); System.out.println(_rawPosition);
 		 * System.out.println(mapped); System.out.println(minX + " / " + maxX);
@@ -134,14 +140,14 @@ public abstract class RegionInputData {
 			} else if (_pressState == DepthState.Start) {
 				// ease back to center of screen
 				PVector target = new PVector(0.5f, 0.5f);
-				PVector dir = getTargetAttr(new PVector(_cursorPos.x, _cursorPos.y), target, 0.01f);
-				// _cursorPos.add(dir);
+				PVector dir = PVector.sub(new PVector(_cursorPos.x, _cursorPos.y), target);
+				dir.normalize();
+				dir.mult(MainView.CENTER_SCREEN_MASS);//0.0005f);
+				_cursorPos.add(dir);
 
-				// if(minZ < _rawPosition.z)
-				//System.out.println(minZ + " / " + _rawPosition.z + " mapped : "
-					//	+ mappedPos.z + " / " + _pressState);
+				//apply snapping to region
 				if (minZ + MainView.ZRANGE > _rawPosition.z) {
-					minZ -= 0.5f;
+					minZ -= 0.3f;
 				}
 			}
 
@@ -233,6 +239,10 @@ public abstract class RegionInputData {
 
 	protected float ease(float start, float dest, float easing) {
 		return start + (dest - start) * easing;
+	}
+
+	private int GetUniqueID(){
+		return ID_COUNT ++;
 	}
 
 }

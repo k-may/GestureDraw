@@ -6,11 +6,12 @@ import framework.interaction.Types.HandType;
 import framework.view.View;
 import application.content.ContentManager;
 import application.view.MainView;
+import application.view.PView;
 import processing.core.PApplet;
 import processing.core.PImage;
 import static processing.core.PApplet.println;
 
-public class AvatarCursor extends View {
+public class AvatarCursor extends PView {
 
 	private PImage _highlight;
 
@@ -121,14 +122,17 @@ public class AvatarCursor extends View {
 
 	private void drawNavigationEllipse(PApplet p) {
 		p.strokeWeight(1);
-		p.stroke(_color);
+		p.stroke(MainView.LIGHT_GREY);//_color);
 		p.noFill();
 		float cRadius = GetRadiusForPressure(1 - _pressure);
 		p.ellipse(_x, _y, cRadius * 2, cRadius * 2);
 	}
 
 	public static float GetRadiusForPressure(float pressure) {
-		return (MainView.ICON_MAX_RADIUS - MainView.ICON_MIN_RADIUS) * pressure + MainView.ICON_MIN_RADIUS;
+		int diff = (MainView.ICON_MAX_RADIUS - MainView.ICON_MIN_RADIUS);
+		float p = diff * pressure + MainView.ICON_MIN_RADIUS;
+		//p *= p;
+		return p;
 	}
 
 	public void setState(CursorState _state) {

@@ -89,7 +89,7 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 
 	@Override
 	public void setReady(Boolean value) {
-		System.out.println("=== HomeScreen === set ready : " + value);
+		//System.out.println("\n=== HomeScreen === set ready : " + value);
 		
 		this._isTouchEnabled = value;
 		_model.setReady(value);

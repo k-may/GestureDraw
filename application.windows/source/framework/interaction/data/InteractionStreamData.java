@@ -1,64 +1,67 @@
-package framework.interaction;
+package framework.interaction.data;
 
 import java.util.ArrayList;
 
 import framework.depth.DepthState;
 import framework.depth.DepthStateData;
 import framework.interaction.Types.HandType;
+import framework.interaction.Types.InteractionType;
 import framework.view.IView;
 
 public class InteractionStreamData {
 
-	private float _z;
-	private float _x;
-	private float _y;
 	private int _userId;
 	private HandType _handType;
 	private InteractionType _type;
 	private Boolean _isOverPressTarget = false;
-	private Boolean _isPressing = false;
 	private Boolean _isOverHoverTarget = false;
-	private DepthState _pressState;
 	private ArrayList<IView> _targets;
-	
-	public InteractionStreamData(float x, float y, float z, int userId,
+	private InteractionData _data;
+	private DepthStateData _depthState;
+
+
+	public InteractionStreamData(InteractionData data, int userId,
 			InteractionType type) {
 		_userId = userId;
-		_z = (z);
-		_x = (x);
-		_y = (y);
-		//System.out.println("z : " + _z);
+		_data = data;
 		_type = (type);
 	}
 
-	public InteractionStreamData(float x, float y, float z, int userId,
+	public InteractionStreamData(InteractionData data, int userId,
 			InteractionType type, Boolean isOverHoverTarget,
-			Boolean isOverPressTarget,Boolean isPressing,
-			HandType handType, DepthState pressState, ArrayList<IView> targets) {
-		this(x, y, z, userId, type);
+			Boolean isOverPressTarget,HandType handType, ArrayList<IView> targets, DepthStateData depthState) {
+		this(data, userId, type);
 		_isOverHoverTarget = isOverHoverTarget;
 		_isOverPressTarget = isOverPressTarget;
-		_isPressing = isPressing;
 		_handType = handType;
-		_pressState = pressState;
 		_targets = targets;
+		_depthState = depthState;
 	}
 
+	
+	public InteractionData get_data() {
+		return _data;
+	}
+
+	
+	public DepthStateData get_depthState() {
+		return _depthState;
+	}
 
 	public Boolean isPressing() {
-		return _isPressing;
+		return _data.isPressing;
 	}
 
 	public float get_z() {
-		return _z;
+		return _data.getZ();
 	}
 
 	public float get_x() {
-		return _x;
+		return _data.getX();
 	}
 
 	public float get_y() {
-		return _y;
+		return _data.getY();
 	}
 
 	public int get_userId() {
@@ -87,7 +90,7 @@ public class InteractionStreamData {
 
 	public boolean isDrawing() {
 		// TODO Auto-generated method stub
-		return _pressState == DepthState.Drawing;// || _pressState == PressState.PreDrawing;
+		return _data.isDrawing;//_pressState == DepthState.Drawing;// || _pressState == PressState.PreDrawing;
 	}
 
 	public ArrayList<IView> getTargets() {
