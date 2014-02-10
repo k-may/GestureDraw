@@ -162,7 +162,7 @@ public class DomainManager {
 		for (Entry<Integer, UserInputData> entry : _domainData.entrySet()) {
 			UserInputData domain = entry.getValue();
 			Boolean ready = domain.isReady();
-			Boolean good = domain.isGood();
+			Boolean good = domain.isDataValid();
 			Boolean updated = domain.updated;
 			if (ready){
 				if(good)

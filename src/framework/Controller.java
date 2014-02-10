@@ -165,7 +165,7 @@ public class Controller implements IController {
 	private void handleUserRemoved(UserRemovedEvent event) {
 		IInteractionRegion region = _mainView.get_region();
 		int id = event.get_user().get_id();
-		region.removeDomain(id);
+		region.removeUser(id);
 		_mainView.get_userMenuView().removeDomain(id);
 
 		println("-->remove user : inputCount = " + region.get_inputCount() + " / avatars = " + _interactionView.get_numChildren());

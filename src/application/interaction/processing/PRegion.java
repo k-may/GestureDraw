@@ -102,7 +102,7 @@ public class PRegion extends Region<PApplet> {
 	}
 
 	@Override
-	public void removeDomain(int id) {
+	public void removeUser(int id) {
 	}
 
 	@Override

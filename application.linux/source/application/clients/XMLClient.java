@@ -56,7 +56,7 @@ public class XMLClient{
 		for (XML child : assetXML.getChildren("asset")) {
 			String filePath = child.getContent().trim();
 			String name = child.getString("name");
-			println("name : " + name);
+			//println("name : " + name);
 			String type = child.getString("type");
 			AssetEntry entry = new AssetEntry(name, type, filePath);
 			entries.add(entry);

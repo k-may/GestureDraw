@@ -12,11 +12,9 @@ import processing.core.PImage;
 import SimpleOpenNI.SimpleOpenNI;
 import application.audio.MinimAudioPlayer;
 import application.canvas.PCanvasController;
+import application.clients.AssetsXMLClient;
 import application.clients.DataXMLClient;
-import application.clients.XMLClient;
 import application.content.ContentManager;
-import application.interaction.KinectRegion;
-import application.interaction.RegionType;
 import application.interaction.RegionTypeHelper;
 import application.interaction.gestTrackOSC.GestTrackOSCRegion;
 import application.interaction.processing.PRegion;
@@ -24,7 +22,6 @@ import application.interaction.soni.SONRegion;
 import application.view.MainView;
 import application.view.canvas.CanvasScene;
 import application.view.home.HomeScene;
-import application.view.menu.Menu;
 import de.looksgood.ani.Ani;
 import framework.Controller;
 import framework.ErrorType;
@@ -67,7 +64,7 @@ public class AppBuilder {
 		dataClient = DataXMLClient.getInstance();
 		_controller.registerDataClient(dataClient);
 
-		XMLClient assetClient = new XMLClient();
+		AssetsXMLClient assetClient = new AssetsXMLClient();
 
 		try {
 			ContentManager contentManager = ContentManager.getInstance();

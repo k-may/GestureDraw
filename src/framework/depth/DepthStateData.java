@@ -19,4 +19,5 @@ public class DepthStateData {
 		_pressure = pressure;
 	}
 
+	public static DepthStateData Removed = new DepthStateData(DepthState.None, 0f);
 }

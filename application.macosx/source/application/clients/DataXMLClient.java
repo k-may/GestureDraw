@@ -32,7 +32,7 @@ public class DataXMLClient implements IDataClient {
 	}
 
 	private void loadDataXML() {
-		
+
 		dataXML = GestureDraw.instance.loadXML(_filePath);
 
 		if (dataXML == null) {
@@ -128,31 +128,31 @@ public class DataXMLClient implements IDataClient {
 	public String getInputType() {
 		return getContent("input");
 	}
-	
-	public int getMaxStroke(){
+
+	public int getMaxStroke() {
 		return getIntContent("ui_max_stroke");
 	}
-	
-	public int getMinStroke(){
+
+	public int getMinStroke() {
 		return getIntContent("ui_min_stroke");
 	}
-	
-	public int getColorWheelRadius(){
+
+	public int getColorWheelRadius() {
 		return getIntContent("ui_color_wheel_radius");
 	}
-	
-	public int getButtonSize(){
+
+	public int getButtonSize() {
 		return getIntContent("ui_button_size");
 	}
 
-	public float getCenterMass(){
+	public float getCenterMass() {
 		return getFloatContent("mass_center");
 	}
-	
-	public float getTargetMass(){
+
+	public float getTargetMass() {
 		return getFloatContent("mass_button");
 	}
-	
+
 	@Override
 	public int getMaxNumHands() {
 		return getIntContent("input_max_handnum");
@@ -183,7 +183,13 @@ public class DataXMLClient implements IDataClient {
 	}
 
 	private int getIntContent(String name) {
-		return Integer.parseInt(getContent(name));
+		try {
+			return Integer.parseInt(getContent(name));
+		} catch (NumberFormatException e) {
+			new ErrorEvent(ErrorType.XMLNumberFormat, "XMLEntry " + name
+					+ ", can't be formatted").dispatch();
+			return 0;
+		}
 	}
 
 	private float getFloatContent(String name) {

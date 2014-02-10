@@ -18,6 +18,6 @@ public interface IInteractionRegion {
 	String get_name();
 	Object get_source();
 	RegionType getType();
-	void removeDomain(int id);
+	void removeUser(int id);
 	int get_inputCount();
 }

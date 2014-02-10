@@ -28,6 +28,7 @@ public abstract class RegionInputData {
 	private PVector _prevPos;
 
 	public Boolean updated = true;
+	public Boolean removed = false;
 
 	protected int minZ = 0;
 	protected int maxZ = 1;

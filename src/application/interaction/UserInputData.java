@@ -13,6 +13,10 @@ public class UserInputData extends KinectInputData {
 	private HandData primary;
 	public int domain;
 
+	/*
+	 * Class is extra layer on top of regular input data to map input hand ids
+	 * and determine a primary hand. Only tested so far with GestTracker
+	 */
 	public UserInputData() {
 		super();
 		_handMap = new HashMap<Integer, HandData>();
@@ -20,7 +24,7 @@ public class UserInputData extends KinectInputData {
 
 	private void addHand(PVector pos, int handId) {
 
-		if (_handMap.values().size() > 1)
+		if (_handMap.values().size() >= 2)
 			return;
 
 		if (primary == null) {
@@ -54,6 +58,7 @@ public class UserInputData extends KinectInputData {
 	@Override
 	public void addRawPosition(PVector pos, int handId) {
 		
+		//update count to determine primary hand id for domain
 		if (_handMap.containsKey(handId))
 			_handMap.get(handId).updateCount();
 		else

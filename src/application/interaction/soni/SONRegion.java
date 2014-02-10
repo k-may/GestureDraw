@@ -72,7 +72,7 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 		return RegionType.SimpleOpenNI;
 	}
 
-	public void removeDomain(int id) {
+	public void removeUser(int id) {
 
 		if (_domainData != null) {
 			if (_domainData.containsKey(id)) {

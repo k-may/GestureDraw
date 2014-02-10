@@ -7,27 +7,12 @@ import processing.core.PVector;
 
 public class KinectInputData extends RegionInputData {
 
-	private static final int MAX_INVALID = 15;
 	private int _invalidDataCount = 0;
 	private PVector lastPosition;
-	private static final int MIN_SAMPLES = 25;
-
-	public KinectInputData() {
-	}
-
 	
-	public Boolean isGood() {
-		
-		if(!updated)
-			_invalidDataCount ++;
-		
-		Boolean isGood= _invalidDataCount < MAX_INVALID;
-		return isGood;
-	}
-
-	public Boolean isReady() {
-		return _sampleCount > MIN_SAMPLES;
-	}
+	private static final int MAX_INVALID = 15;
+	private static final int MIN_SAMPLES = 25;
+	private static final float INVALID_DISTANCE = 0.5F;
 
 	@Override
 	protected void addPosition(PVector pos) {
@@ -44,6 +29,31 @@ public class KinectInputData extends RegionInputData {
 
 		_sampleCount++;
 	}
+	
+
+	private Boolean isPositionBad(PVector pos) {
+		double distance = 0;
+		if (lastPosition != null)
+			distance = Math.hypot(pos.x - lastPosition.x, pos.y
+					- lastPosition.y);
+
+		//System.out.println(distance);
+		lastPosition = pos;
+		return distance > INVALID_DISTANCE;
+	}
+	public Boolean isDataValid() {
+		
+		if(!updated)
+			_invalidDataCount ++;
+		
+		Boolean isValid= _invalidDataCount < MAX_INVALID;
+		return isValid;
+	}
+
+	public Boolean isReady() {
+		return _sampleCount > MIN_SAMPLES;
+	}
+
 
 	protected void updateRanges(PVector pos) {
 
@@ -89,15 +99,5 @@ public class KinectInputData extends RegionInputData {
 	}
 
 
-	private Boolean isPositionBad(PVector pos) {
-		double distance = 0;
-		if (lastPosition != null)
-			distance = Math.hypot(pos.x - lastPosition.x, pos.y
-					- lastPosition.y);
-
-		//System.out.println(distance);
-		lastPosition = pos;
-		return distance > 0.5;
-	}
 
 }
