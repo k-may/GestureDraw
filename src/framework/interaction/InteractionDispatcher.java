@@ -43,13 +43,12 @@ public class InteractionDispatcher {
 		// if press button is found, no other targets will be added to stack
 		// need to check if handle exists which overrides press button (ie.
 		// canvas)
-
 		
 		//TODO create drawing dispatcher
 		
 		if (data.isDrawing()) {
 			for (InteractionHandle handle : _handles) {
-				if (handle.get_id() == data.get_userId() && handle.isDrawing()) {
+				if (handle.get_userId() == data.get_userId() && handle.isDrawing()) {
 					// println("pressing : " + data.isPressing());
 					handle.add(data.get_data());
 					break;
@@ -57,7 +56,8 @@ public class InteractionDispatcher {
 			}
 		} else {
 			for (InteractionHandle handle : _handles) {
-				if (handle.get_id() == data.get_userId()) {
+
+				if (handle.get_userId() == data.get_userId()) {
 					for (int i = 0; i < targets.size(); i++) {
 						if (handle.get_target() == targets.get(i)) {
 							handle.add(data.get_data());
@@ -68,9 +68,9 @@ public class InteractionDispatcher {
 				}
 			}
 			// }
-			if (!data.isPressing() && !data.isDrawing()) {
+			if (!data.isPressing()){// || !data.isDrawing()) {
 				for (IView target : targets) {
-					//System.out.println("add handle " + target.isPressTarget() + " / " + target.isDrawTarget());
+					//System.out.println("add handle " + target.isPressTarget());
 					InteractionHandle handle = new InteractionHandle(data.get_userId(), target);
 					handle.add(data.get_data());
 					_handles.add(handle);
@@ -98,6 +98,13 @@ public class InteractionDispatcher {
 		disposeHandles();
 		resetHandles();
 	}
+	
+	public void removeUser(int id){
+		for(InteractionHandle handle : _handles){
+			if(handle.get_userId() == id)
+				disposeHandle(handle);
+		}
+	}
 
 	private void processHandle(InteractionHandle handle, int millis) {
 		InteractionData currentInteraction = handle.get_currentInteraction();
@@ -105,18 +112,18 @@ public class InteractionDispatcher {
 		float x = handle.get_currentX();
 		float y = handle.get_currentY();
 		float pressure = handle.getCurrentPressure();
-		int id = handle.get_id();
+		int id = handle.get_userId();
 
 		if (handle.get_dX() != 0.0f || handle.get_dY() != 0.0f)
 			dispatchEvent(target, InteractionEventType.Move, x, y, id);
 
 		// if (handle.get_target().isDrawTarget())
-		// System.out.println("cR press: " + currentInteraction.isPressing()+
-		// " / " + handle.isPressing());
+		// System.out.println(target + ", pT: " + target.isPressTarget() + " /  cR press: " + currentInteraction.isPressing + " / " + handle.isPressing());
 
-		if (currentInteraction.isPressing && !handle.isPressing())
+		if (currentInteraction.isPressing && !handle.isPressing()){
+		//System.out.println("-->press\n\n");
 			dispatchEvent(target, InteractionEventType.PressDown, x, y, id);
-		else if (currentInteraction.isDrawing && !handle.isDrawing())
+		}else if (currentInteraction.isDrawing && !handle.isDrawing())
 			dispatchEvent(target, InteractionEventType.PressDown, x, y, id);
 
 		if (!currentInteraction.isPressing && handle.isPressing())
@@ -136,7 +143,7 @@ public class InteractionDispatcher {
 
 	private void initHandle(InteractionHandle handle, int millis) {
 		handle.set_startMillis(millis);
-		int id = handle.get_id();
+		int id = handle.get_userId();
 		IView target = handle.get_target();
 		float x = handle.get_currentX();
 		float y = handle.get_currentY();
@@ -158,7 +165,7 @@ public class InteractionDispatcher {
 
 	private void disposeHandle(InteractionHandle handle) {
 		_completeHandles.add(handle);
-		dispatchEvent(handle.get_target(), InteractionEventType.Cancel, -1f, -1f, handle.get_id());
+		dispatchEvent(handle.get_target(), InteractionEventType.Cancel, -1f, -1f, handle.get_userId());
 	}
 
 	private void disposeHandles() {

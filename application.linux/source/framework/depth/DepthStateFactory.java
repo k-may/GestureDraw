@@ -1,5 +1,6 @@
 package framework.depth;
 
+import application.view.MainView;
 import framework.SceneState;
 import framework.cursor.CursorMode;
 import framework.cursor.CursorState;
@@ -7,35 +8,10 @@ import framework.interaction.Types.HandType;
 
 public class DepthStateFactory {
 
-	private float _startS;
-	private float _startE;
-
-	private float _colorS;
-	private float _colorE;
-
-	private float _preDrawS;
-	private float _preDrawE;
-
-	private float _drawS;
-	private float _drawE;
-
-	public DepthStateFactory(float startTo, float colorTo, float preDrawTo) {
-		_startS = 0.0f;
-		_startE = startTo;
-
-		_colorS = _startE;
-		_colorE = colorTo;
-
-		_preDrawS = colorTo;
-		_preDrawE = preDrawTo;
-
-		_drawS = preDrawTo;
-		_drawE = 1.0f;
+	public DepthStateFactory() {
 	}
 
 	public DepthStateData getStateData(float pressure, SceneState sceneState) {
-		// System.out.println("pressure ==>" + pressure);
-
 		switch (sceneState) {
 			case Canvas:
 				return getCanvasSceneDepthData(pressure);
@@ -48,20 +24,18 @@ public class DepthStateFactory {
 	private DepthStateData getCanvasSceneDepthData(float pressure) {
 		DepthStateData data = null;
 		float p = 0.0f;
-		if (pressure >= _startS && pressure < _startE) {// || overTarget) {
-			data = new DepthStateData(DepthState.Start, map(pressure, _startS, _startE));
-		} else if (pressure >= _colorS && pressure < _colorE) {
-			data = new DepthStateData(DepthState.ColorSelection, map(pressure, _colorS, _colorE));
-		} else if (pressure >= _preDrawS && pressure < _preDrawE) {
-			data = new DepthStateData(DepthState.PreDrawing, map(pressure, _preDrawS, _preDrawE));
+	//System.out.println("pressure : " + pressure);
+		if (pressure >= 0f && pressure < MainView.START_TO) {// || overTarget) {
+			data = new DepthStateData(DepthState.Start, map(pressure, 0, MainView.START_TO));
+		} else if (pressure >= MainView.START_TO && pressure < MainView.COLOR_TO) {
+			data = new DepthStateData(DepthState.ColorSelection, map(pressure, MainView.START_TO, MainView.COLOR_TO));
+		} else if (pressure >= MainView.COLOR_TO && pressure < MainView.PREDRAW_TO) {
+			data = new DepthStateData(DepthState.PreDrawing, map(pressure, MainView.COLOR_TO, MainView.PREDRAW_TO));
 		} else {
-			p = map(pressure, _drawS, _drawE);
+			p = map(pressure, MainView.PREDRAW_TO, 1f);
 			p *= p;
 			data = new DepthStateData(DepthState.Drawing, p);
 		}
-		// System.out.println("pressure ==>" + pressure + " : "+
-		// data.get_state().toString());
-
 		return data;
 	}
 

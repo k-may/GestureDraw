@@ -44,6 +44,7 @@ public class Canvas extends PView implements ICanvas<PImage> {
 	}
 
 	private void drawStrokeBuffers(PApplet p) {
+		//System.out.println("size : " + _buffers.size());
 		for (PGraphics buffer : _buffers.values()) {
 			p.image(buffer, _x, _y);
 		}
@@ -87,6 +88,7 @@ public class Canvas extends PView implements ICanvas<PImage> {
 	private void renderStrokeBuffers(PApplet p) {
 
 		ArrayList<StrokeFragment> strokes = _handler.getStrokes();
+		//System.out.println("strokes : " + strokes.size());
 		for (StrokeFragment stroke : strokes) {
 			PGraphics buffer = getBuffer(stroke.get_id(), p);
 			drawStrokeFragment(stroke, buffer, p);
@@ -100,19 +102,20 @@ public class Canvas extends PView implements ICanvas<PImage> {
 
 	protected void drawStrokeFragment(StrokeFragment stroke, PGraphics buffer,
 			PApplet p) {
-		buffer.noFill();
+		//buffer.noFill();
 		buffer.beginDraw();
-		// buffer.blendMode(PApplet.LIGHTEST);
-		PGraphics strokeGraphic = createStroke(stroke.get_startPt(), stroke.get_ctrlPt(), stroke.get_endPt(), stroke.get_pressure(), stroke.get_color(), p);
-		// buffer.image(strokeGraphic, 0, 0);
-		// buffer.blend(strokeGraphic, 0, 0, (int) _width, (int) _height, 0, 0,
-		// (int) _width, (int) _height, PApplet.DIFFERENCE);
-		buffer.copy(strokeGraphic, 0, 0, (int) _width, (int) _height, 0, 0, (int) _width, (int) _height);
+		buffer.beginShape();
+		buffer.noFill();
+		buffer.stroke(stroke.get_color());
+		buffer.strokeWeight(AvatarCursor.GetRadiusForPressure(stroke.get_pressure()));
+		buffer.vertex(stroke.get_startPt().x, stroke.get_startPt().y);
+		
+		buffer.vertex(stroke.get_endPt().x, stroke.get_endPt().y);
+		buffer.endShape();
 		buffer.endDraw();
-		strokeGraphic.dispose();
-		p.removeCache(strokeGraphic);
-	}
 
+	}
+/*
 	private PGraphics createStroke(PVector pt1, PVector ctrl, PVector pt2,
 			float pressure, int color, PApplet p) {
 		// PGraphics buffer = createBuffer(p);
@@ -132,13 +135,12 @@ public class Canvas extends PView implements ICanvas<PImage> {
 		_strokeBuffer.endDraw();
 		return _strokeBuffer;
 	}
-
+*/
 	private PGraphics getBuffer(int id, PApplet p) {
 		if (_buffers.containsKey(id)) {
 			return _buffers.get(id);
 		}
 		PGraphics buffer = createBuffer(p);
-		// buffer.blendMode(PApplet.LIGHTEST);
 		_buffers.put(id, buffer);
 		return buffer;
 
@@ -161,7 +163,7 @@ public class Canvas extends PView implements ICanvas<PImage> {
 		switch (event.get_interactionType()) {
 			case PressDown:
 				// println("press down");
-				_handler.start(event.get_localX(), event.get_localY(), strokePressure, event.getUser());
+				//_handler.start(event.get_localX(), event.get_localY(), strokePressure, event.getUser());
 				break;
 			case PressUp:
 				// println("press up");
@@ -175,10 +177,12 @@ public class Canvas extends PView implements ICanvas<PImage> {
 		}
 	}
 
+	@Override
 	public void onStrokeStart(int id) {
 		_buffers.put(id, null);
 	}
 
+	@Override
 	public void onStrokeEnd(int id) {
 		if (_buffers.containsKey(id)) {
 			_buffer.image(_buffers.get(id), 0, 0);
@@ -188,7 +192,9 @@ public class Canvas extends PView implements ICanvas<PImage> {
 
 	@Override
 	public void clear() {
+		_buffer.beginDraw();
 		_buffer.background(MainView.BG_COLOR);
+		_buffer.endDraw();
 	}
 
 	@Override

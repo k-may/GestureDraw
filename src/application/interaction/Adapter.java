@@ -19,18 +19,17 @@ import framework.view.IView;
 
 public class Adapter implements IAdapter {
 
-	private final int MAX_UNAVAILABLE = 5;
 	protected IMainView _canvas;
 	protected AvatarsView _avatarsView;
 	private DepthStateFactory _depthStateFactory;
 
 	public Adapter() {
 		_avatarsView = new AvatarsView();
-		_depthStateFactory = new DepthStateFactory(0.15f, 0.4f, 0.6f);
+		_depthStateFactory = new DepthStateFactory();
 	}
 
 	@Override
-	public InteractionTargetInfo getInteractionInfoAtLocation(float x, float y, InteractionType type) {
+	public InteractionTargetInfo getInteractionInfoAtLocation(float x, float y) {
 		// TODO Auto-generated method stub
 		ArrayList<IView> targets = _canvas.getTargetsAtLocation(x
 				* MainView.SCREEN_WIDTH, y * MainView.SCREEN_HEIGHT);
@@ -56,13 +55,15 @@ public class Adapter implements IAdapter {
 
 		if (target != null) {
 			overPressTarget = target.isPressTarget();
-			// println("over press target : " + overPressTarget);
+			// System.out.println("over press target : " + target);
 			overHoverTarget = target.isHoverTarget();
-			PVector targetAbsPos = ((PView)target).get_absPos();
+			PVector targetAbsPos = ((PView) target).get_absPos();
 			float targetWidth = target.get_width();
 			float targetHeight = target.get_height();
 			attrX = (targetAbsPos.x + targetWidth / 2) / _canvas.get_width();
 			attrY = (targetAbsPos.y + targetHeight / 2) / _canvas.get_height();
+
+			info.set_pressTarget(target);
 		}
 
 		info.set_canvas(canvas);
@@ -97,8 +98,13 @@ public class Adapter implements IAdapter {
 	@Override
 	public void endInteractionFrame() {
 		ArrayList<UserData> staleUsers = new ArrayList<UserData>();
+
+		//System.out.println("\n==== end frame ====");
+
 		for (UserData user : _avatarsView.get_users()) {
-			if (user.getUnavailableCount() > MAX_UNAVAILABLE)
+			int unavailable = user.getUnavailableCount();
+			//System.out.println(user.get_id() + " unavail : " + unavailable);
+			if (unavailable > 0)
 				staleUsers.add(user);
 		}
 
@@ -115,7 +121,7 @@ public class Adapter implements IAdapter {
 
 	private void digestStream(InteractionStreamData data) {
 
-		UserData user = getUserForDomain(data.get_userId());//_avatarsView.getUser(data.get_userId());
+		UserData user = getUserForDomain(data.get_userId());// _avatarsView.getUser(data.get_userId());
 
 		float localX = data.get_x() * _canvas.get_width();
 		float localY = data.get_y() * _canvas.get_height();

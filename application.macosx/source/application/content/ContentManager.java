@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import application.clients.XMLClient;
+import application.clients.AssetsXMLClient;
 import application.view.canvas.PGalleryEntry;
 import application.view.colorwheel.ColorWheel;
 

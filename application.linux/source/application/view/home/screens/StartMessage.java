@@ -2,21 +2,15 @@ package application.view.home.screens;
 
 import processing.core.PApplet;
 import application.view.MainView;
-import application.view.PView;
 import application.view.image.GlowingImage;
-import framework.events.TouchEvent;
 
-public class StartMessage extends PView {
+public class StartMessage extends HomeScreen{
 
 	public GlowingImage _title;
 	private PressButton _pressButton;
 
 	public StartMessage() {
-		_width = MainView.SCREEN_WIDTH;
-		_height = MainView.SCREEN_HEIGHT;
-		_x = (MainView.SCREEN_WIDTH - _width) / 2;
-		_y = (MainView.SCREEN_HEIGHT - _height) / 2;
-
+		super();
 		createChilds();
 	}
 
@@ -37,8 +31,6 @@ public class StartMessage extends PView {
 			setup();
 		}
 
-
-		
 		super.draw(p);
 	}
 
@@ -51,15 +43,4 @@ public class StartMessage extends PView {
 		_pressButton.set_y(_height/2);
 	}
 
-	@Override
-	public void handleInteraction(TouchEvent event) {
-		// TODO Auto-generated method stub
-		super.handleInteraction(event);
-	}
-
-	@Override
-	public Boolean isTouchEnabled() {
-		// TODO Auto-generated method stub
-		return super.isTouchEnabled();
-	}
 }

@@ -33,6 +33,13 @@ public class YesButton extends MenuButton {
 	}
 	
 	@Override
+	protected void onHoverEnd(TouchEvent event) {
+
+		super.onHoverEnd(event);
+		new YesPressedEvent().dispatch();
+		setClosed();
+	}
+	@Override
 	protected void onPress(TouchEvent event) {
 		// TODO Auto-generated method stub
 		super.onPress(event);

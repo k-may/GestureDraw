@@ -12,7 +12,7 @@ public class StrokeHandle {
 	private ArrayList<PVector> _pos;
 
 	public StrokeHandle(int id, int color) {
-		//println("new stroke handle : color : " + Integer.toHexString(color));
+		// println("new stroke handle : color : " + Integer.toHexString(color));
 		_color = color;
 		_id = id;
 		_infos = new ArrayList<StrokeInfo>();
@@ -48,7 +48,7 @@ public class StrokeHandle {
 		int index = _pos.size() - 1;
 		PVector pt1, ctrl, pt2;
 		StrokeType type = getCurrentStrokeType();
-		//System.out.println("type:" + type);
+		// System.out.println("type:" + type);
 		switch (type) {
 			case Move:
 				if (index > 1) {
@@ -56,7 +56,11 @@ public class StrokeHandle {
 							: PVector.lerp(_pos.get(index - 2), _pos.get(index - 1), 0.5f);
 					ctrl = _pos.get(index - 1);
 					pt2 = PVector.lerp(_pos.get(index - 1), _pos.get(index), 0.5f);
-					return new StrokeFragment(pt1, ctrl, pt2, getCurrentPressure(), _color, _id, type);
+					//float distance = PVector.dist(ctrl, pt2);
+					//System.out.println("distance : " + distance);
+					//System.out.println(pt1 + " / "  + PVector.dist(pt1, ctrl) + "/ " + ctrl + " / "  + PVector.dist(ctrl, pt2) + "/ " + pt2);
+					//if (distance > 0.5f)
+						return new StrokeFragment(pt1, ctrl, pt2, getCurrentPressure(), _color, _id, type);
 				}
 				break;
 			case End:

@@ -44,4 +44,6 @@ public interface IMainView extends IView {
 
 	void addHoverEndEvent(IView target, float x, float y, int id);
 
+	void removeUser(int id);
+
 }

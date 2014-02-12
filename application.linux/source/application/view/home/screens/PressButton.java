@@ -9,7 +9,6 @@ public class PressButton extends MenuButton {
 
 	public PressButton() {
 		super("pressIcon", "pressIcon", "pressText");
-
 		_invalidated = true;
 	}
 
@@ -34,14 +33,8 @@ public class PressButton extends MenuButton {
 	}
 
 	@Override
-	protected void onPress(TouchEvent event) {
-		// TODO Auto-generated method stub
-		super.onPress(event);
-
-		if (_isOpen) {
-			new LabelButtonPressed("START").dispatch();
-			setClosed();
-		}
-
+	protected void onHoverEnd(TouchEvent event) {
+		new LabelButtonPressed("START").dispatch();
 	}
+
 }

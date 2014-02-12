@@ -5,4 +5,6 @@ public interface ICanvas<T> {
 
 	void clear();
 	T getImage();
+	void onStrokeEnd(int id);
+	void onStrokeStart(int id);
 }

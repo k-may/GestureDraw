@@ -13,44 +13,39 @@ import framework.data.MusicEntry;
 import framework.events.ErrorEvent;
 import gesturedraw.GestureDraw;
 
-public class DataXMLClient implements IDataClient {
+public class DataXMLClient extends XMLClient implements IDataClient {
 
 	private static DataXMLClient instance;
 	private static XML dataXML;
 	private String _filePath;
 
-	public static DataXMLClient getInstance() {
+	public static DataXMLClient getInstance() throws Exception{
+		
 		if (instance == null)
 			instance = new DataXMLClient(PathUtil.GetDataPath());
 
 		return instance;
 	}
 
-	private DataXMLClient(String filePath) {
+	private DataXMLClient(String filePath) throws Exception {
 		_filePath = filePath + "config.xml";
 		loadDataXML();
 	}
 
-	private void loadDataXML() {
-
-		dataXML = GestureDraw.instance.loadXML(_filePath);
-
-		if (dataXML == null) {
+	public void loadDataXML() throws Exception{
+		try {
+			dataXML = loadXML(GestureDraw.instance, _filePath);// GestureDraw.instance.loadXML(_filePath);
+		} catch (Exception e) {
 			new ErrorEvent(ErrorType.XMLPath, "path '" + _filePath
 					+ "' could not be found").dispatch();
 			println("cant load");
-		} else
-			setTracksPath();
-	}
-
-	private void setTracksPath() {
-		XML child = dataXML.getChild("trackpath");
-
-		if (child != null) {
-			String path = child.getContent().trim();
-			println("-->>>>tracks path : " + path);
-			PathUtil.TRACKS_PATH = path;
+			throw e;
 		}
+		/*
+		 * if (dataXML == null) { new ErrorEvent(ErrorType.XMLPath, "path '" +
+		 * _filePath + "' could not be found").dispatch(); println("cant load");
+		 * } else setTracksPath();
+		 */
 	}
 
 	public void writeImageEntry(ImageEntry entry) {
@@ -81,10 +76,6 @@ public class DataXMLClient implements IDataClient {
 	}
 
 	public ArrayList<MusicEntry> readMusicEntries() {
-
-		if (PathUtil.TRACKS_PATH == null) {
-			setTracksPath();
-		}
 
 		ArrayList<MusicEntry> entries = new ArrayList<MusicEntry>();
 
@@ -182,37 +173,6 @@ public class DataXMLClient implements IDataClient {
 		return getContent("soni_start_gesture");
 	}
 
-	private int getIntContent(String name) {
-		try {
-			return Integer.parseInt(getContent(name));
-		} catch (NumberFormatException e) {
-			new ErrorEvent(ErrorType.XMLNumberFormat, "XMLEntry " + name
-					+ ", can't be formatted").dispatch();
-			return 0;
-		}
-	}
-
-	private float getFloatContent(String name) {
-		return Float.parseFloat(getContent(name));
-	}
-
-	private Boolean getBooleanContent(String name) {
-		Boolean value = true;
-		value = Boolean.parseBoolean(getContent(name));
-		return value;
-	}
-
-	private String getContent(String name) {
-		String value = "";
-		try {
-			value = dataXML.getChild(name).getContent();// Integer.parseInt(dataXML.getChild("input_for_range").getContent());
-		} catch (NullPointerException e) {
-			new ErrorEvent(ErrorType.XMLParsing, "couldn't find value for '"
-					+ name + "' in config.xml").dispatch();
-		}
-		return value;
-	}
-
 	@Override
 	public float getHorUserRegion1() {
 		return getFloatContent("user_region_ratio_1");
@@ -221,6 +181,17 @@ public class DataXMLClient implements IDataClient {
 	@Override
 	public float getHorUserRegion2() {
 		return getFloatContent("user_region_ratio_2");
+	}
+	
+	@Override
+	protected String getContent(String name) {
+		try {
+			return getContent(name, dataXML);
+		}catch(Exception e){
+			new ErrorEvent(ErrorType.XMLParsing, "couldn't find value for '"
+					+ name + "' in config.xml").dispatch();
+			return "";
+		}
 	}
 
 }

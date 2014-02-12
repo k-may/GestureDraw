@@ -2,6 +2,8 @@ package framework.interaction;
 
 import java.util.ArrayList;
 
+import application.interaction.RegionType;
+
 import processing.core.PVector;
 import framework.interaction.Types.InteractionType;
 import framework.interaction.data.InteractionStreamData;
@@ -13,7 +15,6 @@ public abstract class Region<T> implements IInteractionRegion {
 	protected IAdapter _adapter;
 	protected T _source;
 	protected ArrayList<InteractionStreamData> _stream;
-	protected InteractionType _type;
 
 	public Region(T source) {
 		_source = source;

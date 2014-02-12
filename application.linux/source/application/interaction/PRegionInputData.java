@@ -1,13 +1,18 @@
 package application.interaction;
 
 import processing.core.PVector;
+import application.interaction.gestTrackOSC.domain.DomainCursorHandler;
 import application.interaction.processing.RegionInputData;
 import application.view.MainView;
 
 public class PRegionInputData extends RegionInputData {
 
+	public PRegionInputData() {
+		super(new DomainCursorHandler());
+	}
+
 	@Override
-	protected void resetRange() {
+	protected void resetRange(PVector rawPos, PVector cursorPos){
 		minX = 0;// / 2;
 		maxX = MainView.XRANGE;
 
@@ -23,5 +28,9 @@ public class PRegionInputData extends RegionInputData {
 		_sampleCount++;
 	}
 
+	@Override
+	public PVector getPosition() {
+		return _rawPosition;
+	}
 
 }

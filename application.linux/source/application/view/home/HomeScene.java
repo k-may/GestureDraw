@@ -73,7 +73,7 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 
 		_gallery = new HomeGallery(_model);
 		addChild(_gallery);
-		float galleryScale = 0.9f;
+		float galleryScale = 1f;
 
 		float galleryWidth = _width * galleryScale;
 		float galleryHeight = _height * galleryScale;

@@ -19,42 +19,33 @@ public class DataXMLClient extends XMLClient implements IDataClient {
 	private static XML dataXML;
 	private String _filePath;
 
-	public static DataXMLClient getInstance() {
+	public static DataXMLClient getInstance() throws Exception{
+		
 		if (instance == null)
 			instance = new DataXMLClient(PathUtil.GetDataPath());
 
 		return instance;
 	}
 
-	private DataXMLClient(String filePath) {
+	private DataXMLClient(String filePath) throws Exception {
 		_filePath = filePath + "config.xml";
 		loadDataXML();
 	}
 
-	private void loadDataXML() {
+	public void loadDataXML() throws Exception{
 		try {
 			dataXML = loadXML(GestureDraw.instance, _filePath);// GestureDraw.instance.loadXML(_filePath);
 		} catch (Exception e) {
 			new ErrorEvent(ErrorType.XMLPath, "path '" + _filePath
 					+ "' could not be found").dispatch();
 			println("cant load");
-			setTracksPath();
+			throw e;
 		}
 		/*
 		 * if (dataXML == null) { new ErrorEvent(ErrorType.XMLPath, "path '" +
 		 * _filePath + "' could not be found").dispatch(); println("cant load");
 		 * } else setTracksPath();
 		 */
-	}
-
-	private void setTracksPath() {
-		XML child = dataXML.getChild("trackpath");
-
-		if (child != null) {
-			String path = child.getContent().trim();
-			println("-->>>>tracks path : " + path);
-			PathUtil.TRACKS_PATH = path;
-		}
 	}
 
 	public void writeImageEntry(ImageEntry entry) {
@@ -85,10 +76,6 @@ public class DataXMLClient extends XMLClient implements IDataClient {
 	}
 
 	public ArrayList<MusicEntry> readMusicEntries() {
-
-		if (PathUtil.TRACKS_PATH == null) {
-			setTracksPath();
-		}
 
 		ArrayList<MusicEntry> entries = new ArrayList<MusicEntry>();
 

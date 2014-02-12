@@ -14,6 +14,12 @@ public class SaveButton extends MenuButton {
 	}
 
 	@Override
+	protected void onHoverEnd(TouchEvent event) {
+		new SaveCanvasEvent().dispatch();
+		setClosed();
+	}
+	
+	@Override
 	protected void onPress(TouchEvent event) {
 		if (_isOpen) {
 			new SaveCanvasEvent().dispatch();

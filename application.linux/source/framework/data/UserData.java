@@ -78,10 +78,6 @@ public class UserData {
 	public Boolean isOverPressTarget() {
 		return _streamData.isOverPressTarget();//_isOverPressTarget;
 	}
-
-	public DepthStateData get_depthStateData(){
-		return _depthStateData;
-	}
 	
 	public float getPressPressure(){
 		return _depthStateData.get_pressure();

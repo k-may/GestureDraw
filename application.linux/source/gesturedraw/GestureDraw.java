@@ -16,6 +16,7 @@ public class GestureDraw extends PApplet {
 	private Boolean isFullScreen = true;
 
 	public void setup() {
+	
 		background(0);
 		noLoop();
 		if (!isFullScreen) {

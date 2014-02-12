@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import application.interaction.RegionType;
 import application.view.MainView;
 import application.view.menu.Menu;
 import application.view.scene.Scene;
@@ -35,7 +36,11 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 
 	private void createChilds() {
 
-		_canvas = new CanvasGL();
+		if (MainView.REGION_TYPE == RegionType.GestDomain)
+			_canvas = new CanvasGL();
+		else
+			_canvas = new Canvas();
+
 		_canvas.set_width(_width);
 		_canvas.set_height(_height);
 		addChild(_canvas);
@@ -118,6 +123,11 @@ public class CanvasScene extends Scene implements ICanvasScene<PImage> {
 	@Override
 	public Boolean get_isSaving() {
 		return _isSaving;
+	}
+
+	@Override
+	public ICanvas get_canvas() {
+		return _canvas;
 	}
 
 }

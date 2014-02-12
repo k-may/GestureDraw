@@ -14,6 +14,12 @@ public class ClearButton extends MenuButton {
 	}
 
 	@Override
+	protected void onHoverEnd(TouchEvent event) {
+		new ClearCanvasEvent().dispatch();
+		setClosed();
+	}
+	
+	@Override
 	protected void onPress(TouchEvent event) {
 		// TODO Auto-generated method stub
 		super.onPress(event);

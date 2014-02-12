@@ -7,7 +7,7 @@ import application.view.image.GlowingImage;
 import application.view.image.Image;
 import framework.view.View;
 
-public class HandsScreen extends PView {
+public class HandsScreen extends HomeScreen {
 
 	private Image _hand1;
 	private Image _hand2;
@@ -24,10 +24,7 @@ public class HandsScreen extends PView {
 	private int _duration = 1000;
 
 	public HandsScreen() {
-		_width = MainView.SCREEN_WIDTH;
-		_height = MainView.SCREEN_HEIGHT;
-		_x = 0;// (MainView.SCREEN_WIDTH - _width) / 2;
-		_y = 0;// (MainView.SCREEN_HEIGHT - _height) / 2;
+		super();
 
 		createChilds();
 	}

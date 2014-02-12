@@ -20,17 +20,14 @@ public class InteractionStreamData {
 	private DepthStateData _depthState;
 
 
-	public InteractionStreamData(InteractionData data, int userId,
-			InteractionType type) {
+	public InteractionStreamData(InteractionData data, int userId) {
 		_userId = userId;
 		_data = data;
-		_type = (type);
 	}
 
-	public InteractionStreamData(InteractionData data, int userId,
-			InteractionType type, Boolean isOverHoverTarget,
+	public InteractionStreamData(InteractionData data, int userId, Boolean isOverHoverTarget,
 			Boolean isOverPressTarget,HandType handType, ArrayList<IView> targets, DepthStateData depthState) {
-		this(data, userId, type);
+		this(data, userId);
 		_isOverHoverTarget = isOverHoverTarget;
 		_isOverPressTarget = isOverPressTarget;
 		_handType = handType;
@@ -66,10 +63,6 @@ public class InteractionStreamData {
 
 	public int get_userId() {
 		return _userId;
-	}
-
-	public InteractionType get_type() {
-		return _type;
 	}
 
 	public Boolean isOverPressTarget() {

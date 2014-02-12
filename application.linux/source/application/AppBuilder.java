@@ -9,22 +9,22 @@ import java.util.Observer;
 import oscP5.OscP5;
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 import application.audio.MinimAudioPlayer;
 import application.canvas.PCanvasController;
+import application.clients.AssetsXMLClient;
 import application.clients.DataXMLClient;
-import application.clients.XMLClient;
 import application.content.ContentManager;
-import application.interaction.KinectRegion;
 import application.interaction.RegionType;
 import application.interaction.RegionTypeHelper;
-import application.interaction.gestTrackOSC.GestTrackOSCRegion;
+import application.interaction.gestTrackOSC.domain.GestDomainsRegion;
+import application.interaction.gestTrackOSC.hand.GestHandTrackRegion;
 import application.interaction.processing.PRegion;
 import application.interaction.soni.SONRegion;
 import application.view.MainView;
 import application.view.canvas.CanvasScene;
 import application.view.home.HomeScene;
-import application.view.menu.Menu;
 import de.looksgood.ani.Ani;
 import framework.Controller;
 import framework.ErrorType;
@@ -43,6 +43,7 @@ import gesturedraw.GestureDraw;
 
 public class AppBuilder {
 
+	DataXMLClient _dataClient;
 	public static String logPath;
 	private IInteractionRegion _region;
 	GestureDraw _parent;
@@ -58,16 +59,16 @@ public class AppBuilder {
 
 		init();
 		load();
+		initConfigurationProperties();
 		initScenes();
 		start();
 	}
 
 	private void load() {
-		DataXMLClient dataClient;
-		dataClient = DataXMLClient.getInstance();
-		_controller.registerDataClient(dataClient);
 
-		XMLClient assetClient = new XMLClient();
+		_controller.registerDataClient(_dataClient);
+
+		AssetsXMLClient assetClient = new AssetsXMLClient();
 
 		try {
 			ContentManager contentManager = ContentManager.getInstance();
@@ -78,9 +79,9 @@ public class AppBuilder {
 
 			// load gallery images
 			contentManager.loadAssets(_parent, readAssetEntries, fontEntries);
-			contentManager.loadGalleryEntries(_parent, dataClient.readImageEntries());
+			contentManager.loadGalleryEntries(_parent, _dataClient.readImageEntries());
 
-			ArrayList<MusicEntry> trackEntries = dataClient.readMusicEntries();
+			ArrayList<MusicEntry> trackEntries = _dataClient.readMusicEntries();
 			_player.setEntries(trackEntries);
 
 			if (trackEntries.size() == 0)
@@ -98,20 +99,34 @@ public class AppBuilder {
 	}
 
 	private void init() {
+		String path = getClassPath();
+		if(path == null){
+			System.out.println("\n!!! PATH ERROR !!!");
+			System.out.println("!!! PATH : " + path + " !!!");
+			return;
+		}
+			
+		PathUtil.SetDataPath(path);
 
+		try {
+			_dataClient = DataXMLClient.getInstance();
+		} catch (Exception e) {
+			new ErrorEvent(ErrorType.XMLPath, "Can't load config.xml : "
+					+ e.getLocalizedMessage()).dispatch();
+			System.out.println("!!! LOAD ERROR :" + e.getLocalizedMessage() + " !!!");
+			return;
+		}
+		
 		initControllers();
 		initMainView();
 		initAnimationEngine();
+		initRanges();
 		initInteraction();
 		initPlayer();
 	}
 
 	private void initControllers() {
 		_controller = Controller.getInstance();
-
-		String path = getClassPath();
-
-		PathUtil.SetDataPath(path);
 		_canvasController = new PCanvasController();
 		_controller.registerController(_canvasController);
 
@@ -119,6 +134,9 @@ public class AppBuilder {
 
 	private String getClassPath() {
 		String path = AppBuilder.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		System.out.println("::: BASE PATH :::");
+		System.out.println("::: PATH : " + path + " :::");
+		
 		try {
 			path = URLDecoder.decode(path, "UTF-8");
 			return path;
@@ -127,6 +145,7 @@ public class AppBuilder {
 			new ErrorEvent(ErrorType.Decode, "Couldn't decode path, '" + path
 					+ "' : " + e1.getMessage()).dispatch();
 
+			System.out.println("!!! ERROR : " +e1.getMessage() + " !!!");
 			e1.printStackTrace();
 			return null;
 		}
@@ -150,16 +169,18 @@ public class AppBuilder {
 		Ani.overwrite();
 	}
 
+	private void initConfigurationProperties() {
+		MainView.BUTTON_HEIGHT = MainView.BUTTON_WIDTH = _dataClient.getButtonSize();
+		MainView.COLORWHEEL_RADIUS = _dataClient.getColorWheelRadius();
+		MainView.ICON_MAX_RADIUS = _dataClient.getMaxStroke();
+		MainView.ICON_MIN_RADIUS = _dataClient.getMinStroke();
+		MainView.CLEARABLE = _dataClient.getClearable();
+		MainView.CENTER_SCREEN_MASS = _dataClient.getCenterMass();
+		MainView.TARGET_MASS = _dataClient.getTargetMass();
+	}
+
 	private void initScenes() {
 
-		MainView.BUTTON_HEIGHT = MainView.BUTTON_WIDTH = DataXMLClient.getInstance().getButtonSize();
-		MainView.COLORWHEEL_RADIUS = DataXMLClient.getInstance().getColorWheelRadius();
-		MainView.ICON_MAX_RADIUS = DataXMLClient.getInstance().getMaxStroke();
-		MainView.ICON_MIN_RADIUS = DataXMLClient.getInstance().getMinStroke();
-		MainView.CLEARABLE = DataXMLClient.getInstance().getClearable();
-		MainView.CENTER_SCREEN_MASS = DataXMLClient.getInstance().getCenterMass();
-		MainView.TARGET_MASS = DataXMLClient.getInstance().getTargetMass();
-		
 		_canvasScene = new CanvasScene();
 		_homeScene = new HomeScene();
 
@@ -184,13 +205,14 @@ public class AppBuilder {
 
 	private void initInteraction() {
 
-		DataXMLClient dataClient = DataXMLClient.getInstance();
-		_controller.registerDataClient(dataClient);
+		// DataXMLClient dataClient = DataXMLClient.getInstance();
+		_controller.registerDataClient(_dataClient);
 
-		MainView.REGION_TYPE = RegionTypeHelper.GetTypeForString(dataClient.getInputType());
+		MainView.REGION_TYPE = RegionTypeHelper.GetTypeForString(_dataClient.getInputType());
 
 		switch (MainView.REGION_TYPE) {
-			case GestTrackOSC:
+			case GestTrack:
+			case GestDomain:
 				initGestTrackOSCRegion();
 				break;
 			case SimpleOpenNI:
@@ -200,7 +222,7 @@ public class AppBuilder {
 				_region = new PRegion(_parent);
 		}
 
-		new LogEvent("Region created : " + _region.getType().toString()).dispatch();
+		new LogEvent("Region created : " + MainView.REGION_TYPE.toString()).dispatch();
 
 		_region.get_adapter().set_canvas(_root);
 		_root.set_region(_region);
@@ -208,16 +230,13 @@ public class AppBuilder {
 	}
 
 	private void initSimpleOpenNIRegion() {
-		DataXMLClient dataClient = DataXMLClient.getInstance();
-		int xRange = dataClient.getXInputRange();
-		int yRange = dataClient.getYInputRange();
-		int zRange = dataClient.getZInputRange();
-		String gestureType = dataClient.getStartGestureType();
-		int maxNumHands = dataClient.getMaxNumHands();
+		// DataXMLClient dataClient = DataXMLClient.getInstance();
+		String gestureType = _dataClient.getStartGestureType();
+
 		try {
 			SimpleOpenNI context = new SimpleOpenNI(GestureDraw.instance);
 			if (context.init()) {
-				_region = new SONRegion(context, maxNumHands, xRange, yRange, zRange, gestureType);
+				_region = new SONRegion(context, gestureType);
 			} else {
 				new ErrorEvent(ErrorType.KinectError, "Unable to initate SimpleOpenNI, make sure all KinectAPI drivers are properly installed").dispatch();
 				_region = new PRegion(_parent);
@@ -231,16 +250,35 @@ public class AppBuilder {
 	}
 
 	private void initGestTrackOSCRegion() {
-		DataXMLClient dataClient = DataXMLClient.getInstance();
-		int xRange = dataClient.getXInputRange();
-		int yRange = dataClient.getYInputRange();
-		int zRange = dataClient.getZInputRange();
-		float firstRegion = dataClient.getHorUserRegion1();
-		float secondRegion = dataClient.getHorUserRegion2();
+		// DataXMLClient dataClient = DataXMLClient.getInstance();
+		float firstRegion = _dataClient.getHorUserRegion1();
+		float secondRegion = _dataClient.getHorUserRegion2();
 
 		OscP5 osc = new OscP5(GestureDraw.instance, 12345);
-		_region = new GestTrackOSCRegion(osc, xRange, yRange, zRange);
-		((GestTrackOSCRegion) _region).setDomains(firstRegion, secondRegion);
+
+		if (MainView.REGION_TYPE == RegionType.GestDomain) {
+			_region = new GestDomainsRegion(osc);
+			((GestDomainsRegion) _region).setDomains(firstRegion, secondRegion);
+		} else if (MainView.REGION_TYPE == RegionType.GestTrack) {
+			_region = new GestHandTrackRegion(osc);
+		}
+	}
+
+	private void initRanges() {
+		// DataXMLClient dataClient = DataXMLClient.getInstance();
+
+		int xRange = _dataClient.getXInputRange();
+		int yRange = _dataClient.getYInputRange();
+		int zRange = _dataClient.getZInputRange();
+
+		if (xRange != -1)
+			MainView.XRANGE = (int) xRange;
+
+		if (yRange != -1)
+			MainView.YRANGE = (int) yRange;
+
+		if (zRange != -1)
+			MainView.ZRANGE = (int) zRange;
 	}
 
 }

@@ -16,6 +16,7 @@ public class PCanvasController extends CanvasController<PImage> implements ICont
 	@Override
 	public void registerCanvasScene(ICanvasScene<PImage> scene) {
 		_canvasScene = scene;
+		_canvas = _canvasScene.get_canvas();
 	}
 
 

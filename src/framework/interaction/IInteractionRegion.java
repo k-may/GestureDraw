@@ -17,7 +17,6 @@ public interface IInteractionRegion {
 	IAdapter get_adapter();
 	String get_name();
 	Object get_source();
-	RegionType getType();
 	void removeUser(int id);
 	int get_inputCount();
 }

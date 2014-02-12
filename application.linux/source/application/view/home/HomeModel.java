@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import application.view.home.screens.HandsScreen;
+import application.view.home.screens.HomeScreen;
 import application.view.home.screens.StartMessage;
-import application.view.home.screens.WeclomeMessage;
+import application.view.home.screens.WelcomeMessage;
 import framework.data.GalleryEntry;
 import framework.view.View;
 
@@ -15,7 +16,6 @@ public class HomeModel extends Observable {
 
 	private HomeScene _home;
 	private HomeGallery _gallery;
-
 	private HandsScreen _handsScreen;
 
 	private final int ROTATION_COUNT = 3;
@@ -27,11 +27,11 @@ public class HomeModel extends Observable {
 	private ArrayList<PImage> _images;
 	private int _imageCount = 0;
 
-	private ArrayList<View> _screens;
+	private static ArrayList<View> _screens;
 	private int _screenCount = 0;
 
 	private View _welcomeScreen;
-	private View _startScreen;
+	private static View _startScreen;
 	private Boolean _ready = false;
 
 	public HomeModel(HomeScene home) {
@@ -41,16 +41,12 @@ public class HomeModel extends Observable {
 	}
 
 	private void initScreens() {
-		_screens = new ArrayList<View>();
-
 		_startScreen = new StartMessage();
-		_screens.add(_startScreen);
-
-		_welcomeScreen = new WeclomeMessage();
-		_screens.add(_welcomeScreen);
-
+		RegisterStartScreen((HomeScreen) _startScreen);
+		_welcomeScreen = new WelcomeMessage();
+		RegisterScreen((HomeScreen) _welcomeScreen);
 		_handsScreen = new HandsScreen();
-		_screens.add(_handsScreen);
+		RegisterScreen(_handsScreen);
 	}
 
 	public void update(int millis) {
@@ -102,7 +98,6 @@ public class HomeModel extends Observable {
 		} else
 			_home.setScreen(_startScreen);
 
-		// _home.setScreen(_handsScreen);
 	}
 
 	public void registerHomeGallery(HomeGallery gallery) {
@@ -139,4 +134,16 @@ public class HomeModel extends Observable {
 			nextScreen();
 	}
 
+	public static void RegisterStartScreen(HomeScreen screen) {
+		_startScreen = screen;
+		RegisterScreen(screen);
+	}
+
+	public static void RegisterScreen(HomeScreen screen) {
+		if (_screens == null)
+			_screens = new ArrayList<View>();
+
+		if (!_screens.contains(screen))
+			_screens.add(screen);
+	}
 }

@@ -14,5 +14,11 @@ public enum DepthState {
 	public String toString() {
 		return _name;
 	}
+	
+
+	public Boolean isDrawing() {
+		return this == DepthState.Drawing
+				|| this == DepthState.PreDrawing;
+	}
 
 }

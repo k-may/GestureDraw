@@ -9,7 +9,7 @@ public class RegionTypeHelper {
 		RegionType type = RegionType.Processing;
 
 		if (str.equals("gesttracker"))
-			type = RegionType.GestTrackOSC;
+			type = RegionType.GestTrack;
 		else if (str.equals("soni"))
 			type = RegionType.SimpleOpenNI;
 		else if (!str.equals("mouse"))

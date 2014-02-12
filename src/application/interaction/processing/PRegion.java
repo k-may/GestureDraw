@@ -39,11 +39,8 @@ public class PRegion extends Region<PApplet> {
 
 		// source.noCursor();
 
-		_type = InteractionType.Mouse;
 		_adapter = new Adapter();
 
-		new HandDetectedEvent().dispatch();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -53,37 +50,44 @@ public class PRegion extends Region<PApplet> {
 		float mY = (float) _source.mouseY;// / _source.height;
 		float mZ = _source.mousePressed ? 1 : 0.25f;
 
-		//System.out.println(mX);
+		// System.out.println(mZ);
 		// if (_source.mousePressed)
-		//System.out.println("\n========= : pressed :" + _source.mousePressed);
+		// System.out.println("\n========= : pressed :" + _source.mousePressed);
+//		new HandDetectedEvent().dispatch();
 
 		PVector position = new PVector(mX, mY, mZ);
 		data.addRawPosition(position, 0);
 		int id = data.get_id();
 		position = data.getPosition();
+		position = new PVector(position.x / _source.width, position.y /_source.height, position.z);
 
 		// digest stream info
-		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(position.x, position.y, _type);
+		InteractionTargetInfo info = _adapter.getInteractionInfoAtLocation(position.x, position.y);
 		Boolean isHoverTarget = info.get_isHoverTarget();
 		Boolean isPressTarget = info.get_isPressTarget();
-		Boolean isDrawTarget = info.get_canvas() != null;
 
-		DepthStateData pressStateData = _adapter.getUserForDomain(0).get_depthStateData();
-		DepthState state = pressStateData == null ? DepthState.None
-				: pressStateData.get_state();
-		position = data.digest(info, state);
-
+		// digest depth state
+		DepthStateData depthStateData;
 		Boolean isPressing = false;
 
-		if (isPressTarget || isDrawTarget)
-			isPressing = _pressHandler.getPressData(id, mZ, info.get_targetID());
-
-		Boolean isDrawing = info.get_canvas() != null
-				&& state == DepthState.Drawing;
+		if (data.removed) {
+			depthStateData = DepthStateData.Removed;
+		} else {
+			depthStateData = _adapter.getInteractionInfoAtDepth(position.z);// getUserForDomain(id).get_depthStateData();
+			// handle press intention
+			if (isPressTarget)
+				isPressing = _pressHandler.getPressData(id, position.z, info.get_targetID());
+		}
 		
+		//System.out.println(isPressTarget + " / " + isPressing);
+		Boolean isDrawing = !isPressing && (info.get_canvas() != null
+				&& depthStateData.get_state() == DepthState.Drawing);
+		
+		//System.out.println(info.get_canvas() + " / " + depthStateData.get_state());
+
 		InteractionData data = new InteractionData(new Vector(position.x, position.y, mZ), isPressing, isDrawing);
 
-		InteractionStreamData streamData = new InteractionStreamData(data, 0, _type, isHoverTarget, isPressTarget, HandType.None, info.get_targets(),pressStateData);
+		InteractionStreamData streamData = new InteractionStreamData(data, 0, isHoverTarget, isPressTarget, HandType.None, info.get_targets(), depthStateData);
 
 		_stream = new ArrayList<InteractionStreamData>();
 		_stream.add(streamData);
@@ -94,11 +98,6 @@ public class PRegion extends Region<PApplet> {
 	@Override
 	public ArrayList<InteractionStreamData> getStream() {
 		return _stream;
-	}
-
-	@Override
-	public RegionType getType() {
-		return RegionType.Processing;
 	}
 
 	@Override

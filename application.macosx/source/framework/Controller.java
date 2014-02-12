@@ -133,10 +133,20 @@ public class Controller implements IController {
 			case Inaction:
 				handleInAction();
 				break;
-			case NoPressed:
+			case Refresh:
 				navigateToHome();
+				handleRefresh();
 				break;
 		}
+	}
+
+	private void handleRefresh() {
+		ArrayList<UserData> users = _interactionView.get_users();
+		
+		for(UserData user : users){
+			_mainView.removeUser(user.get_id());
+		}
+		
 	}
 
 	private void handleUpdateColor(UpdateColorEvent event) {
@@ -165,18 +175,19 @@ public class Controller implements IController {
 	private void handleUserRemoved(UserRemovedEvent event) {
 		IInteractionRegion region = _mainView.get_region();
 		int id = event.get_user().get_id();
-		region.removeDomain(id);
-		_mainView.get_userMenuView().removeDomain(id);
+		//region.removeUser(id);
+		//_mainView.get_userMenuView().removeDomain(id);
 
+		_mainView.removeUser(id);
 		println("-->remove user : inputCount = " + region.get_inputCount() + " / avatars = " + _interactionView.get_numChildren());
 		
-		if(region.get_inputCount() != _interactionView.get_numChildren())
-			println("wtf!?");
+		//if(region.get_inputCount() != _interactionView.get_numChildren())
+			//println("wtf!?");
 
 	}
 
 	private void println(Object msg) {
-		System.out.println(msg);
+		//System.out.println(msg);
 	}
 
 	private void handleLog(LogEvent event) {
@@ -188,7 +199,6 @@ public class Controller implements IController {
 	}
 
 	private void handleHandDetected(HandDetectedEvent event) {
-		System.out.println("->> hand detected event");
 		switch (SceneManager.GetSceneType()) {
 			case Home:
 				_homeScene.setReady(true);

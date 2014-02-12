@@ -1,25 +1,27 @@
 package application.interaction.soni;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import framework.events.StreamEndEvent;
+import framework.interaction.data.InteractionStreamData;
 import application.interaction.Adapter;
-import application.interaction.UserInputData;
+import application.interaction.KinectInputData;
 import application.interaction.KinectRegion;
 import application.interaction.RegionType;
+import application.interaction.gestTrackOSC.domain.DomainInputData;
 import processing.core.PVector;
 
 import SimpleOpenNI.SimpleOpenNI;
 
 import static processing.core.PApplet.println;
 
-public class SONRegion extends KinectRegion<SimpleOpenNI> {
+public class SONRegion extends KinectRegion<KinectInputData, SimpleOpenNI> {
 
-	private Map<Integer, UserInputData> _domainData;
+	private Map<Integer, KinectInputData> _domainData;
 	
-	public SONRegion(SimpleOpenNI source, int maxHands, int xRange, int yRange,
-			int zRange, String gestureType) {
- 		super(source, maxHands, xRange, yRange, zRange,RegionType.SimpleOpenNI);
+	public SONRegion(SimpleOpenNI source, String gestureType) {
+ 		super(source, RegionType.SimpleOpenNI);
 		// enable depthMap generation
 		Boolean enabled = true;
 		
@@ -66,17 +68,11 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 			_domainData.remove(id);
 	}
 
-	@Override
-	public RegionType getType() {
-		// TODO Auto-generated method stub
-		return RegionType.SimpleOpenNI;
-	}
-
-	public void removeDomain(int id) {
+	public void removeUser(int id) {
 
 		if (_domainData != null) {
 			if (_domainData.containsKey(id)) {
-				UserInputData data = _domainData.get(id);
+				KinectInputData data = _domainData.get(id);
 				_domainData.remove(id);
 
 			}
@@ -87,6 +83,23 @@ public class SONRegion extends KinectRegion<SimpleOpenNI> {
 				new StreamEndEvent().dispatch();
 			}
 		}
+	}
+
+	@Override
+	public int get_inputCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	protected ArrayList<KinectInputData> digestInputData(Map<Integer, PVector> inputQueue, ArrayList<Integer> removeQueue)  {
+		return null;
+	}
+
+	@Override
+	protected InteractionStreamData convertInputData(KinectInputData domainData) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

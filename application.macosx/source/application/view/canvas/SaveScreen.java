@@ -17,7 +17,7 @@ public class SaveScreen extends PView {
 
 	private int _duration = 2000;
 	private int _lastTime;
-	
+	int padding = 150;
 	public SaveScreen() {
 		_width = MainView.SCREEN_WIDTH;
 		_height = MainView.SCREEN_HEIGHT;
@@ -43,6 +43,11 @@ public class SaveScreen extends PView {
 
 	@Override
 	public void draw(PApplet p) {
+
+		p.noStroke();
+		p.fill(0,200);
+		p.rect(padding, padding, _width - padding*2, _height - padding*2);
+		
 		int time = p.millis();
 		
 		if(_invalidated){

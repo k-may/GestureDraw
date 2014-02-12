@@ -33,7 +33,13 @@ public class NoButton extends MenuButton {
 		}
 	}
 	
-	
+	@Override
+	protected void onHoverEnd(TouchEvent event) {
+		// TODO Auto-generated method stub
+		super.onHoverEnd(event);
+		new NoPressedEvent().dispatch();
+		setClosed();
+	}
 	@Override
 	protected void onPress(TouchEvent event) {
 		// TODO Auto-generated method stub

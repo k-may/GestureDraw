@@ -3,15 +3,19 @@ package framework;
 import framework.data.GalleryEntry;
 import framework.events.Event;
 import framework.events.EventType;
+import framework.events.RefreshEvent;
 import framework.events.SaveCanvasEvent;
+import framework.events.UserRemovedEvent;
 import framework.scenes.IHomeScene;
 import framework.scenes.SceneManager;
+import framework.stroke.ICanvas;
 import framework.view.ICanvasScene;
 import framework.view.IGallery;
 
 public abstract class CanvasController<T> implements IController {
 
 	protected ICanvasScene<T> _canvasScene;
+	protected ICanvas _canvas;
 	protected IHomeScene<T> _homeScene;
 
 	public abstract void registerHomeScene(IHomeScene<T> homeScene);
@@ -20,7 +24,6 @@ public abstract class CanvasController<T> implements IController {
 
 	public void processEvent(Event event) {
 		EventType type = event.get_type();
-		//println("process event : " + event.toString());
 		switch (type) {
 			case SaveCanvas:
 				handleSaveCanvas((SaveCanvasEvent) event);
@@ -39,9 +42,16 @@ public abstract class CanvasController<T> implements IController {
 			case ClearCanvas:
 				handleClear();
 				break;
+			case UserRemoved:
+				removeStroke((UserRemovedEvent) event);
 		}
 	}
 
+
+	private void removeStroke(UserRemovedEvent event) {
+		System.out.println("remove stroke : " + event.get_user().get_id());
+		_canvas.onStrokeEnd(event.get_user().get_id());
+	}
 
 	private void handleClear() {
 		_canvasScene.clearCanvas();
@@ -70,6 +80,8 @@ public abstract class CanvasController<T> implements IController {
 	
 	private void handleNoPressed(){
 		_canvasScene.clearCanvas();
+		
+		new RefreshEvent().dispatch();
 	}
 	
 	private void handleContinue(){

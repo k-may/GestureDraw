@@ -50,6 +50,9 @@ public class MainView extends BaseMainView implements Observer {
 	public static int BUTTON_HEIGHT = 208;
 
 	public static final int DividorWidth = 6;
+	public static float START_TO = 0.15f;
+	public static float PREDRAW_TO = 0.4f;
+	public static float COLOR_TO = 0.6f;
 
 	// menu states
 	public static Boolean CLEARABLE = true;
@@ -59,6 +62,15 @@ public class MainView extends BaseMainView implements Observer {
 	public static int ZRANGE = 300;
 	public static int XRANGE = 200;
 	public static int YRANGE = 200;
+	public static final float RANGE_DAMPENING = 0.1f;
+	
+	public static final int TENDENCY_SAMPLES = 7;
+	
+
+	public static final int MAX_UNAVAILABLE = 5;
+	public static final int MAX_INVALID = 15;
+	public static final int MIN_SAMPLES = 25;
+	public static float INVALID_DISTANCE = 0.5F;
 
 	public static float DRAW_MASS;
 	public static float DRAW_LERP = 0.5f;

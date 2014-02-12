@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import framework.audio.IAudioView;
 import framework.data.GalleryEntry;
+import framework.stroke.ICanvas;
 
 public interface ICanvasScene<T> {
 	//ICanvas<T> get_canvas();
@@ -16,4 +17,5 @@ public interface ICanvasScene<T> {
 	void clearCanvas();
 	void set_isSaving(Boolean value);
 	Boolean get_isSaving();
+	ICanvas get_canvas();
 }

@@ -11,7 +11,7 @@ import application.view.PView;
 import framework.Controller;
 import framework.cursor.CursorMode;
 import framework.data.UserData;
-import framework.events.InactionEvent;
+import framework.events.InActionEvent;
 import framework.events.UserAddedEvent;
 import framework.events.UserRemovedEvent;
 import framework.interaction.IInteractionView;
@@ -54,9 +54,11 @@ public class AvatarsView extends PView implements IInteractionView {
 		if (_updated)
 			_lastUpdate = p.millis();
 
-		if (time - _lastUpdate > getInactionValue()) {
+		int elapsed = time - _lastUpdate;
+		
+		if (elapsed > getInactionValue()) {
 			//System.out.println("------------>>>> inaction!!!");
-			new InactionEvent().dispatch();
+			new InActionEvent().dispatch();
 			_lastUpdate = time;
 		}
 

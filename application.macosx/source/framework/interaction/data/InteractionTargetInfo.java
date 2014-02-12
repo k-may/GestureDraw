@@ -19,6 +19,7 @@ public class InteractionTargetInfo {
 	private int _targetID = -1;
 	private ArrayList<IView> _targets;
 	private IView _canvas;
+	private IView _pressTarget;
 
 	public ArrayList<IView> get_targets() {
 		return _targets;
@@ -102,6 +103,10 @@ public class InteractionTargetInfo {
 	
 	public IView get_canvas(){
 		return _canvas;
+	}
+
+	public void set_pressTarget(IView target) {
+		_pressTarget = target;
 	}
 
 }

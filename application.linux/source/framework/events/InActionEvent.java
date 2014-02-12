@@ -1,8 +1,8 @@
 package framework.events;
 
-public class InactionEvent extends Event {
+public class InActionEvent extends Event {
 
-	public InactionEvent() {
+	public InActionEvent() {
 		super(EventType.Inaction);
 	}
 

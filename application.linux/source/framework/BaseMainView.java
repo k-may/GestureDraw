@@ -221,5 +221,13 @@ public abstract class BaseMainView implements IMainView {
 	@Override
 	public void draw() {
 	}
+	
+	@Override
+	public void removeUser(int id) {
+		_region.removeUser(id);
+		_dispatcher.removeUser(id);
+		_userMenuView.removeDomain(id);
+		
+	}
 
 }

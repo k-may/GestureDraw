@@ -1,13 +1,10 @@
 package application.view.canvas;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-
-import application.view.avatar.AvatarCursor;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 import processing.opengl.PGL;
+import application.view.avatar.AvatarCursor;
 import framework.stroke.StrokeFragment;
 
 public class CanvasGL extends Canvas {

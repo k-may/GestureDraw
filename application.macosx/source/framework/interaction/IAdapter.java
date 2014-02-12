@@ -17,8 +17,7 @@ import framework.interaction.data.InteractionTargetInfo;
 public interface IAdapter{
 	void set_canvas(IMainView canvas);
 	//convert finite location to screen coords, get press target location, etc.
-	InteractionTargetInfo getInteractionInfoAtLocation(float x, float y,
-			InteractionType type);
+	InteractionTargetInfo getInteractionInfoAtLocation(float x, float y);
 	DepthStateData getInteractionInfoAtDepth(float z);
 	void handleStreamData(ArrayList<InteractionStreamData> data);
 	void beginInteractionFrame();

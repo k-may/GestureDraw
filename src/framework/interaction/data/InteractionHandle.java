@@ -6,7 +6,7 @@ import framework.view.IView;
 
 public class InteractionHandle {
 	private IView _target;
-	private int _id;
+	private int _userId;
 	private ArrayList<InteractionData> _data;
 	private Boolean _isPressing = false;
 	private Boolean _isPreHovering = false;
@@ -16,13 +16,16 @@ public class InteractionHandle {
 
 	public InteractionHandle(int id, IView target) {
 		_target = target;
-		_id = id;
+		_userId = id;
 	}
 
 	public void add(InteractionData data) {
 		if (_data == null)
 			_data = new ArrayList<InteractionData>();
 
+		if(_data.size() > 2)
+			_data.remove(2);
+		
 		_data.add(data);
 
 		_updated = true;
@@ -32,8 +35,8 @@ public class InteractionHandle {
 		return _target;
 	}
 
-	public int get_id() {
-		return _id;
+	public int get_userId() {
+		return _userId;
 	}
 
 	public void cancel() {
