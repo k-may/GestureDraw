@@ -2,6 +2,7 @@ package framework.interaction.data;
 
 import java.util.ArrayList;
 
+import framework.interaction.IHoverTarget;
 import framework.view.IView;
 
 public class InteractionHandle {
@@ -13,10 +14,14 @@ public class InteractionHandle {
 	private Boolean _isHovering = false;
 	private Boolean _updated = false;
 	private int _startMillis;
+	public int hoverInterval;
 
 	public InteractionHandle(int id, IView target) {
 		_target = target;
 		_userId = id;
+		
+		if(_target.isHoverTarget())
+			hoverInterval = ((IHoverTarget)target).get_hoverInterval();
 	}
 
 	public void add(InteractionData data) {
@@ -74,10 +79,6 @@ public class InteractionHandle {
 		// only update press state after initial processing
 		_isPressing = get_currentInteraction().isPressing;
 		_updated = false;
-	}
-
-	public float getCurrentPressure() {
-		return get_currentInteraction().getZ();
 	}
 
 	public boolean isHovering() {

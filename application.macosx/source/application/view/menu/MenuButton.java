@@ -2,11 +2,11 @@ package application.view.menu;
 
 import application.view.ButtonBorder;
 import application.view.MainView;
-import application.view.PView;
+import application.view.PButton;
 import application.view.image.Image;
 import framework.events.TouchEvent;
 
-public class MenuButton extends PView {
+public class MenuButton extends PButton {
 
 	protected Boolean _isOpen = false;
 
@@ -31,8 +31,17 @@ public class MenuButton extends PView {
 
 	protected final float ICON_SCALE = 2.0f;
 
+	public MenuButton(String icon, String iconLarge) {
+		this(icon, iconLarge, "", MainView.HOVER_ELAPSE);
+	}
+
 	public MenuButton(String icon, String iconLarge, String text) {
-		_isHoverEnabled = true;
+		this(icon, iconLarge);
+	}
+
+	public MenuButton(String icon, String iconLarge, String text, int interval) {
+		super(interval);
+		// _isHoverEnabled = true;
 		_width = MainView.BUTTON_WIDTH;
 		_height = MainView.BUTTON_HEIGHT;
 
@@ -54,12 +63,14 @@ public class MenuButton extends PView {
 		_bg.set_width(_width);
 		_bg.set_height(_height);
 
-		_text = new Image(text);
-		_text.set_color(0xff000000);
-		_text.set_y(MainView.BUTTON_TEXT_TOP);
-
 		_border = new ButtonBorder();
 		_border.hoverOver();
+
+		if (text != "") {
+			_text = new Image(text);
+			_text.set_color(0xff000000);
+			_text.set_y(MainView.BUTTON_TEXT_TOP);
+		}
 	}
 
 	@Override
@@ -97,13 +108,14 @@ public class MenuButton extends PView {
 		_isPressTarget = true;
 		addChild(_bg);
 		addChild(_iconLarge);
-		addChild(_text);
-		
-		//by default the border is only
-		//visible in the open state
+		if (_text != null)
+			addChild(_text);
+
+		// by default the border is only
+		// visible in the open state
 		addChild(_border);
 		_border.hoverOver();
-		
+
 		_iconLarge.fadeIn();
 
 		removeChild(_icon);
@@ -114,7 +126,8 @@ public class MenuButton extends PView {
 		_isPressTarget = false;
 		removeChild(_iconLarge);
 		addChild(_icon);
-		removeChild(_text);
+		if (_text != null)
+			removeChild(_text);
 		removeChild(_bg);
 		removeChild(_border);
 		_isOpen = false;

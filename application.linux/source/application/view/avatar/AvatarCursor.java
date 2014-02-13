@@ -1,5 +1,6 @@
 package application.view.avatar;
 
+import de.looksgood.ani.Ani;
 import framework.cursor.CursorMode;
 import framework.cursor.CursorState;
 import framework.interaction.Types.HandType;
@@ -163,6 +164,10 @@ public class AvatarCursor extends PView {
 				return MainView.GREY;
 		}else
 			return MainView.WHITE;
+	}
+	
+	public Ani animateLoad(int interval, float value){
+		return Ani.to(this, interval / 1000, "loadRatio", value, Ani.EXPO_OUT);
 	}
 
 }

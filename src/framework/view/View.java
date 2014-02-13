@@ -1,26 +1,18 @@
 package framework.view;
 
-import static processing.core.PApplet.println;
-
 import java.util.ArrayList;
 
 import framework.Rectangle;
 import framework.events.TouchEvent;
 
-
-
-
-import processing.core.PApplet;
-
 public class View implements IView {
 
 	private static int ID_COUNT = 0;
-	
-	protected Boolean _isHoverEnabled = false;
+
 	protected Boolean _isTouchEnabled = true;
 	protected Boolean _isPressTarget = false;
 	protected Boolean _isVisible = true;
-	
+
 	protected int _id;
 	protected float _x;
 	protected float _y;
@@ -43,12 +35,12 @@ public class View implements IView {
 	public View(String name) {
 		this();
 		_name = name;
-		//println("new view : " + _name);
+		// println("new view : " + _name);
 	}
 
 	@Override
 	public void draw() {
-		if(!_isVisible)
+		if (!_isVisible)
 			return;
 		// TODO Auto-generated method stub
 		for (IView view : _childs)
@@ -62,7 +54,7 @@ public class View implements IView {
 
 		if (!_childs.contains(child))
 			_childs.add(child);
-		else{
+		else {
 			_childs.remove(child);
 			_childs.add(child);
 		}
@@ -128,7 +120,7 @@ public class View implements IView {
 	}
 
 	protected void log(String message) {
-		println(message);
+		System.out.println(message);
 	}
 
 	public void removeAllChildren() {
@@ -160,18 +152,17 @@ public class View implements IView {
 
 	@Override
 	public Boolean isHoverTarget() {
-		// TODO Auto-generated method stub
-		return _isHoverEnabled;
+		return false;
 	}
 
 	public String get_name() {
 		return _name;
 	}
 
-	public void setVisible(Boolean isVisible){
+	public void setVisible(Boolean isVisible) {
 		_isVisible = isVisible;
 	}
-	
+
 	@Override
 	public void handleInteraction(TouchEvent event) {
 		switch (event.get_interactionType()) {
@@ -217,13 +208,13 @@ public class View implements IView {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public void set_alpha(float value){
-		
+
+	public void set_alpha(float value) {
+
 	}
-	
-	private int getUniquID(){
-		return ID_COUNT ++;
+
+	private int getUniquID() {
+		return ID_COUNT++;
 	}
 
 	@Override

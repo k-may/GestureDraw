@@ -33,6 +33,6 @@ public class WelcomeMessage extends HomeScreen {
 
 	private void setup() {
 		_title.set_x((_width - _title.get_width()) / 2);
-		_title.set_y(_titlePaddingTop);
+		_title.set_y((_height - _title.get_height())/2);
 	}
 }

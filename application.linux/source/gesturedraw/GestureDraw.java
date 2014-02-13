@@ -16,15 +16,15 @@ public class GestureDraw extends PApplet {
 	private Boolean isFullScreen = true;
 
 	public void setup() {
-	
+
 		background(0);
 		noLoop();
 		if (!isFullScreen) {
 			size(1024, 768, PApplet.P3D);
 		} else {
-			size(displayWidth, displayHeight, PApplet.P3D);//PApplet.OPENGL);//PApplet.JAVA2D);//
+			size(displayWidth, displayHeight, PApplet.P3D);// PApplet.OPENGL);//PApplet.JAVA2D);//
 		}
-
+		noCursor();
 		instance = this;
 		AppBuilder appBuilder = new AppBuilder(this);
 	}
@@ -73,7 +73,7 @@ public class GestureDraw extends PApplet {
 	}
 
 	public void mousePressed() {
-		//if (AppBuilder.REGION_TYPE != RegionType.Processing)
-			//exit();
+		// if (AppBuilder.REGION_TYPE != RegionType.Processing)
+		// exit();
 	}
 }

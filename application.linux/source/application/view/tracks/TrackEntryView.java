@@ -1,21 +1,15 @@
 package application.view.tracks;
 
+import processing.core.PApplet;
 import application.content.ContentManager;
 import application.view.MainView;
-import application.view.ShadowButton;
 import application.view.image.Image;
 import application.view.labels.LabelView;
-import application.view.menu.Menu;
 import application.view.menu.MenuButton;
-import de.looksgood.ani.Ani;
 import framework.data.MusicEntry;
 import framework.events.PauseTrackEvent;
 import framework.events.PlayTrackEvent;
 import framework.events.TouchEvent;
-import framework.view.View;
-import processing.core.PApplet;
-
-import static processing.core.PApplet.println;
 
 public class TrackEntryView extends MenuButton { // ShadowButton {
 	private MusicEntry _entry;
@@ -27,8 +21,8 @@ public class TrackEntryView extends MenuButton { // ShadowButton {
 
 	private Image _playIcon;
 	private Image _pauseIcon;
-	private Image _playText;
-	private Image _pauseText;
+	// private Image _playText;
+	// private Image _pauseText;
 
 	private Boolean _isPlaying = false;
 
@@ -64,13 +58,12 @@ public class TrackEntryView extends MenuButton { // ShadowButton {
 		_pauseIcon.set_color(MainView.ICON_COLOR);
 		_pauseIcon.set_x((_width - _pauseIcon.get_width()) / 2);
 		_pauseIcon.set_y((_height - _pauseIcon.get_height()) / 2);
-
-		_playText = new Image("playText");
-		_playText.set_color(0xff000000);
-		_playText.set_y(_textPaddingTop);
-		_pauseText = new Image("pauseText");
-		_pauseText.set_color(0xff000000);
-		_pauseText.set_y(_textPaddingTop);
+		/*
+		 * _playText = new Image("playText"); _playText.set_color(0xff000000);
+		 * _playText.set_y(_textPaddingTop); _pauseText = new
+		 * Image("pauseText"); _pauseText.set_color(0xff000000);
+		 * _pauseText.set_y(_textPaddingTop);
+		 */
 	}
 
 	public MusicEntry get_entry() {
@@ -115,8 +108,8 @@ public class TrackEntryView extends MenuButton { // ShadowButton {
 
 	@Override
 	protected void onHoverEnd(TouchEvent event) {
-		//System.out.println("hoverEnd : " + _artistLabel.get_text() + " : "
-				//+ event.get_time());
+		// System.out.println("hoverEnd : " + _artistLabel.get_text() + " : "
+		// + event.get_time());
 		super.onHoverEnd(event);
 
 		_openColor = event.getColor();
@@ -145,26 +138,28 @@ public class TrackEntryView extends MenuButton { // ShadowButton {
 
 	@Override
 	protected void setClosed() {
-		//System.out.println("closed : " + _artistLabel.get_text());
+		// System.out.println("closed : " + _artistLabel.get_text());
 		_isPressTarget = false;
-		removeChild(_text);
+		//removeChild(_text);
 		removeChild(_bg);
 		_isOpen = false;
 
 		_border.hoverOut();
 
 	}
-	
+
 	@Override
 	protected void setOpen() {
 		_isPressTarget = true;
 		addChild(_bg);
 		addChild(_artistLabel);
 		addChild(_trackLabel);
-		addChild(_text);
+		_trackLabel.set_color(225);
+		_artistLabel.set_color(225);
+		//addChild(_text);
 		addChild(_icon);
-		//by default the border is only
-		//visible in the open state
+		// by default the border is only
+		// visible in the open state
 		addChild(_border);
 		_border.hoverOver();
 		_isOpen = true;

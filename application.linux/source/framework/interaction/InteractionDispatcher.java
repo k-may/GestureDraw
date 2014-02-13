@@ -1,11 +1,8 @@
 package framework.interaction;
 
-import static processing.core.PApplet.println;
-
 import java.util.ArrayList;
 
-import application.view.canvas.Canvas;
-
+import framework.BaseMainView;
 import framework.IMainView;
 import framework.interaction.Types.InteractionEventType;
 import framework.interaction.data.InteractionData;
@@ -19,7 +16,6 @@ public class InteractionDispatcher {
 	public ArrayList<InteractionHandle> _handles;
 	private ArrayList<InteractionHandle> _completeHandles;
 
-	public static int HOVER_ELAPSE = 1000;
 
 	public InteractionDispatcher(IMainView mainView) {
 		_mainView = mainView;
@@ -111,7 +107,6 @@ public class InteractionDispatcher {
 		IView target = handle.get_target();
 		float x = handle.get_currentX();
 		float y = handle.get_currentY();
-		float pressure = handle.getCurrentPressure();
 		int id = handle.get_userId();
 
 		if (handle.get_dX() != 0.0f || handle.get_dY() != 0.0f)
@@ -132,7 +127,7 @@ public class InteractionDispatcher {
 		if (handle.isHovering()) {
 			if (handle.isPreHovering()) {
 				int elapsed = millis - handle.get_startMillis();
-				if (elapsed > HOVER_ELAPSE) {
+				if (elapsed > handle.hoverInterval){
 					dispatchEvent(target, InteractionEventType.HoverEnd, x, y, id);
 					handle.endPreHovering();
 				}
@@ -147,7 +142,6 @@ public class InteractionDispatcher {
 		IView target = handle.get_target();
 		float x = handle.get_currentX();
 		float y = handle.get_currentY();
-		float pressure = handle.getCurrentPressure();
 
 		if (target.isHoverTarget()) {
 			dispatchEvent(handle.get_target(), InteractionEventType.HoverStart, x, y, id);

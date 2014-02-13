@@ -8,7 +8,7 @@ import framework.events.TouchEvent;
 public class PressButton extends MenuButton {
 
 	public PressButton() {
-		super("pressIcon", "pressIcon", "pressText");
+		super("pressIcon", "pressIcon", "pressText", 2000);
 		_invalidated = true;
 	}
 
@@ -18,16 +18,16 @@ public class PressButton extends MenuButton {
 		super.draw(p);
 
 		if (_invalidated) {
-			
+
 			float xPos = (_width - _icon.get_width()) / 2;
 			float yPos = (_height - _icon.get_height()) / 2;
 
 			_icon.set_x(xPos);
 			_iconLarge.set_x(xPos);
-			
+
 			_icon.set_y(yPos);
 			_iconLarge.set_y(yPos);
-			
+
 			_invalidated = false;
 		}
 	}

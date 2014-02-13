@@ -5,7 +5,7 @@ import java.util.Observable;
 
 import application.view.home.screens.HandsScreen;
 import application.view.home.screens.HomeScreen;
-import application.view.home.screens.StartMessage;
+import application.view.home.screens.StartScreen;
 import application.view.home.screens.WelcomeMessage;
 import framework.data.GalleryEntry;
 import framework.view.View;
@@ -22,7 +22,7 @@ public class HomeModel extends Observable {
 	private int _rotationCount = 0;
 
 	private int _lastUpdate = 0;
-	private final int TTime = 5000;
+	private final int TTime = 6000;
 	private int _index = 0;
 	private ArrayList<PImage> _images;
 	private int _imageCount = 0;
@@ -41,7 +41,7 @@ public class HomeModel extends Observable {
 	}
 
 	private void initScreens() {
-		_startScreen = new StartMessage();
+		_startScreen = new StartScreen();
 		RegisterStartScreen((HomeScreen) _startScreen);
 		_welcomeScreen = new WelcomeMessage();
 		RegisterScreen((HomeScreen) _welcomeScreen);

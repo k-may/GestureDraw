@@ -23,8 +23,7 @@ public class NavButton extends PView {
 		
 		_isTouchEnabled = true;
 		_isPressTarget = true;
-		_isHoverEnabled = false;
-		
+
 		createChilds();
 	}
 

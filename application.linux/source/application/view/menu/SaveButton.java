@@ -6,7 +6,7 @@ import framework.events.TouchEvent;
 public class SaveButton extends MenuButton {
 
 	public SaveButton() {
-		super("saveIcon","saveIconLarge", "saveText");
+		super("saveIcon","saveIconLarge", "saveText", 2000);
 		_iconPaddingLeft = 151;
 		_iconPaddingTop = -6;
 		_icon.set_x(_iconPaddingLeft);

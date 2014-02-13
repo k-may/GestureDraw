@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import processing.core.PVector;
 import application.view.MainView;
-import application.view.PView;
+import application.view.PIView;
 import application.view.avatar.AvatarsView;
 import framework.IMainView;
 import framework.cursor.CursorState;
@@ -57,7 +57,7 @@ public class Adapter implements IAdapter {
 			overPressTarget = target.isPressTarget();
 			// System.out.println("over press target : " + target);
 			overHoverTarget = target.isHoverTarget();
-			PVector targetAbsPos = ((PView) target).get_absPos();
+			PVector targetAbsPos = ((PIView) target).get_absPos();
 			float targetWidth = target.get_width();
 			float targetHeight = target.get_height();
 			attrX = (targetAbsPos.x + targetWidth / 2) / _canvas.get_width();

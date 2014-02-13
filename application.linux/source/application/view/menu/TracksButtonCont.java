@@ -6,19 +6,21 @@ import application.view.image.Image;
 import application.view.tracks.TrackView;
 import framework.events.TracksShowEvent;
 import framework.events.TouchEvent;
+import framework.interaction.IHoverTarget;
 import framework.view.View;
 
-public class TracksButtonCont extends PView {
+public class TracksButtonCont extends PView implements IHoverTarget{
 
 	private Boolean _tracksOpen = false;
 	private Image _icon;
 	private TrackView _tracksView;
 	private int _iconPaddingTop = -6;
 	private int _iconPaddingLeft = 0;
+	
+	private Boolean _isHoverEnabled = true;
 
 	public TracksButtonCont() {
 		_isPressTarget = false;
-		_isHoverEnabled = true;
 		_width = MainView.BUTTON_WIDTH;
 		_height = MainView.BUTTON_HEIGHT;
 		
@@ -82,5 +84,15 @@ public class TracksButtonCont extends PView {
 		addChild(_tracksView);
 		_tracksOpen = true;
 		_width = _tracksView.get_width();
+	}
+
+	@Override
+	public Boolean isHoverTarget() {
+		return _isHoverEnabled;
+	}
+	@Override
+	public int get_hoverInterval() {
+		// TODO Auto-generated method stub
+		return MainView.HOVER_ELAPSE;
 	}
 }

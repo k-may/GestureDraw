@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import framework.data.UserData;
 import framework.events.TouchEvent;
+import framework.interaction.IHoverTarget;
 import framework.interaction.IInteractionRegion;
 import framework.interaction.IInteractionView;
 import framework.interaction.InteractionDispatcher;
@@ -25,11 +26,15 @@ public abstract class BaseMainView implements IMainView {
 	
 	public static SceneState CurrentState;
 	
+
+	
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 
 	public static int SRC_WIDTH = 640;
 	public static int SRC_HEIGHT = 480;
+	
+	public static int HOVER_ELAPSE = 1000;
 	
 	public static final float PRESS_POS_EXTENTS = 0.7F;
 	public static final float PRESS_MAX_PRESSURE = 0.7f;
@@ -86,7 +91,8 @@ public abstract class BaseMainView implements IMainView {
 	@Override
 	public void addHoverStartEvent(IView target, float x, float y, int id) {
 		addInteractionEvent(InteractionEventType.HoverStart, target, x, y, id);
-		startHover(id, InteractionDispatcher.HOVER_ELAPSE, target);
+		int hoverInterval = ((IHoverTarget) target).get_hoverInterval();
+		startHover(id, hoverInterval, target);
 	}
 
 	@Override

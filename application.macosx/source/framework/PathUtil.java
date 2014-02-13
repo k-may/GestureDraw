@@ -13,23 +13,20 @@ public class PathUtil {
 	public static void SetDataPath(String path) {
 		int rootIndex = path.indexOf("lib/");
 
-		if (rootIndex == -1)
+		if (rootIndex == -1) {
+			// local
 			rootIndex = path.indexOf("bin/");
-
-		try {
 			path = path.substring(0, rootIndex);
 			path += "bin/";
-
-			println("::: BIN PATH :" + path + " :::");
-
-			DATA_PATH = path;
-			IMAGE_PATH = path + "images/";
-			LOG_PATH = path + "logs/";
-			TRACKS_PATH = path + "tracks/";
-
-		} catch (Exception e) {
-			new ErrorEvent(ErrorType.PathError, "can't find 'GestureDraw/bin' on application path, you may need to rename or move the application").dispatch();
+		} else {
+			path = path.substring(0, rootIndex);
 		}
+		println("::: BIN PATH :" + path + " :::");
+
+		DATA_PATH = path;
+		IMAGE_PATH = path + "images/";
+		LOG_PATH = path + "logs/";
+		TRACKS_PATH = path + "tracks/";
 	}
 
 	public static String GetDataPath() {

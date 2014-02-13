@@ -63,7 +63,7 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 		createGallery();
 
 		_poweredByText = new Image("poweredByText");
-		_poweredByText.set_alpha(200);
+		_poweredByText.set_alpha(150);
 		addChild(_poweredByText);
 
 		_invalidated = true;
@@ -107,6 +107,10 @@ public class HomeScene extends Scene implements IHomeScene<PImage> {
 			_currentScreen.set_x((_width - _currentScreen.get_width()) / 2);
 			_currentScreen.set_y((_height - _currentScreen.get_height()) / 2);
 		}
+		
+		addChild(_poweredByText);
+		_poweredByText.set_alpha(150);
+
 	}
 
 	@Override

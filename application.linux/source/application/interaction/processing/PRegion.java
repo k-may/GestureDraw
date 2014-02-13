@@ -87,7 +87,7 @@ public class PRegion extends Region<PApplet> {
 
 		InteractionData data = new InteractionData(new Vector(position.x, position.y, mZ), isPressing, isDrawing);
 
-		InteractionStreamData streamData = new InteractionStreamData(data, 0, isHoverTarget, isPressTarget, HandType.None, info.get_targets(), depthStateData);
+		InteractionStreamData streamData = new InteractionStreamData(data, 0, isHoverTarget, isPressTarget, HandType.Right, info.get_targets(), depthStateData);
 
 		_stream = new ArrayList<InteractionStreamData>();
 		_stream.add(streamData);

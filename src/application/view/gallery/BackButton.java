@@ -23,8 +23,7 @@ public class BackButton extends PView {
 
 		_isTouchEnabled = true;
 		_isPressTarget = true;
-		_isHoverEnabled = false;
-		
+
 		createChilds();
 	}
 

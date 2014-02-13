@@ -65,7 +65,7 @@ public class HomeGallery extends PView implements IGallery<PImage> {
 
 		_currentImage = image;
 		alpha = 0;
-		Ani.to(this, 1, "alpha", 255, Easing.EXPO_OUT, "onEnd:onEnd");
+		Ani.to(this, 5, "alpha", 255, Easing.EXPO_OUT, "onEnd:onEnd");
 
 	}
 

@@ -49,7 +49,6 @@ public abstract class CanvasController<T> implements IController {
 
 
 	private void removeStroke(UserRemovedEvent event) {
-		System.out.println("remove stroke : " + event.get_user().get_id());
 		_canvas.onStrokeEnd(event.get_user().get_id());
 	}
 

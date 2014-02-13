@@ -6,7 +6,7 @@ import framework.Rectangle;
 import framework.view.IView;
 import framework.view.View;
 
-public class PView extends View {
+public class PView extends View implements PIView{
 
 	public PView(){
 		super();
@@ -16,6 +16,10 @@ public class PView extends View {
 		super(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see application.view.PIView#get_absPos()
+	 */
+	@Override
 	public PVector get_absPos() {
 		// TODO Auto-generated method stub
 
@@ -30,12 +34,16 @@ public class PView extends View {
 		return new PVector(rect.get_x(), rect.get_y());
 	}
 
+	/* (non-Javadoc)
+	 * @see application.view.PIView#draw(processing.core.PApplet)
+	 */
+	@Override
 	public void draw(PApplet p) {
 		if(!_isVisible)
 			return;
 		// TODO Auto-generated method stub
 		for (IView view : _childs)
-			((PView)view).draw(p);
+			((PIView)view).draw(p);
 	}
 
 }

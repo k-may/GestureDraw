@@ -6,7 +6,7 @@ import application.view.PView;
 
 public class HomeScreen extends PView {
 
-	private int padding = 150;
+	private int padding = 5;
 	
 	public HomeScreen(){
 		_width = MainView.SCREEN_WIDTH;
@@ -14,6 +14,7 @@ public class HomeScreen extends PView {
 		_x = 0;
 		_y = 0;
 
+		
 	}
 	@Override
 	public void draw(PApplet p) {

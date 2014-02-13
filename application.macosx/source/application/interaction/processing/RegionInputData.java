@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import processing.core.PVector;
 import application.interaction.ICursorHandler;
 import application.interaction.IRangeHandler;
-import application.interaction.gestTrackOSC.domain.DomainCursorHandler;
 import application.view.MainView;
 import framework.depth.DepthState;
 import framework.interaction.data.InteractionTargetInfo;

@@ -28,6 +28,7 @@ public class MainView extends BaseMainView implements Observer {
 
 	public static RegionType REGION_TYPE;
 
+	
 	public static int WHITE = 0XFFFFFFFF;
 	public static int LIGHT_GREY = 0xBADBD7D7;
 	public static int GREY = 0xBA6E6F72;
@@ -121,10 +122,10 @@ public class MainView extends BaseMainView implements Observer {
 
 		_controller.update(time);
 
-		((PView) SceneManager.getScene()).draw(p);
+		((PIView) SceneManager.getScene()).draw(p);
 
 		for (IView child : _childs)
-			((PView) child).draw(p);
+			((PIView) child).draw(p);
 
 	}
 
@@ -227,7 +228,7 @@ public class MainView extends BaseMainView implements Observer {
 	@Override
 	protected void addInteractionEvent(InteractionEventType type, IView target,
 			float x, float y, int id) {
-		PVector pos = ((PView) target).get_absPos();
+		PVector pos = ((PIView) target).get_absPos();
 
 		UserData user = _interactionView.getUser(id);
 

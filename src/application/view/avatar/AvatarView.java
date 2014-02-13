@@ -43,7 +43,7 @@ public class AvatarView extends PView implements Comparable<AvatarView> {
 
 		if (!_user.isOverButton())
 			drawPressState(p);
-		else{
+		else {
 			_isColorWheelVisible = false;
 
 		}
@@ -53,7 +53,7 @@ public class AvatarView extends PView implements Comparable<AvatarView> {
 	}
 
 	private void updateCursor() {
-		_cursor.setState(_user.getCursorState());//getCursorMode());
+		_cursor.setState(_user.getCursorState());// getCursorMode());
 		_cursor.set_x(_user.get_localX());
 		_cursor.set_y(_user.get_localY());
 	}
@@ -62,7 +62,7 @@ public class AvatarView extends PView implements Comparable<AvatarView> {
 		float x = _user.get_localX();
 		float y = _user.get_localY();
 		DepthState state = _user.getDepthState();
-		
+
 		if (state == DepthState.ColorSelection) {
 			if (!_isColorWheelVisible)
 				animateColorWheel(x, y);
@@ -127,15 +127,17 @@ public class AvatarView extends PView implements Comparable<AvatarView> {
 
 	public void startLoad(int interval, float value, IView target) {
 		_hoverTarget = target;
-		_hoverAnimation = new Ani(_cursor, interval / 1000, "loadRatio", value, Ani.EXPO_OUT);
+		_hoverAnimation = _cursor.animateLoad(interval, value);//Ani.to(_cursor, interval / 1000, "loadRatio", value, Ani.EXPO_OUT);
 	}
 
 	public void cancelHover() {
 		if (_hoverTarget != null)
 			_hoverTarget = null;
 
-		if (_hoverAnimation != null)
+		if (_hoverAnimation != null) {
 			_hoverAnimation.end();
+			_hoverAnimation = null;
+		}
 
 		_cursor.loadRatio = 0.0f;
 	}

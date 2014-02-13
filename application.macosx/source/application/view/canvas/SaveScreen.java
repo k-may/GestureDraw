@@ -17,7 +17,7 @@ public class SaveScreen extends PView {
 
 	private int _duration = 2000;
 	private int _lastTime;
-	int padding = 150;
+	int padding = 0;
 	public SaveScreen() {
 		_width = MainView.SCREEN_WIDTH;
 		_height = MainView.SCREEN_HEIGHT;
