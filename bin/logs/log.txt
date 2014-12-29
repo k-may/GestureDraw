@@ -79,3 +79,12 @@
 [2/13 16:19:08] Region created : Processing
 [2/13 16:50:16] Region created : Processing
 [5/4 14:12:52] Region created : Processing
+[5/6 18:54:17] Region created : Processing
+[5/6 18:57:07] Region created : GestTrack
+[5/11 13:45:48] Region created : GestTrack
+[5/11 13:49:48] Region created : GestTrack
+[5/11 14:04:55] Region created : GestTrack
+[5/11 14:33:45] Region created : GestTrack
+[5/12 18:09:18] Region created : GestTrack
+[5/12 18:10:20] Region created : GestTrack
+[5/12 18:11:11] Region created : Processing

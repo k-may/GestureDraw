@@ -28,7 +28,6 @@ public class MainView extends BaseMainView implements Observer {
 
 	public static RegionType REGION_TYPE;
 
-	
 	public static int WHITE = 0XFFFFFFFF;
 	public static int LIGHT_GREY = 0xBADBD7D7;
 	public static int GREY = 0xBA6E6F72;
@@ -64,9 +63,8 @@ public class MainView extends BaseMainView implements Observer {
 	public static int XRANGE = 200;
 	public static int YRANGE = 200;
 	public static final float RANGE_DAMPENING = 0.1f;
-	
+
 	public static final int TENDENCY_SAMPLES = 7;
-	
 
 	public static final int MAX_UNAVAILABLE = 5;
 	public static final int MAX_INVALID = 15;
@@ -78,7 +76,7 @@ public class MainView extends BaseMainView implements Observer {
 	public static float CURSOR_LERP = 0.05F;
 	public static float TARGET_MASS = 0.005F;
 	public static float CENTER_SCREEN_MASS = 0.0005F;
-	
+
 	public static float DOMAIN_1 = 0.2f;
 	public static float DOMAIN_2 = 0.8f;
 
@@ -182,7 +180,8 @@ public class MainView extends BaseMainView implements Observer {
 
 	@Override
 	public void startHover(int userID, int interval, IView target) {
-		AvatarView avatar = ((AvatarsView) _interactionView).getAvatarById(userID);
+		AvatarView avatar = ((AvatarsView) _interactionView)
+				.getAvatarById(userID);
 
 		if (avatar != null)
 			avatar.startLoad(interval, 1.0f, target);
@@ -190,7 +189,8 @@ public class MainView extends BaseMainView implements Observer {
 
 	@Override
 	public void endHover(int userID) {
-		AvatarView avatar = ((AvatarsView) _interactionView).getAvatarById(userID);
+		AvatarView avatar = ((AvatarsView) _interactionView)
+				.getAvatarById(userID);
 
 		if (avatar != null)
 			avatar.cancelHover();
@@ -235,7 +235,8 @@ public class MainView extends BaseMainView implements Observer {
 		if (user != null) {
 			float localX = x * SCREEN_WIDTH - pos.x;
 			float localY = y * SCREEN_HEIGHT - pos.y;
-			new TouchEvent(type, target, localX, localY, _interactionView.getUser(id), _parent.millis()).dispatch();
+			new TouchEvent(type, target, localX, localY,
+					_interactionView.getUser(id), _parent.millis()).dispatch();
 		}
 	}
 
@@ -246,6 +247,5 @@ public class MainView extends BaseMainView implements Observer {
 	public float get_height() {
 		return _parent.height;
 	}
-
 
 }
