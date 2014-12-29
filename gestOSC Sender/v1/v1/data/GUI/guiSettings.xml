@@ -1,0 +1,10 @@
+<Widget>
+    <Kind>2</Kind>
+    <Name>Send absolute coordinates.</Name>
+    <Value>1</Value>
+</Widget>
+<Widget>
+    <Kind>2</Kind>
+    <Name>Send normalized coordinates.</Name>
+    <Value>1</Value>
+</Widget>
